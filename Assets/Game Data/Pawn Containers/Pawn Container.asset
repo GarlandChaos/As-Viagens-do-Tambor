@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31438d4aafdf4174b84c263e0ad982d7, type: 3}
+  m_Name: Pawn Container
+  m_EditorClassIdentifier: 
+  pawns:
+  - {fileID: 8086397070506978333, guid: c06184e5659bf004d851bf253f2b7d98, type: 3}
+  - {fileID: 8086397070506978333, guid: 1e6b97106d4eec24196632ab638e584e, type: 3}
+  - {fileID: 8086397070506978333, guid: fd107ef90e34e7b4f962ff69f436c6fb, type: 3}
+  - {fileID: 8086397070506978333, guid: b90b792c5d9f9e14fa52167f953914b5, type: 3}
+  - {fileID: 8086397070506978333, guid: cd194c7c0fbd5bf418896d8f328bdced, type: 3}
+  - {fileID: 8086397070506978333, guid: df0d7aa53f529924e910b922b2934666, type: 3}
+  - {fileID: 8086397070506978333, guid: 6fd24a373fc430b45871871b5612a242, type: 3}
+  - {fileID: 8086397070506978333, guid: 75c474cca0ff17c42863be2c7605d22b, type: 3}
+  - {fileID: 8086397070506978333, guid: ea0e3405c1da92a48b4828071b88f440, type: 3}
+  - {fileID: 8086397070506978333, guid: d71eb2a78df70d74f8c7b60c00c3b3ce, type: 3}
+  - {fileID: 8086397070506978333, guid: b61d5ac7d06fb3f48948a9b5c47d31a9, type: 3}

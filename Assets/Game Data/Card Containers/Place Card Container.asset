@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47337652aeaf4f54395e54d328fbe6e1, type: 3}
+  m_Name: Place Card Container
+  m_EditorClassIdentifier: 
+  cards:
+  - {fileID: 11400000, guid: 3a4a0eb5091bd154b96020473fda353e, type: 2}
+  - {fileID: 11400000, guid: 4dc00583bb789f546b18bbff4874950e, type: 2}
+  - {fileID: 11400000, guid: 361df71f6ef194c459f129ad46f4e822, type: 2}
+  - {fileID: 11400000, guid: 716d321a80b05ac4c906f3b6b7825235, type: 2}
+  - {fileID: 11400000, guid: d9ad09292f8d15c45b1f24f944e58566, type: 2}
+  - {fileID: 11400000, guid: 2a912a1389175c244aa8ea19dca035c9, type: 2}
+  - {fileID: 11400000, guid: 26f67755dd0c93d4c8d73d8cc10885e4, type: 2}
+  - {fileID: 11400000, guid: b2de07dca31ea354ca22d2c0b4965e4e, type: 2}
+  - {fileID: 11400000, guid: bfb1187ff7847f44eb769165487ad98d, type: 2}
+  - {fileID: 11400000, guid: e4bca79db5a5107429d1b04339e9f532, type: 2}
+  - {fileID: 11400000, guid: 6aa5ec6ad0657fc4abddb8d582b46d00, type: 2}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ad6014ab63b214f983a563007b8743, type: 3}
+  m_Name: UI Settings
+  m_EditorClassIdentifier: 
+  screensPrefabs:
+  - {fileID: 2654664258504706692, guid: a705044a9d02e9f47baea54e54349da2, type: 3}
+  - {fileID: 2654664258504706692, guid: f5c5c031b0efd7b458662f29b5a70bbd, type: 3}
+  - {fileID: 2654664258504706692, guid: 929d775a727a0954f84395bf25e6d60f, type: 3}
+  - {fileID: 2654664258504706692, guid: fa8cc4c4d0b4aa14eb2263476f484872, type: 3}
+  - {fileID: 2654664258504706692, guid: a48c4e00b3d5471428834b251f102d74, type: 3}
+  - {fileID: 2654664258504706692, guid: 5d2c03450fcc7e64e81c577e97101d80, type: 3}
+  - {fileID: 2654664258504706692, guid: 417c4445784bfa848928139daa30b2ba, type: 3}
+  - {fileID: 2654664258504706692, guid: 2a06a6b9ec71c7e4980f9533afdfc0bc, type: 3}
+  - {fileID: 2654664258504706692, guid: 58151a7b93ff8464080dff349adf8fc5, type: 3}
