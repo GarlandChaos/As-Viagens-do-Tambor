@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.UI;
 using MLAPI;
 
 public class GameManager : MonoBehaviour
@@ -28,8 +29,6 @@ public class GameManager : MonoBehaviour
     List<Player> listPlayers = new List<Player>();
     Card[] envelope = new Card[3];
     Card currentPlaceGuess, currentPersonGuess, currentPracticeGuess;
-    public int currentDice1Result = 0;
-    public int currentDice2Result = 0;
     int turnPlayer = 0;
     int showCardPlayer;
     bool registerPlayerLock = false;
@@ -69,6 +68,17 @@ public class GameManager : MonoBehaviour
         UIManager.instance.RequestScreen("Room Manager Screen", true);
         //boardGO.SetActive(false);
     }
+
+    //TEMP CODE
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Dices.RollDices();
+            UIManager.instance.RequestScreen("Dices Results");
+        }
+    }
+    //END TEMP CODE
 
     public void FillEnvelope(int person, int practice, int place)
     {
@@ -134,119 +144,84 @@ public class GameManager : MonoBehaviour
         return list.OrderBy(x => Random.value).ToList();
     }
 
-    void DistributeCards()
+    void DistributeCardsToPlayers(List<Card> cards)
     {
-        List<Card> people = new List<Card>(peopleCardContainer._Cards);
-        foreach(Card c in envelope)
-        {
-            if (people.Contains(c))
-                people.Remove(c);
-        }
-        while (people.Count > 0)
-        {
-            foreach (Player p in listPlayers)
-            {
-                if(people.Count > 0)
-                {
-                    int index = Random.Range(0, people.Count);
-                    p.AddToCardLists(people[index]);
-                    people.RemoveAt(index);
-                }
-            }
-        }
-
-        List<Card> practices = new List<Card>(practicesCardContainer._Cards);
+        List<Card> tempCards = new List<Card>(cards);
         foreach (Card c in envelope)
         {
-            if (practices.Contains(c))
-                practices.Remove(c);
+            if (tempCards.Contains(c))
+                tempCards.Remove(c);
         }
-        while (practices.Count > 0)
-        {            
-            foreach (Player p in listPlayers)
-            {
-                if (practices.Count > 0)
-                {
-                    int index = Random.Range(0, practices.Count);
-                    p.AddToCardLists(practices[index]);
-                    practices.RemoveAt(index);
-                }
-            }
-        }
-
-        List<Card> places = new List<Card>(placesCardContainer._Cards);
-        foreach (Card c in envelope)
+        while (tempCards.Count > 0)
         {
-            if (places.Contains(c))
-                places.Remove(c);
-        }
-        while (places.Count > 0)
-        {            
             foreach (Player p in listPlayers)
             {
-                if (places.Count > 0)
+                if (tempCards.Count > 0)
                 {
-                    int index2 = Random.Range(0, places.Count);
-                    p.AddToCardLists(places[index2]);
-                    places.RemoveAt(index2);
+                    int index = Random.Range(0, tempCards.Count);
+                    p.AddToCardLists(tempCards[index]);
+                    tempCards.RemoveAt(index);
                 }
             }
         }
     }
 
+    //essa função só serve para retornar para GuessScreenController, o(s) Player(s) poderiam retornar diretamente em vez de usar um intermediário
     public List<Card> GetPersonCards() //quando o jogador puder selecionar quais cartas mostrar, pode repetir cartas já mostradas, é responsabilidade do jogador do turno cuidar para não pedir as mesmas (?)
     {
-        List<Card> people = new List<Card>();
+        List<Card> personCards = new List<Card>();
+        
         foreach(Player p in listPlayers)
         {
             if(p.id != turnPlayer)
             {
-                foreach(Card c in p.GetPersonCards())
+                foreach(Card c in p._CardPersonList)
                 {
                     if (!listPlayers[turnPlayer].IsItADiscardedCard(c))
-                        people.Add(c);
+                        personCards.Add(c);
                 }
             }
         }
+
         foreach(Card c in envelope)
         {
             if(c.type == CardType.person)
             {
-                people.Add(c);
-                return people;
+                personCards.Add(c);
+                return personCards;
             }
         }
-        return people;
-    } 
 
-    //public List<Card> GetPlaceCards()
-    //{
-    //    return listPlaces;
-    //}
+        return personCards;
+    }
 
+    //essa função só serve para retornar para GuessScreenController, o(s) Player(s) poderiam retornar diretamente em vez de usar um intermediário
     public List<Card> GetPracticeCards()
     {
-        List<Card> practices = new List<Card>();
+        List<Card> practiceCards = new List<Card>();
+
         foreach (Player p in listPlayers)
         {
             if (p.id != turnPlayer)
             {
-                foreach (Card c in p.GetPracticeCards())
+                foreach (Card c in p._CardPracticeList)
                 {
                     if (!listPlayers[turnPlayer].IsItADiscardedCard(c))
-                        practices.Add(c);
+                        practiceCards.Add(c);
                 }
             }
         }
+
         foreach (Card c in envelope)
         {
             if (c.type == CardType.practice)
             {
-                practices.Add(c);
-                return practices;
+                practiceCards.Add(c);
+                return practiceCards;
             }
         }
-        return practices;
+
+        return practiceCards;
     }
 
     public void RegisterPlayer(Player player)
@@ -266,24 +241,30 @@ public class GameManager : MonoBehaviour
             }
             else if(listPlayers.Count == 2 && NetworkManager.Singleton.IsServer)
             {
-                if (peopleCardContainer != null)
-                    peopleCardContainer._Cards = ShuffleList(peopleCardContainer._Cards);
-                if (practicesCardContainer != null)
-                    practicesCardContainer._Cards = ShuffleList(practicesCardContainer._Cards);
-                if (placesCardContainer != null)
-                    placesCardContainer._Cards = ShuffleList(placesCardContainer._Cards);
-
-                envelope = new Card[3];
-                envelope[0] = peopleCardContainer._Cards[0];
-                envelope[1] = practicesCardContainer._Cards[0];
-                envelope[2] = placesCardContainer._Cards[0];
-
-                DistributeCards();
-                SendDiscardCardEvents(listPlayers[0]); //apenas para o jogador 1 do server
-                listPlayers[1].RequestPlayerToSendDiscardCardEvents();
+                OrganizeCards();
             }
             registerPlayerLock = false;
         }
+    }
+
+    void OrganizeCards()
+    {
+        peopleCardContainer._Cards = ShuffleList(peopleCardContainer._Cards);
+        practicesCardContainer._Cards = ShuffleList(practicesCardContainer._Cards);
+        placesCardContainer._Cards = ShuffleList(placesCardContainer._Cards);
+
+        envelope = new Card[3];
+        envelope[0] = peopleCardContainer._Cards[0];
+        envelope[1] = practicesCardContainer._Cards[0];
+        envelope[2] = placesCardContainer._Cards[0];
+
+        //Distribute people, practices and places cards to players
+        DistributeCardsToPlayers(peopleCardContainer._Cards);
+        DistributeCardsToPlayers(practicesCardContainer._Cards);
+        DistributeCardsToPlayers(placesCardContainer._Cards);
+
+        SendDiscardCardEvents(listPlayers[0]); //apenas para o jogador 1 do server
+        listPlayers[1].RequestPlayerToSendDiscardCardEvents();
     }
 
     public void SendDiscardCardEvents(Player player)
@@ -292,13 +273,13 @@ public class GameManager : MonoBehaviour
         UIManager.instance.RequestScreen("Notes", true); 
         //FIM GAMBIARRA
 
-        foreach (Card cPlace in player.GetPlaceCards())
+        foreach (Card cPlace in player._CardPlaceList)
             eventDiscardCard.Raise(cPlace);
         
-        foreach (Card cPerson in player.GetPersonCards())
+        foreach (Card cPerson in player._CardPersonList)
             eventDiscardCard.Raise(cPerson);
         
-        foreach (Card cPractice in player.GetPracticeCards())
+        foreach (Card cPractice in player._CardPracticeList)
             eventDiscardCard.Raise(cPractice);
 
         //COMEÇO GAMBIARRA
@@ -331,17 +312,6 @@ public class GameManager : MonoBehaviour
         eventShowExtraCard.Raise(extraCardsContainer._Cards[Random.Range(0, extraCardsContainer._Cards.Count)]);
     }
 
-    public void OnDisplayDicesResults(int dice1, int dice2)
-    {
-        currentDice1Result = dice1;
-        currentDice2Result = dice2;
-        
-        if(UIManager.instance.IsScreenVisible("Dices Results"))
-            UIManager.instance.RequestScreen("Dices Results", false);
-        
-        UIManager.instance.RequestScreen("Dices Results", true);
-    }
-
     public void OnAskIfWantToGuess(Card cardPlace)
     {
         currentPlaceGuess = cardPlace;
@@ -367,18 +337,18 @@ public class GameManager : MonoBehaviour
         ChangePlayerTurn();
     }
 
-    List<Card> CheckGuessCards(Card place, Card person, Card practice)
+    List<Card> CheckGuessCards(Card placeCard, Card personCard, Card practiceCard)
     {
         List<Card> cardsToShow = new List<Card>();
         foreach (Player p in listPlayers)
         {
             if (p.id != turnPlayer)
             {
-                if(place != null)
+                if(placeCard != null)
                 {
-                    foreach (Card c in p.GetPlaceCards())
+                    foreach (Card c in p._CardPlaceList)
                     {
-                        if (c == place)
+                        if (c == placeCard)
                         {
                             if (!listPlayers[turnPlayer].IsItADiscardedCard(c))
                                 cardsToShow.Add(c);
@@ -386,11 +356,11 @@ public class GameManager : MonoBehaviour
                     }
                 }
 
-                if(person != null)
+                if(personCard != null)
                 {
-                    foreach (Card c in p.GetPersonCards())
+                    foreach (Card c in p._CardPersonList)
                     {
-                        if (c == person)
+                        if (c == personCard)
                         {
                             if (!listPlayers[turnPlayer].IsItADiscardedCard(c))
                                 cardsToShow.Add(c);
@@ -398,11 +368,11 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 
-                if(practice != null)
+                if(practiceCard != null)
                 {
-                    foreach (Card c in p.GetPracticeCards())
+                    foreach (Card c in p._CardPracticeList)
                     {
-                        if (c == practice)
+                        if (c == practiceCard)
                         {
                             if (!listPlayers[turnPlayer].IsItADiscardedCard(c))
                                 cardsToShow.Add(c);
@@ -420,11 +390,11 @@ public class GameManager : MonoBehaviour
         return cardsToShow;
     }
 
-    public void SendGuessToOtherPlayers(Card place, Card person, Card practice)
+    public void SendGuessToOtherPlayers(Card placeCard, Card personCard, Card practiceCard)
     {
-        currentPersonGuess = person;
-        currentPracticeGuess = practice;
-        List<Card> cardsToShow = CheckGuessCards(place, person, practice);
+        currentPersonGuess = personCard;
+        currentPracticeGuess = practiceCard;
+        List<Card> cardsToShow = CheckGuessCards(placeCard, personCard, practiceCard);
         if(cardsToShow.Count == 0)
             eventAskForGuessConfirmation.Raise(); //ninguém tinha as cartas, pergunta para o jogador do turno se quer confirmar o palpite
         else

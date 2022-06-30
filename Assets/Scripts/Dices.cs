@@ -2,30 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dices : MonoBehaviour
+public static class Dices
 {
-    public static Dices instance;
-    [SerializeField]
-    GameEvent eventDisplayDicesResults;
+    //Runtime fields
+    static int[] dicesResults = new int[2];
 
-    private void Awake()
-    {
-        if(instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    //Properties
+    public static int _Dice1Result { get => dicesResults[0]; }
+    public static int _Dice2Result { get => dicesResults[1]; }
 
-    public int[] RollDices()
+    public static int[] RollDices()
     {
-        int[] dices = new int[2];
-        dices[0] = Random.Range(1, 7);
-        dices[1] = Random.Range(1, 7);
-        eventDisplayDicesResults.Raise(dices[0], dices[1]);
-        return dices;
+        dicesResults[0] = Random.Range(1, 7);
+        dicesResults[1] = Random.Range(1, 7);
+
+        return dicesResults;
     }
 }

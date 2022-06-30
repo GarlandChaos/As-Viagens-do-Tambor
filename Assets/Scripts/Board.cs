@@ -33,14 +33,20 @@ public class Board : MonoBehaviour
               eventFinalBoardSpaceDeselected, 
               eventFinalBoardSpacePressed;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+            Destroy(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        if(instance != null)
-            Destroy(this);
-        else
-            instance = this;
-
         BoardSpace[] bs = gameObject.GetComponentsInChildren<BoardSpace>();
         int id = 0;
         foreach(BoardSpace b in bs)

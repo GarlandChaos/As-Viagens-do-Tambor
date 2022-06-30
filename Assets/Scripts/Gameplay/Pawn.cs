@@ -4,10 +4,9 @@ using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
-//using MLAPI.Serialization;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class Pawn : NetworkBehaviour//, INetworkSerializable
+public class Pawn : NetworkBehaviour
 {
     public string namePawn;
     public BoardSpace currentBoardSpace;
@@ -17,14 +16,6 @@ public class Pawn : NetworkBehaviour//, INetworkSerializable
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
-
-    //private void Awake()
-    //{
-    //    if(spritePawn == null)
-    //    {
-    //        spritePawn = GetComponent<SpriteRenderer>().sprite;
-    //    }
-    //}
 
     private void Start()
     {
@@ -44,16 +35,6 @@ public class Pawn : NetworkBehaviour//, INetworkSerializable
         networkPosition.Value = transform.position;
     }
 
-    private void Update()
-    {
-        //UpdatePosition();
-    }
-
-    //public void UpdatePosition()
-    //{
-    //    transform.position = networkPosition.Value;
-    //}
-
     [ClientRpc]
     public void SetClientParentClientRpc(ulong clientID)
     {
@@ -62,12 +43,8 @@ public class Pawn : NetworkBehaviour//, INetworkSerializable
         transform.parent.GetComponent<Player>()._PlayerPawn = this;
     }
 
-    //// INetworkSerializable
-    //public void NetworkSerialize(NetworkSerializer serializer)
-    //{
-    //    serializer.Serialize(ref namePawn);
-    //    serializer.Serialize(ref currentBoardSpace);
-    //    serializer.Serialize(ref spritePawn);
-    //}
-    //// ~INetworkSerializable
+    public void OnFinalBoardSpacePressed(Queue<BoardSpace> path)
+    {
+        //MovePawn(path, true);
+    }
 }

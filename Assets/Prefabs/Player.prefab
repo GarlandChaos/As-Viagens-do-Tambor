@@ -59,6 +59,7 @@ MonoBehaviour:
   eventRequestPaths: {fileID: 11400000, guid: 7b3ff6ae19684254991e6526eb4879d6, type: 2}
   eventRequestExtraCard: {fileID: 11400000, guid: 6e8cb5207fd1b7441bc5f092bdfb2ee5,
     type: 2}
+  eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
   eventAskIfWantToGuess: {fileID: 11400000, guid: e8ed097c9ccdb3b4d8b85785960d1e77,
     type: 2}
   eventEndOfMove: {fileID: 11400000, guid: 3a102db6f43d17f4ebe770237ef2a7e8, type: 2}
@@ -69,10 +70,12 @@ MonoBehaviour:
     type: 2}
   eventWin: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
   eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
-  listPeople: []
-  listPractices: []
-  listPlaces: []
-  discardedCards: []
+  eventDisplayDiceResults: {fileID: 11400000, guid: 59c362c29ef511d47b89e22522489b8a,
+    type: 2}
+  cardPersonList: []
+  cardPracticeList: []
+  cardPlaceList: []
+  discardedCardList: []
   isMyTurn:
     m_InternalValue: 0
 --- !u!114 &2936002786673998453
