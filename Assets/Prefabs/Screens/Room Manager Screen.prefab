@@ -1979,7 +1979,9 @@ MonoBehaviour:
   eventRequestPawns: {fileID: 11400000, guid: 7e40f085e98f43b42ba5aa83c084bb24, type: 2}
   eventCreatePlayerPawn: {fileID: 11400000, guid: 7347478efb72f4749a79dbb5cfd902c8,
     type: 2}
+  eventShowCredits: {fileID: 11400000, guid: 86130fb011bbfa5438ea656e220659cc, type: 2}
   pawnsContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
+  animationSettings: {fileID: 11400000, guid: 68bb1e74e88b5c148a86a76e97ae0227, type: 2}
 --- !u!114 &2322508254749188470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5147,7 +5149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7004648009695754456
 RectTransform:
   m_ObjectHideFlags: 0

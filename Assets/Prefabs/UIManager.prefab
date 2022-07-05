@@ -199,6 +199,8 @@ GameObject:
   - component: {fileID: 6588873183743567962}
   - component: {fileID: 6588873183743567963}
   - component: {fileID: 202660922758898206}
+  - component: {fileID: 8450258494262929707}
+  - component: {fileID: 332682653720391512}
   m_Layer: 5
   m_Name: UIManager
   m_TagString: Untagged
@@ -265,7 +267,63 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Dices Results
+          m_StringArgument: Dices Results Panel
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8450258494262929707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588873183743567960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 86130fb011bbfa5438ea656e220659cc, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6588873183743567963}
+        m_TargetAssemblyTypeName: System.UI.UIManager, Assembly-CSharp
+        m_MethodName: RequestScreen
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Credits Screen
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &332682653720391512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588873183743567960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 0e51282b2d222c647959e4bdb7d83dc7, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6588873183743567963}
+        m_TargetAssemblyTypeName: System.UI.UIManager, Assembly-CSharp
+        m_MethodName: RequestScreen
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Room Manager Screen
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &7729404526744669228

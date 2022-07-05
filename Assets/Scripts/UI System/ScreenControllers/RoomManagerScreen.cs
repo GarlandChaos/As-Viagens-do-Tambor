@@ -26,9 +26,11 @@ namespace System.UI
         List<string> adressesFoundList;
         bool connectedToHost = false;
         [SerializeField]
-        GameEvent eventRequestPawns, eventCreatePlayerPawn;
+        GameEvent eventRequestPawns, eventCreatePlayerPawn, eventShowCredits;
         [SerializeField]
         PawnContainer pawnsContainer = null;
+        [SerializeField]
+        InterpolationSettings animationSettings = null;
 
         private void Awake()
         {
@@ -54,7 +56,7 @@ namespace System.UI
 
         private void OnEnable()
         {
-            MyNetworkDiscovery.instance.Initialize();
+            //MyNetworkDiscovery.instance.Initialize();
             createOrSearchRoomDialog.gameObject.SetActive(true);
             createRoomDialog.gameObject.SetActive(false);
             waitingForPlayersDialog.gameObject.SetActive(false);
@@ -121,10 +123,10 @@ namespace System.UI
             }
         }
 
-        public void GoToCreateRoomScreen()
+        public async void GoToCreateRoomScreen()
         {
             createOrSearchRoomDialog.gameObject.SetActive(false);
-            createRoomDialog.gameObject.SetActive(true);
+            await OpenScreenAnimation(createRoomDialog);
             foreach (Pawn p in pawnsContainer._Pawns)
             {
                 CardTemplatePawn ct = Instantiate(prefabCardTemplatePawn);
@@ -133,28 +135,28 @@ namespace System.UI
             }
         }
 
-        public void GoToSelectRoomScreen()
+        public async void GoToSelectRoomScreen()
         {
             createOrSearchRoomDialog.gameObject.SetActive(false);
-            selectRoomDialog.gameObject.SetActive(true);
+            await OpenScreenAnimation(selectRoomDialog);
             MyNetworkDiscovery.instance.StartAsClient();
         }
 
-        public void CreateRoomAndPlay()
+        public async void CreateRoomAndPlay()
         {
-            createRoomDialog.gameObject.SetActive(false);
-            waitingForPlayersDialog.gameObject.SetActive(true);
+            await CloseScreenAnimation(createRoomDialog);
+            await OpenScreenAnimation(waitingForPlayersDialog);
             MyNetworkDiscovery.instance.broadcastData = roomNameInputField.text;
             MyNetworkDiscovery.instance.StartAsServer();
             NetworkManager.Singleton.StartHost();
             eventCreatePlayerPawn.Raise();
         }
 
-        public void EnterRoom()
+        public async void EnterRoom()
         {
-            selectRoomDialog.gameObject.SetActive(false);
+            await CloseScreenAnimation(selectRoomDialog);
             //send an RPC
-            enterRoomDialog.gameObject.SetActive(true);
+            await OpenScreenAnimation(enterRoomDialog);
             NetworkManager.Singleton.StartClient();
             StartCoroutine(RequestPawnsCoroutine());
         }
@@ -202,7 +204,8 @@ namespace System.UI
 
         public void OnCreditsScreen()
         {
-            //show credits screen
+            Hide();
+            eventShowCredits.Raise();
         }
 
         public void OnQuitGame()
@@ -222,6 +225,41 @@ namespace System.UI
                 yield return new WaitForEndOfFrame();
                 eventRequestPawns.Raise();
             }
+        }
+
+        IEnumerator OpenScreenAnimation(RectTransform screen)
+        {
+            screen.gameObject.SetActive(true);
+            WaitForEndOfFrame wait = new WaitForEndOfFrame();
+            float timer = 0f;
+            Vector3 startScale = screen.localScale;
+            startScale.y = 0;
+            Vector3 endScale = screen.localScale;
+
+            while (timer < 1f)
+            {
+                timer += Time.deltaTime / animationSettings._Duration;
+                screen.localScale = Vector3.Lerp(startScale, endScale, animationSettings._Curve.Evaluate(timer));
+                yield return wait;
+            }
+        }
+
+        IEnumerator CloseScreenAnimation(RectTransform screen)
+        {
+            WaitForEndOfFrame wait = new WaitForEndOfFrame();
+            float timer = 0f;
+            Vector3 startScale = screen.localScale;
+            Vector3 endScale = screen.localScale;
+            endScale.y = 0;
+
+            while (timer < 1f)
+            {
+                timer += Time.deltaTime / animationSettings._Duration;
+                screen.localScale = Vector3.Lerp(startScale, endScale, animationSettings._Curve.Evaluate(timer));
+                yield return wait;
+            }
+
+            screen.gameObject.SetActive(false);
         }
     }
 }

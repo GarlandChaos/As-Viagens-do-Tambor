@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 5460524607106295999}
   - component: {fileID: 6042841561531979021}
   m_Layer: 5
-  m_Name: Dices Results
+  m_Name: Dices Results Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

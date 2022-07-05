@@ -26,14 +26,10 @@ public class MyNetworkDiscovery : NetworkDiscovery
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
-        Debug.Log("Received broadcast from: " + fromAddress + " with the data: " + data);
         if (!addresses.ContainsKey(fromAddress))
         {
             addresses.Add(fromAddress, data);
-            //addresses.Add("143.54.201.27", "teste");
-            //addresses.Add("143.54.201.28", "teste2");
             emitterUpdateRooms.EmitEvent();
         }
-        //MLAPI.NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = fromAddress;
     }
 }

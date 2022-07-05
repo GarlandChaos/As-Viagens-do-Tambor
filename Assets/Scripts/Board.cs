@@ -20,7 +20,7 @@ public class Board : MonoBehaviour
 
     //Inspector references
     public List<Place> places;
-    public Material pathMat, finalBoardSpaceMat, localMat, boardSpaceMat;
+    //public Material pathMat, finalBoardSpaceMat, localMat, boardSpaceMat;
     public BoardSpace initialSpace;
 
     //Runtime fields
@@ -70,15 +70,16 @@ public class Board : MonoBehaviour
     {
         foreach (Queue<BoardSpace> q in pathList)
         {
-            int i = 0;
+            //int i = 0;
             foreach (BoardSpace b in q)
             {
-                SpriteRenderer bSpriteRenderer = b.GetComponent<SpriteRenderer>();
-                if (i < q.Count - 1)
-                    bSpriteRenderer.color = pathMat.color;
-                else
-                    bSpriteRenderer.color = finalBoardSpaceMat.color;
-                i++;
+                //SpriteRenderer bSpriteRenderer = b.GetComponent<SpriteRenderer>();
+                //if (i < q.Count - 1)
+                //    bSpriteRenderer.color = pathMat.color;
+                //else
+                //    bSpriteRenderer.color = finalBoardSpaceMat.color;
+                //i++;
+                b.marker.SetActive(true);
             }
         }
     }
@@ -88,7 +89,7 @@ public class Board : MonoBehaviour
         foreach (Queue<BoardSpace> q in pathList)
         {
             foreach (BoardSpace b in q)
-                b.GetComponent<SpriteRenderer>().color = localMat.color;
+                b.marker.SetActive(false);  //b.GetComponent<SpriteRenderer>().color = localMat.color;
         }
         pathList.Clear();
     }
@@ -130,7 +131,7 @@ public class Board : MonoBehaviour
             foreach (BoardSpace b in q)
             {
                 if (!path.Contains(b))
-                    b.GetComponent<SpriteRenderer>().color = localMat.color;
+                    b.marker.SetActive(false); //b.GetComponent<SpriteRenderer>().color = localMat.color;
             }
         }
     }
