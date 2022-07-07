@@ -21,6 +21,7 @@ using UnityEngine;
 //Change turns
 //Move Pawn
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class Player : NetworkBehaviour
 {
     //Runtime fields
@@ -32,7 +33,8 @@ public class Player : NetworkBehaviour
         cardPracticeList = new List<Card>(),
         cardPlaceList = new List<Card>(),
         discardedCardList = new List<Card>();
-    Pawn playerPawn;
+    //Pawn playerPawn;
+    public BoardSpace currentBoardSpace;
 
     //Serialized fields
     [SerializeField]
@@ -46,9 +48,13 @@ public class Player : NetworkBehaviour
         eventWin,
         eventLose,
         eventDisplayDiceResults;
+    [SerializeField]
+    SpriteRenderer spriteRenderer = null;
+    [SerializeField]
+    PawnContainer pawnContainer = null;
 
     //Properties
-    public Pawn _PlayerPawn { set { playerPawn = value; } }
+    //public Pawn _PlayerPawn { set { playerPawn = value; } }
     public List<Card> _CardPersonList { get => cardPersonList; }
     public List<Card> _CardPracticeList { get => cardPracticeList; }
     public List<Card> _CardPlaceList { get => cardPlaceList; }
@@ -81,6 +87,18 @@ public class Player : NetworkBehaviour
         ReadPermission = NetworkVariablePermission.Everyone
     }, false);
 
+    public NetworkVariableVector3 networkPosition = new NetworkVariableVector3(new NetworkVariableSettings
+    {
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    });
+
+    public NetworkVariableString pawnName = new NetworkVariableString(new NetworkVariableSettings
+    {
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    });
+
     private void Awake()
     {
         listPeopleIds.OnListChanged += AddPersonCardToListById;
@@ -88,6 +106,7 @@ public class Player : NetworkBehaviour
         listPracticesIds.OnListChanged += AddPracticeCardToListById;
         discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
         isMyTurn.OnValueChanged += OnMyTurnValueChanged;
+        pawnName.OnValueChanged += OnPawnNameValueChanged;
     }
 
     private void OnDestroy()
@@ -97,12 +116,23 @@ public class Player : NetworkBehaviour
         listPracticesIds.OnListChanged -= AddPracticeCardToListById;
         discardedCardsIds.OnListChanged -= AddDiscardedCardToListById;
         isMyTurn.OnValueChanged -= OnMyTurnValueChanged;
+        pawnName.OnValueChanged -= OnPawnNameValueChanged;
     }
 
     private void Start()
     {
-        if (!IsServer && playerPawn == null && transform.childCount > 0)
-            playerPawn = GetComponentInChildren<Pawn>();
+        //if (!IsServer && playerPawn == null && transform.childCount > 0)
+        //    playerPawn = GetComponentInChildren<Pawn>();
+
+        //COMEÇO GAMBIARRA
+        Board.instance.gameObject.SetActive(true);
+        //FIM GAMBIARRA
+
+        currentBoardSpace = Board.instance.initialSpace;
+
+        //COMEÇO GAMBIARRA
+        Board.instance.gameObject.SetActive(false);
+        //FIM GAMBIARRA
     }
 
     public override void NetworkStart()
@@ -119,6 +149,8 @@ public class Player : NetworkBehaviour
         
         if (!IsServer && IsOwner)
             RequestEnvelopeCardsServerRpc();
+
+        networkPosition.Value = transform.position;
     }
 
     public void AddToCardLists(Card card)
@@ -166,7 +198,7 @@ public class Player : NetworkBehaviour
         if (isMyTurn.Value && IsOwner)
         {
             if (Dices._Dice1Result != Dices._Dice2Result)
-                eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, playerPawn.currentBoardSpace);
+                eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, currentBoardSpace);
             else
                 eventRequestExtraCard.Raise();
         }
@@ -190,16 +222,43 @@ public class Player : NetworkBehaviour
         }
     }
 
-    void CreatePlayerPawn()
+    public void SetPlayerPawn(ulong clientID, string pawnName)
     {
-        if (IsOwner)
+        //CreatePlayerPawnServerRPC(clientID, pawnName);
+        if (OwnerClientId == clientID)
         {
-            if (IsServer)
-                playerPawn = InstantiatePawn(GameManager.instance.clientPawn, new Vector3(-0.5f, 0f, 0f), NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.transform);
-            else
-                SpawnClientPawnServerRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name); //precisa ser feito no servidor o primeiro instanciamento
+            //if (IsServer)
+            //    playerPawn = InstantiatePawn(GameManager.instance.clientPawn, new Vector3(-0.5f, 0f, 0f), NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.transform);
+            //else
+            //    SpawnClientPawnServerRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name); //precisa ser feito no servidor o primeiro instanciamento
+
+            Debug.Log("Calling on clientID " + clientID + " with pawnName: " + pawnName);
+            this.pawnName.Value = pawnName;
+            //Debug.Log("Should've set to " + GameManager.instance.clientPawn.spritePawn);
         }
     }
+
+    //[ServerRpc]
+    //void CreatePlayerPawnServerRPC(ulong clientID, string pawnName)
+    //{
+    //    CreatePlayerPawnClientRPC(clientID, pawnName);
+    //}
+
+    //[ClientRpc]
+    //void CreatePlayerPawnClientRPC(ulong clientID, string pawnName)
+    //{
+    //    Debug.Log("Called CreatePlayerPawn");
+    //    if (OwnerClientId == clientID)
+    //    {
+    //        //if (IsServer)
+    //        //    playerPawn = InstantiatePawn(GameManager.instance.clientPawn, new Vector3(-0.5f, 0f, 0f), NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.transform);
+    //        //else
+    //        //    SpawnClientPawnServerRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name); //precisa ser feito no servidor o primeiro instanciamento
+
+    //        this.pawnName.Value = pawnName;
+    //        //Debug.Log("Should've set to " + GameManager.instance.clientPawn.spritePawn);
+    //    }
+    //}
 
     public void OnRequestPawns()
     {
@@ -264,8 +323,8 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     void SpawnClientPawnServerRpc(ulong clientID, string clientPawn)
     {
-        playerPawn = InstantiatePawn(GameManager.instance.GetPawnByName(clientPawn), new Vector3(1f, 0f, 0f), transform);
-        playerPawn.SetClientParentClientRpc(clientID);
+        //playerPawn = InstantiatePawn(GameManager.instance.GetPawnByName(clientPawn), new Vector3(1f, 0f, 0f), transform);
+        //playerPawn.SetClientParentClientRpc(clientID);
     }
 
     Pawn InstantiatePawn(Pawn pawn, Vector3 positionOffset, Transform parent)
@@ -331,6 +390,12 @@ public class Player : NetworkBehaviour
         }
     }
 
+    void OnPawnNameValueChanged(string previous, string current)
+    {
+        Debug.Log("previous: " + previous + " current: " + current);
+        spriteRenderer.sprite = pawnContainer.GetPawnByName(pawnName.Value).spritePawn;
+    }
+
     public void RequestPlayerToSendDiscardCardEvents()
     {
         SendDiscardCardEventsClientRpc();
@@ -350,18 +415,19 @@ public class Player : NetworkBehaviour
 
     public void SendStartGameRPC()
     {
-        if (!IsServer && IsOwner) //apenas quando não for servidor, ou seja, quando é garantido que tenha dois jogadores
-            StartGameWithTwoPlayersServerRpc();
+        if (IsServer && IsOwner)
+            if (NetworkManager.Singleton.ConnectedClientsList.Count < 5)
+                StartGameClientRpc();
     }
 
-    [ServerRpc]
-    void StartGameWithTwoPlayersServerRpc()
-    {
-        StartGameWithTwoPlayersClientRpc();
-    }
+    //[ServerRpc]
+    //void StartGameServerRpc()
+    //{
+        
+    //}
 
     [ClientRpc]
-    void StartGameWithTwoPlayersClientRpc()
+    void StartGameClientRpc()
     {
         eventStartGame.Raise();
     }
@@ -396,7 +462,7 @@ public class Player : NetworkBehaviour
         if (isMyTurn.Value && IsOwner)
         {
             BoardSpace goal = Board.instance.GetPlaceByEnum(extraCard.placeToGo);
-            MovePawn(AStar.CalculatePathToPlace(playerPawn.currentBoardSpace, goal), extraCard.askIfWantToGuess);
+            MovePawn(AStar.CalculatePathToPlace(currentBoardSpace, goal), extraCard.askIfWantToGuess);
         }
     }
 
@@ -409,8 +475,8 @@ public class Player : NetworkBehaviour
             if (!GameManager.instance._RegisterPlayerLock)
             {
                 GameManager.instance.RegisterPlayer(this);
-                if (!IsServer && IsOwner) //mudar aqui para iniciar com mais players
-                    StartGameWithTwoPlayersServerRpc();
+                //if (!IsServer && IsOwner) //mudar aqui para iniciar com mais players
+                //    StartGameWithTwoPlayersServerRpc();
             }
             else
                 StartCoroutine(WaitToRegisterCoroutine());
@@ -424,14 +490,14 @@ public class Player : NetworkBehaviour
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
         AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
         float timer = 0f;
-        Vector3 startPos = playerPawn.transform.position;
+        Vector3 startPos = transform.position;
         BoardSpace bs = path.Dequeue();
         Vector3 endPos = bs.transform.position;
 
         while (timer < 1f)
         {
             timer += Time.deltaTime * 2f;
-            playerPawn.transform.position = Vector3.Lerp(startPos, endPos, curve.Evaluate(timer));
+            transform.position = Vector3.Lerp(startPos, endPos, curve.Evaluate(timer));
             
             yield return wait;
         }
@@ -440,7 +506,7 @@ public class Player : NetworkBehaviour
             StartCoroutine(MoveCoroutine(path, askIfWantToGuess));
         else
         {
-            playerPawn.currentBoardSpace = bs;
+            currentBoardSpace = bs;
             if (IsOwner)
             {
                 eventEndOfMove.Raise();

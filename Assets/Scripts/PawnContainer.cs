@@ -9,4 +9,15 @@ public class PawnContainer : ScriptableObject
     List<Pawn> pawns = new List<Pawn>();
 
     public List<Pawn> _Pawns { get => pawns; }
+
+    public Pawn GetPawnByName(string pawnName)
+    {
+        foreach(Pawn p in pawns)
+        {
+            if (p.name == pawnName)
+                return p;
+        }
+
+        return null;
+    }
 }

@@ -17,7 +17,9 @@ namespace System.UI
         [SerializeField]
         TMP_InputField playerNameCreateInputField, roomNameInputField, playerNameSearchInputField;
         [SerializeField]
-        Button createRoomPlayButton, enterRoomPlayButton;
+        Button createRoomPlayButton, enterRoomPlayButton, playGameButton;
+        [SerializeField]
+        TMP_Text numberOfPlayersConnectedText = null;
         [SerializeField]
         CardTemplatePawn prefabCardTemplatePawn;
         [SerializeField]
@@ -26,7 +28,7 @@ namespace System.UI
         List<string> adressesFoundList;
         bool connectedToHost = false;
         [SerializeField]
-        GameEvent eventRequestPawns, eventCreatePlayerPawn, eventShowCredits;
+        GameEvent eventRequestPawns, eventCreatePlayerPawn, eventShowCredits, eventReadyToPlay;
         [SerializeField]
         PawnContainer pawnsContainer = null;
         [SerializeField]
@@ -51,6 +53,9 @@ namespace System.UI
             if (enterRoomPlayButton != null)
                 enterRoomPlayButton.interactable = false;
 
+            if (playGameButton != null)
+                playGameButton.interactable = false;
+
             adressesFoundList = new List<string>();
         }
 
@@ -67,8 +72,19 @@ namespace System.UI
 
         private void OnDisable()
         {
+            if(NetworkManager.Singleton != null)
+                NetworkManager.Singleton.OnClientConnectedCallback -= Singleton_OnClientConnectedCallback;
+
             if (MyNetworkDiscovery.instance.running)
                 MyNetworkDiscovery.instance.StopBroadcast();
+        }
+
+        private void Singleton_OnClientConnectedCallback(ulong obj)
+        {
+            int playersCount = NetworkManager.Singleton.ConnectedClients.Count;
+            numberOfPlayersConnectedText.text = playersCount.ToString() + "/4";
+            if (playersCount > 1 && playersCount < 5)
+                playGameButton.interactable = true;
         }
 
         public void SetSelectedPawn(Pawn pawn)
@@ -142,43 +158,45 @@ namespace System.UI
             MyNetworkDiscovery.instance.StartAsClient();
         }
 
-        public async void CreateRoomAndPlay()
+        public async void CreateRoom()
         {
             await CloseScreenAnimation(createRoomDialog);
             await OpenScreenAnimation(waitingForPlayersDialog);
             MyNetworkDiscovery.instance.broadcastData = roomNameInputField.text;
             MyNetworkDiscovery.instance.StartAsServer();
             NetworkManager.Singleton.StartHost();
-            eventCreatePlayerPawn.Raise();
+            NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
+            eventCreatePlayerPawn.Raise(NetworkManager.Singleton.LocalClientId, selectedPawn.name);
         }
 
         public async void EnterRoom()
         {
             await CloseScreenAnimation(selectRoomDialog);
-            //send an RPC
             await OpenScreenAnimation(enterRoomDialog);
             NetworkManager.Singleton.StartClient();
             StartCoroutine(RequestPawnsCoroutine());
         }
 
+        public void HostPlay()
+        {
+            eventReadyToPlay.Raise();
+            Hide();
+        }
+
         public void ClientPlay()
         {
-            eventCreatePlayerPawn.Raise();
+            eventCreatePlayerPawn.Raise(NetworkManager.Singleton.LocalClientId, selectedPawn.name);
             Hide();
         }
 
         void CreateRoomInputChange()
         {
             if (!createRoomPlayButton.interactable && playerNameCreateInputField.text.Length > 0 && roomNameInputField.text.Length > 0 && selectedPawn != null)
-            {
                 createRoomPlayButton.interactable = true;
-            }
             else if (
                 (createRoomPlayButton.interactable && playerNameCreateInputField.text.Length == 0) ||
                 (createRoomPlayButton.interactable && roomNameInputField.text.Length == 0))
-            {
                 createRoomPlayButton.interactable = false;
-            }
         }
 
         void EnterRoomInputChange()

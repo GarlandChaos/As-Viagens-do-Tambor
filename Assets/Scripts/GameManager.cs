@@ -222,10 +222,7 @@ public class GameManager : MonoBehaviour
             listPlayers.Add(player); //precisa gerenciar quando um jogador desconecta, provavelmente usar delegate para decadastrar
             
             if (listPlayers.Count == 1)
-            {
-                //player.isMyTurn.Value = true;
                 playerCanInteract = true;
-            }
             else if(listPlayers.Count == 2 && NetworkManager.Singleton.IsServer)
                 OrganizeCards();
 
@@ -235,6 +232,12 @@ public class GameManager : MonoBehaviour
 
     void OrganizeCards()
     {
+
+        //foreach (MLAPI.Connection.NetworkClient c in NetworkManager.Singleton.ConnectedClientsList)
+        //{
+        //    Debug.Log("Client " + c.ClientId + " with PlayerObject " + c.PlayerObject + " has " + c.OwnedObjects.Count + " objects");
+        //}
+
         peopleCardContainer._Cards = ShuffleList(peopleCardContainer._Cards);
         practicesCardContainer._Cards = ShuffleList(practicesCardContainer._Cards);
         placesCardContainer._Cards = ShuffleList(placesCardContainer._Cards);
@@ -461,7 +464,7 @@ public class GameManager : MonoBehaviour
 
     public void OnStartGame()
     {
-        UIManager.instance.RequestScreen("Room Manager Screen", false);
+        //UIManager.instance.RequestScreen("Room Manager Screen", false);
         UIManager.instance.RequestScreen("Status Panel", true);
         UIManager.instance.RequestScreen("Notes", true);
         boardGO.SetActive(true);
