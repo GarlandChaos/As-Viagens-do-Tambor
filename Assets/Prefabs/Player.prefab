@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 3120880717654898214}
   - component: {fileID: 1274651921785696640}
   - component: {fileID: 7569817381000206538}
+  - component: {fileID: 5553864226894468007}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -55,11 +56,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: -1
   canRollDices: 0
-  playerPawn: {fileID: 0}
   eventRequestPaths: {fileID: 11400000, guid: 7b3ff6ae19684254991e6526eb4879d6, type: 2}
   eventRequestExtraCard: {fileID: 11400000, guid: 6e8cb5207fd1b7441bc5f092bdfb2ee5,
     type: 2}
-  eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
   eventAskIfWantToGuess: {fileID: 11400000, guid: e8ed097c9ccdb3b4d8b85785960d1e77,
     type: 2}
   eventEndOfMove: {fileID: 11400000, guid: 3a102db6f43d17f4ebe770237ef2a7e8, type: 2}
@@ -72,10 +71,6 @@ MonoBehaviour:
   eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
   eventDisplayDiceResults: {fileID: 11400000, guid: 59c362c29ef511d47b89e22522489b8a,
     type: 2}
-  cardPersonList: []
-  cardPracticeList: []
-  cardPlaceList: []
-  discardedCardList: []
   isMyTurn:
     m_InternalValue: 0
 --- !u!114 &2936002786673998453
@@ -350,6 +345,34 @@ MonoBehaviour:
       - m_Target: {fileID: 6819681765602089541}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: ChangePlayerTurn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5553864226894468007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: f009a0ca7187afc4d9beab19fd8f2d52, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnActUponDiceResults
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

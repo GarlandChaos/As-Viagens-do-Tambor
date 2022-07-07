@@ -69,17 +69,6 @@ public class GameManager : MonoBehaviour
         //boardGO.SetActive(false);
     }
 
-    //TEMP CODE
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Dices.RollDices();
-            UIManager.instance.RequestScreen("Dices Results");
-        }
-    }
-    //END TEMP CODE
-
     public void FillEnvelope(int person, int practice, int place)
     {
         envelope[0] = peopleCardContainer._Cards.SingleOrDefault(obj => obj.id == person);
@@ -234,15 +223,12 @@ public class GameManager : MonoBehaviour
             
             if (listPlayers.Count == 1)
             {
-                player.isMyTurn.Value = true;
+                //player.isMyTurn.Value = true;
                 playerCanInteract = true;
-                if (player.IsOwner)
-                    player.canRollDices = true;
             }
             else if(listPlayers.Count == 2 && NetworkManager.Singleton.IsServer)
-            {
                 OrganizeCards();
-            }
+
             registerPlayerLock = false;
         }
     }
@@ -289,20 +275,15 @@ public class GameManager : MonoBehaviour
 
     void ChangePlayerTurn()
     {
-        listPlayers[turnPlayer].isMyTurn.Value = false;
+        listPlayers[turnPlayer].isMyTurn.Value = false; //mudança ocorre duas vezes porque é uma NetworkVariable
         
         if (turnPlayer < listPlayers.Count - 1)
             turnPlayer++;
         else
             turnPlayer = 0;
 
-        listPlayers[turnPlayer].isMyTurn.Value = true;
-        bool isOwner = listPlayers[turnPlayer].IsOwner;
-        
-        if (isOwner)
-            listPlayers[turnPlayer].canRollDices = true;
-        
-        eventUpdateStatusPanel.Raise(isOwner);
+        listPlayers[turnPlayer].isMyTurn.Value = true; //mudança ocorre duas vezes porque é uma NetworkVariable            
+        eventUpdateStatusPanel.Raise(listPlayers[turnPlayer].IsOwner);
     }
 
     public void OnRequestExtraCard()
@@ -334,6 +315,7 @@ public class GameManager : MonoBehaviour
 
     public void OnChangePlayerTurn()
     {
+        Debug.Log("Called OnChangePlayerTurn");
         ChangePlayerTurn();
     }
 
@@ -484,5 +466,6 @@ public class GameManager : MonoBehaviour
         UIManager.instance.RequestScreen("Notes", true);
         boardGO.SetActive(true);
         eventUpdateStatusPanel.Raise(listPlayers[turnPlayer].IsOwner);
+        listPlayers[turnPlayer].isMyTurn.Value = true;
     }
 }

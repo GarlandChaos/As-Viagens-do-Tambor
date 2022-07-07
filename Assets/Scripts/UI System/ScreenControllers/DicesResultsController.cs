@@ -15,6 +15,14 @@ namespace System.UI
         Image imageDice2 = null;
         [SerializeField]
         Sprite[] diceFacesSprites = new Sprite[6];
+        [SerializeField]
+        GameObject buttonRollDice = null;
+        [SerializeField]
+        GameObject panelDice1 = null;
+        [SerializeField]
+        GameObject panelDice2 = null;
+        [SerializeField]
+        GameEvent eventActUponDiceResults = null;
 
         //Runtime field
         Dictionary<int, Sprite> diceFaceSpriteDictionary = new Dictionary<int, Sprite>();
@@ -27,7 +35,18 @@ namespace System.UI
 
         private void OnEnable()
         {
-            StartCoroutine(AnimateDicesResults());
+            buttonRollDice.SetActive(true);
+            panelDice1.SetActive(false);
+            panelDice2.SetActive(false);
+        }
+
+        public async void OnRollDiceButton()
+        {
+            buttonRollDice.SetActive(false);
+            panelDice1.SetActive(true);
+            panelDice2.SetActive(true);
+            await AnimateDicesResults();
+            eventActUponDiceResults.Raise();
         }
 
         IEnumerator AnimateDicesResults()

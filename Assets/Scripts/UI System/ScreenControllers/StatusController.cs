@@ -11,7 +11,7 @@ namespace System.UI
         public void OnUpdateStatusPanel(bool isOwnerTurn)
         {
             if (isOwnerTurn)
-                textStatus.text = "Sua vez! Aperte R para rolar os dados.";
+                textStatus.text = "Sua vez! Role os dados.";
             else
                 textStatus.text = "Aguardando o outro jogador...";
         }

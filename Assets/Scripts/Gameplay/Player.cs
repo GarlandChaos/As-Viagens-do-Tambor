@@ -79,15 +79,15 @@ public class Player : NetworkBehaviour
     {
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
-    });
+    }, false);
 
     private void Awake()
     {
-        isMyTurn.Value = false;
         listPeopleIds.OnListChanged += AddPersonCardToListById;
         listPlacesIds.OnListChanged += AddPlaceCardToListById;
         listPracticesIds.OnListChanged += AddPracticeCardToListById;
         discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
+        isMyTurn.OnValueChanged += OnMyTurnValueChanged;
     }
 
     private void OnDestroy()
@@ -96,6 +96,7 @@ public class Player : NetworkBehaviour
         listPlacesIds.OnListChanged -= AddPlaceCardToListById;
         listPracticesIds.OnListChanged -= AddPracticeCardToListById;
         discardedCardsIds.OnListChanged -= AddDiscardedCardToListById;
+        isMyTurn.OnValueChanged -= OnMyTurnValueChanged;
     }
 
     private void Start()
@@ -118,15 +119,6 @@ public class Player : NetworkBehaviour
         
         if (!IsServer && IsOwner)
             RequestEnvelopeCardsServerRpc();
-    }
-
-    void Update()
-    {
-        if (isMyTurn.Value && IsOwner && canRollDices)
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-                RollDices();
-        }
     }
 
     public void AddToCardLists(Card card)
@@ -167,11 +159,17 @@ public class Player : NetworkBehaviour
         Dices.RollDices();
         canRollDices = false;
         eventDisplayDiceResults.Raise();
+    }
 
-        if (Dices._Dice1Result != Dices._Dice2Result)
-            eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, playerPawn.currentBoardSpace);
-        else
-            eventRequestExtraCard.Raise();
+    public void OnActUponDiceResults()
+    {
+        if (isMyTurn.Value && IsOwner)
+        {
+            if (Dices._Dice1Result != Dices._Dice2Result)
+                eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, playerPawn.currentBoardSpace);
+            else
+                eventRequestExtraCard.Raise();
+        }
     }
 
     public void OnFinalBoardSpacePressed(Queue<BoardSpace> path)
@@ -319,6 +317,18 @@ public class Player : NetworkBehaviour
         Card c = GameManager.instance.GetCardByID(changeEvent.Value);
         if (!discardedCardList.Contains(c))
             discardedCardList.Add(c);
+    }
+
+    void OnMyTurnValueChanged(bool previous, bool current)
+    {
+        if (!previous)
+        {
+            if (IsOwner && !canRollDices)
+                canRollDices = true;
+
+            if (isMyTurn.Value && IsOwner && canRollDices)
+                RollDices();
+        }
     }
 
     public void RequestPlayerToSendDiscardCardEvents()

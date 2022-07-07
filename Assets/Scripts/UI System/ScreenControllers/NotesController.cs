@@ -10,6 +10,10 @@ namespace System.UI
         List<NoteCard> noteCards = new List<NoteCard>();
         [SerializeField]
         Button notePanel = null;
+        [SerializeField]
+        RectTransform arrowIndicator1 = null;
+        [SerializeField]
+        RectTransform arrowIndicator2 = null;
         bool hidden = true;
         [SerializeField]
         GameEvent eventPlayerCanInteract = null, eventPlayerCannotInteract = null;
@@ -37,6 +41,17 @@ namespace System.UI
             StartCoroutine(ShowOrHideCoroutine(rt));
         }
 
+        void FlipImage(RectTransform image)
+        {
+            Vector3 newPos = image.anchoredPosition;
+            newPos.x = newPos.x == 0 ? image.sizeDelta.x : 0;
+            image.anchoredPosition = newPos;
+
+            Vector3 newScale = image.localScale;
+            newScale.x = -newScale.x;
+            image.localScale = newScale;
+        }
+
         IEnumerator ShowOrHideCoroutine(RectTransform rt)
         {
             notePanel.interactable = false;
@@ -52,11 +67,17 @@ namespace System.UI
             {
                 endPos = new Vector3(-x, startPos.y, startPos.z);
                 hidden = false;
+
+                FlipImage(arrowIndicator1);
+                FlipImage(arrowIndicator2);
             }
             else
             {
                 endPos = new Vector3(x - 120f, startPos.y, startPos.z);
                 hidden = true;
+
+                FlipImage(arrowIndicator1);
+                FlipImage(arrowIndicator2);
             }
 
             Vector3 delta = endPos - startPos;
