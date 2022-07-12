@@ -126,6 +126,8 @@ MonoBehaviour:
   eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
   eventDisplayDiceResults: {fileID: 11400000, guid: 59c362c29ef511d47b89e22522489b8a,
     type: 2}
+  eventUpdateAvailablePawns: {fileID: 11400000, guid: 657a6347b8b79984091e8afca6173351,
+    type: 2}
   spriteRenderer: {fileID: 3963900548354619676}
   pawnContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   isMyTurn:

@@ -5,6 +5,7 @@ using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using MLAPI.NetworkVariable.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 //Has an id
 //Has a pawn
@@ -38,16 +39,17 @@ public class Player : NetworkBehaviour
 
     //Serialized fields
     [SerializeField]
-    GameEvent eventRequestPaths, 
-        eventRequestExtraCard,
-        eventAskIfWantToGuess, 
-        eventEndOfMove, 
-        eventChangePlayerTurn, 
-        eventStartGame, 
-        eventSendServerPawnToRoomManager,
-        eventWin,
-        eventLose,
-        eventDisplayDiceResults;
+    GameEvent eventRequestPaths = null,
+        eventRequestExtraCard = null,
+        eventAskIfWantToGuess = null,
+        eventEndOfMove = null,
+        eventChangePlayerTurn = null,
+        eventStartGame = null,
+        eventSendServerPawnToRoomManager = null,
+        eventWin = null,
+        eventLose = null,
+        eventDisplayDiceResults = null,
+        eventUpdateAvailablePawns = null;
     [SerializeField]
     SpriteRenderer spriteRenderer = null;
     [SerializeField]
@@ -263,7 +265,7 @@ public class Player : NetworkBehaviour
     public void OnRequestPawns()
     {
         if (!IsServer && IsOwner)
-            RequestPawnsServerRpc(NetworkManager.Singleton.LocalClientId);
+            RequestPawnsServerRpc();
     }
 
     [ServerRpc]
@@ -306,25 +308,37 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc]
-    void RequestPawnsServerRpc(ulong clientID)
+    void RequestPawnsServerRpc()
     {
-        CreatePawnCardsClientRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name);       
+        //CreatePawnCardsClientRpc(GameManager.instance.clientPawn.name);       
+        CreatePawnCardsClientRpc(GetPlayersPawnNames());       
     }
 
     [ClientRpc]
-    void CreatePawnCardsClientRpc(ulong serverID, string serverPawn)
+    void CreatePawnCardsClientRpc(string[] pawnNames)
     {
         if (IsServer)
             return;
 
-        eventSendServerPawnToRoomManager.Raise(serverPawn);
+        eventSendServerPawnToRoomManager.Raise(pawnNames);
     }
 
-    [ServerRpc]
-    void SpawnClientPawnServerRpc(ulong clientID, string clientPawn)
+    //[ServerRpc]
+    //void SpawnClientPawnServerRpc(ulong clientID, string clientPawn)
+    //{
+    //    //playerPawn = InstantiatePawn(GameManager.instance.GetPawnByName(clientPawn), new Vector3(1f, 0f, 0f), transform);
+    //    //playerPawn.SetClientParentClientRpc(clientID);
+    //}
+
+    string[] GetPlayersPawnNames()
     {
-        //playerPawn = InstantiatePawn(GameManager.instance.GetPawnByName(clientPawn), new Vector3(1f, 0f, 0f), transform);
-        //playerPawn.SetClientParentClientRpc(clientID);
+        string[] pawnNames = new string[NetworkManager.Singleton.ConnectedClientsList.Count];
+        List<MLAPI.Connection.NetworkClient> clientList = NetworkManager.Singleton.ConnectedClientsList;
+        
+        for (int i = 0; i < clientList.Count; i++)
+            pawnNames[i] = clientList[i].PlayerObject.GetComponent<Player>().pawnName.Value;
+
+        return pawnNames;
     }
 
     Pawn InstantiatePawn(Pawn pawn, Vector3 positionOffset, Transform parent)
@@ -392,8 +406,12 @@ public class Player : NetworkBehaviour
 
     void OnPawnNameValueChanged(string previous, string current)
     {
-        Debug.Log("previous: " + previous + " current: " + current);
-        spriteRenderer.sprite = pawnContainer.GetPawnByName(pawnName.Value).spritePawn;
+        //Debug.Log("previous: " + previous + " current: " + current);
+        if(!string.IsNullOrEmpty(current))
+            spriteRenderer.sprite = pawnContainer.GetPawnByName(pawnName.Value).spritePawn;
+
+        if (IsOwner)
+            eventUpdateAvailablePawns.Raise(GetPlayersPawnNames());
     }
 
     public void RequestPlayerToSendDiscardCardEvents()

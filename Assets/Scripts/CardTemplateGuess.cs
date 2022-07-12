@@ -12,21 +12,11 @@ public class CardTemplateGuess : CardTemplate
     {
         if(card.type != CardType.place)
         {
-            Debug.Log("Clicou em : " + card.name);
             if (card.type == CardType.person)
-            {
                 guessScreen.SetSelectedPersonCard(card);
-            }
             else if (card.type == CardType.practice)
-            {
                 guessScreen.SetSelectedPracticeCard(card);
-            }
         }
-        else
-        {
-            Debug.Log("Clicou em : " + card.name + " porém já está definido o card de lugar.");
-        }
-
     }
 
     public void Setup(GuessScreenController g, Card c)

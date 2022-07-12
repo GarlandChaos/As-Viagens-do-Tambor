@@ -11,33 +11,31 @@ namespace System.UI
 {
     public class RoomManagerScreen : APanelController
     {
+        //Inspector reference fields
         [SerializeField]
-        RectTransform createOrSearchRoomDialog, createRoomDialog, waitingForPlayersDialog, selectRoomDialog, enterRoomDialog,
-                      createRoomPawnContainer, enterRoomPawnContainer;
+        RectTransform mainMenuDialog = null, createRoomDialog = null, waitingForPlayersDialog = null, selectRoomDialog = null, selectRoomDialogBG = null, enterRoomDialog = null,
+                      createRoomPawnContainer = null, enterRoomPawnContainer = null;
         [SerializeField]
-        TMP_InputField playerNameCreateInputField, roomNameInputField, playerNameSearchInputField;
+        TMP_InputField playerNameCreateInputField = null, roomNameInputField = null, playerNameSearchInputField = null;
         [SerializeField]
-        Button createRoomPlayButton, enterRoomPlayButton, playGameButton;
+        Button createRoomPlayButton = null, backToMainMenuButton = null, enterRoomPlayButton = null, playGameButton = null;
         [SerializeField]
         TMP_Text numberOfPlayersConnectedText = null;
         [SerializeField]
-        CardTemplatePawn prefabCardTemplatePawn;
+        List<CardTemplatePawn> enterRoomCardTemplatePawnList = new List<CardTemplatePawn>();
         [SerializeField]
-        GameObject roomTemplatePrefab;
-        Pawn selectedPawn;
-        List<string> adressesFoundList;
-        bool connectedToHost = false;
+        GameObject roomTemplatePrefab = null;
         [SerializeField]
         GameEvent eventRequestPawns, eventCreatePlayerPawn, eventShowCredits, eventReadyToPlay;
         [SerializeField]
-        PawnContainer pawnsContainer = null;
-        [SerializeField]
         InterpolationSettings animationSettings = null;
+
+        Pawn selectedPawn = null;
+        List<string> adressesFoundList = new List<string>();
+        bool connectedToHost = false;
 
         private void Awake()
         {
-            MyNetworkDiscovery.instance.Initialize();
-
             if (playerNameCreateInputField != null)
                 playerNameCreateInputField.onValueChanged.AddListener(delegate { CreateRoomInputChange(); });
 
@@ -55,19 +53,19 @@ namespace System.UI
 
             if (playGameButton != null)
                 playGameButton.interactable = false;
-
-            adressesFoundList = new List<string>();
         }
 
         private void OnEnable()
         {
-            //MyNetworkDiscovery.instance.Initialize();
-            createOrSearchRoomDialog.gameObject.SetActive(true);
+            mainMenuDialog.gameObject.SetActive(true);
             createRoomDialog.gameObject.SetActive(false);
             waitingForPlayersDialog.gameObject.SetActive(false);
             selectRoomDialog.gameObject.SetActive(false);
             enterRoomDialog.gameObject.SetActive(false);
             selectedPawn = null;
+            
+            foreach (CardTemplatePawn ctp in enterRoomCardTemplatePawnList)
+                ctp.gameObject.SetActive(true);
         }
 
         private void OnDisable()
@@ -83,6 +81,7 @@ namespace System.UI
         {
             int playersCount = NetworkManager.Singleton.ConnectedClients.Count;
             numberOfPlayersConnectedText.text = playersCount.ToString() + "/4";
+            
             if (playersCount > 1 && playersCount < 5)
                 playGameButton.interactable = true;
         }
@@ -111,17 +110,10 @@ namespace System.UI
                         GameObject go = Instantiate(roomTemplatePrefab);
                         RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
                         RectTransform goRT = go.GetComponent<RectTransform>();
+                        
                         if (roomTemplate != null)
                         {
-                            float sizeIncrement = i * goRT.rect.size.y;
-                            float margin = i * 10f;
-                            if (i > 0)
-                                selectRoomDialog.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, selectRoomDialog.sizeDelta.y + goRT.rect.size.y + 10f);
-
-                            go.transform.SetParent(selectRoomDialog, false);
-                            goRT.anchoredPosition = new Vector2(
-                                goRT.anchoredPosition.x,
-                                goRT.anchoredPosition.y - sizeIncrement - margin);
+                            go.transform.SetParent(selectRoomDialogBG, false);
                             roomTemplate.SetRoomName(kvp.Value);
                             roomTemplate.GetPlayButton().interactable = false;
                             roomTemplate.GetPlayButton().onClick.AddListener(
@@ -136,24 +128,30 @@ namespace System.UI
                     }
                     i++;
                 }
+                backToMainMenuButton.transform.SetAsLastSibling();
             }
+        }
+
+        public async void OnBackToMainMenuScreen()
+        {
+            if (MyNetworkDiscovery.instance.running)
+                MyNetworkDiscovery.instance.StopBroadcast();
+
+            await CloseScreenAnimation(selectRoomDialog);
+            await OpenScreenAnimation(mainMenuDialog);
         }
 
         public async void GoToCreateRoomScreen()
         {
-            createOrSearchRoomDialog.gameObject.SetActive(false);
+            MyNetworkDiscovery.instance.Initialize();
+            mainMenuDialog.gameObject.SetActive(false);
             await OpenScreenAnimation(createRoomDialog);
-            foreach (Pawn p in pawnsContainer._Pawns)
-            {
-                CardTemplatePawn ct = Instantiate(prefabCardTemplatePawn);
-                ct.Setup(this, p);
-                ct.transform.SetParent(createRoomPawnContainer, false);
-            }
         }
 
         public async void GoToSelectRoomScreen()
         {
-            createOrSearchRoomDialog.gameObject.SetActive(false);
+            MyNetworkDiscovery.instance.Initialize();
+            mainMenuDialog.gameObject.SetActive(false);
             await OpenScreenAnimation(selectRoomDialog);
             MyNetworkDiscovery.instance.StartAsClient();
         }
@@ -207,16 +205,19 @@ namespace System.UI
                 enterRoomPlayButton.interactable = false;
         }
 
-        public void OnSendServerPawnToRoomManager(string serverPawn)
+        public void OnSendAvailablePawnsToRoomManager(string[] pawnNames)
         {
-            foreach (Pawn p in pawnsContainer._Pawns) //menos o peão do host!
+            foreach (CardTemplatePawn ctp in enterRoomCardTemplatePawnList)
             {
-                if (p.name != serverPawn)
+                bool uniqueName = true;
+                foreach(string s in pawnNames)
                 {
-                    CardTemplatePawn ct = Instantiate(prefabCardTemplatePawn);
-                    ct.Setup(this, p);
-                    ct.transform.SetParent(enterRoomPawnContainer, false);
+                    if (ctp._PawnName == s)
+                        uniqueName = false;
                 }
+
+                if (!uniqueName)
+                    ctp.gameObject.SetActive(false);
             }
         }
 
@@ -252,7 +253,7 @@ namespace System.UI
             float timer = 0f;
             Vector3 startScale = screen.localScale;
             startScale.y = 0;
-            Vector3 endScale = screen.localScale;
+            Vector3 endScale = Vector3.one;
 
             while (timer < 1f)
             {
@@ -266,7 +267,7 @@ namespace System.UI
         {
             WaitForEndOfFrame wait = new WaitForEndOfFrame();
             float timer = 0f;
-            Vector3 startScale = screen.localScale;
+            Vector3 startScale = Vector3.one;
             Vector3 endScale = screen.localScale;
             endScale.y = 0;
 

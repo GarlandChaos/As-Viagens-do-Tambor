@@ -9,7 +9,7 @@ using MLAPI.NetworkVariable;
 public class Pawn : NetworkBehaviour
 {
     public string namePawn;
-    public BoardSpace currentBoardSpace;
+    //public BoardSpace currentBoardSpace;
     public Sprite spritePawn;
     //public NetworkVariableVector3 networkPosition = new NetworkVariableVector3(new NetworkVariableSettings
     //{

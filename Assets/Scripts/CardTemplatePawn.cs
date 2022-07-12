@@ -6,20 +6,27 @@ using System.UI;
 
 public class CardTemplatePawn : MonoBehaviour
 {
-    RoomManagerScreen roomManagerScreen;
+    //Inspector reference fields
     [SerializeField]
     Image pawnImage;
+    [SerializeField]
     Pawn pawn;
+    [SerializeField]
+    RoomManagerScreen roomManagerScreen;
+
+    //Properties
+    public string _PawnName { get => pawn.name; }
 
     public void CardSelect()
     {
         roomManagerScreen.SetSelectedPawn(pawn);
     }
 
-    public void Setup(RoomManagerScreen r, Pawn p)
+#if UNITY_EDITOR
+    private void OnValidate()
     {
-        pawn = p;
-        pawnImage.sprite = p.spritePawn;
-        roomManagerScreen = r;
+        if (pawn != null)
+            pawnImage.sprite = pawn.spritePawn;
     }
+#endif
 }
