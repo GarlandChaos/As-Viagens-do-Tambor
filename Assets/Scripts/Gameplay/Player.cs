@@ -34,7 +34,7 @@ public class Player : NetworkBehaviour
         cardPracticeList = new List<Card>(),
         cardPlaceList = new List<Card>(),
         discardedCardList = new List<Card>();
-    //Pawn playerPawn;
+    [HideInInspector]
     public BoardSpace currentBoardSpace;
 
     //Serialized fields
@@ -56,7 +56,6 @@ public class Player : NetworkBehaviour
     PawnContainer pawnContainer = null;
 
     //Properties
-    //public Pawn _PlayerPawn { set { playerPawn = value; } }
     public List<Card> _CardPersonList { get => cardPersonList; }
     public List<Card> _CardPracticeList { get => cardPracticeList; }
     public List<Card> _CardPlaceList { get => cardPlaceList; }
@@ -88,28 +87,18 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     }, false);
-
+    [HideInInspector]
     public NetworkVariableVector3 networkPosition = new NetworkVariableVector3(new NetworkVariableSettings
     {
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
-
+    [HideInInspector]
     public NetworkVariableString pawnName = new NetworkVariableString(new NetworkVariableSettings
     {
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
-
-    private void Awake()
-    {
-        listPeopleIds.OnListChanged += AddPersonCardToListById;
-        listPlacesIds.OnListChanged += AddPlaceCardToListById;
-        listPracticesIds.OnListChanged += AddPracticeCardToListById;
-        discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
-        isMyTurn.OnValueChanged += OnMyTurnValueChanged;
-        pawnName.OnValueChanged += OnPawnNameValueChanged;
-    }
 
     private void OnDestroy()
     {
@@ -121,10 +110,23 @@ public class Player : NetworkBehaviour
         pawnName.OnValueChanged -= OnPawnNameValueChanged;
     }
 
+    private void Singleton_OnClientDisconnectCallback(ulong obj) //not working!!!
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
+        Debug.Log("Disconnected prefab from client: " + obj);
+
+        //Destroy(gameObject);
+    }
+
     private void Start()
     {
-        //if (!IsServer && playerPawn == null && transform.childCount > 0)
-        //    playerPawn = GetComponentInChildren<Pawn>();
+        listPeopleIds.OnListChanged += AddPersonCardToListById;
+        listPlacesIds.OnListChanged += AddPlaceCardToListById;
+        listPracticesIds.OnListChanged += AddPracticeCardToListById;
+        discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
+        isMyTurn.OnValueChanged += OnMyTurnValueChanged;
+        pawnName.OnValueChanged += OnPawnNameValueChanged;
+        NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
 
         //COMEÇO GAMBIARRA
         Board.instance.gameObject.SetActive(true);
@@ -226,41 +228,9 @@ public class Player : NetworkBehaviour
 
     public void SetPlayerPawn(ulong clientID, string pawnName)
     {
-        //CreatePlayerPawnServerRPC(clientID, pawnName);
         if (OwnerClientId == clientID)
-        {
-            //if (IsServer)
-            //    playerPawn = InstantiatePawn(GameManager.instance.clientPawn, new Vector3(-0.5f, 0f, 0f), NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.transform);
-            //else
-            //    SpawnClientPawnServerRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name); //precisa ser feito no servidor o primeiro instanciamento
-
-            Debug.Log("Calling on clientID " + clientID + " with pawnName: " + pawnName);
             this.pawnName.Value = pawnName;
-            //Debug.Log("Should've set to " + GameManager.instance.clientPawn.spritePawn);
-        }
     }
-
-    //[ServerRpc]
-    //void CreatePlayerPawnServerRPC(ulong clientID, string pawnName)
-    //{
-    //    CreatePlayerPawnClientRPC(clientID, pawnName);
-    //}
-
-    //[ClientRpc]
-    //void CreatePlayerPawnClientRPC(ulong clientID, string pawnName)
-    //{
-    //    Debug.Log("Called CreatePlayerPawn");
-    //    if (OwnerClientId == clientID)
-    //    {
-    //        //if (IsServer)
-    //        //    playerPawn = InstantiatePawn(GameManager.instance.clientPawn, new Vector3(-0.5f, 0f, 0f), NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.transform);
-    //        //else
-    //        //    SpawnClientPawnServerRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name); //precisa ser feito no servidor o primeiro instanciamento
-
-    //        this.pawnName.Value = pawnName;
-    //        //Debug.Log("Should've set to " + GameManager.instance.clientPawn.spritePawn);
-    //    }
-    //}
 
     public void OnRequestPawns()
     {
@@ -310,7 +280,6 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     void RequestPawnsServerRpc()
     {
-        //CreatePawnCardsClientRpc(GameManager.instance.clientPawn.name);       
         CreatePawnCardsClientRpc(GetPlayersPawnNames());       
     }
 
@@ -322,13 +291,6 @@ public class Player : NetworkBehaviour
 
         eventSendServerPawnToRoomManager.Raise(pawnNames);
     }
-
-    //[ServerRpc]
-    //void SpawnClientPawnServerRpc(ulong clientID, string clientPawn)
-    //{
-    //    //playerPawn = InstantiatePawn(GameManager.instance.GetPawnByName(clientPawn), new Vector3(1f, 0f, 0f), transform);
-    //    //playerPawn.SetClientParentClientRpc(clientID);
-    //}
 
     string[] GetPlayersPawnNames()
     {
@@ -406,7 +368,6 @@ public class Player : NetworkBehaviour
 
     void OnPawnNameValueChanged(string previous, string current)
     {
-        //Debug.Log("previous: " + previous + " current: " + current);
         if(!string.IsNullOrEmpty(current))
             spriteRenderer.sprite = pawnContainer.GetPawnByName(pawnName.Value).spritePawn;
 
@@ -438,11 +399,24 @@ public class Player : NetworkBehaviour
                 StartGameClientRpc();
     }
 
-    //[ServerRpc]
-    //void StartGameServerRpc()
-    //{
-        
-    //}
+    public void DisconnectPlayer()
+    {
+        if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            //MyNetworkDiscovery.instance.StopBroadcast();
+            //NetworkManager.Singleton.StopClient(); 
+            DisconnectPlayerServerRPC(NetworkManager.Singleton.LocalClientId);
+            //NetworkManager.Singleton.NetworkConfig.NetworkTransport.Shutdown();
+            //NetworkManager.Singleton.Shutdown();
+        }
+    }
+
+    [ServerRpc]
+    public void DisconnectPlayerServerRPC(ulong clientID)
+    {
+        //if (IsServer && IsOwner)
+            NetworkManager.Singleton.DisconnectClient(clientID); Debug.Log("Disconnected client: " + clientID);
+    }
 
     [ClientRpc]
     void StartGameClientRpc()
@@ -491,11 +465,7 @@ public class Player : NetworkBehaviour
         if(GameManager.instance != null)
         {
             if (!GameManager.instance._RegisterPlayerLock)
-            {
                 GameManager.instance.RegisterPlayer(this);
-                //if (!IsServer && IsOwner) //mudar aqui para iniciar com mais players
-                //    StartGameWithTwoPlayersServerRpc();
-            }
             else
                 StartCoroutine(WaitToRegisterCoroutine());
         }

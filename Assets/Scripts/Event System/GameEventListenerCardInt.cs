@@ -26,6 +26,11 @@ public class GameEventListenerCardInt : MonoBehaviour, IGameEventListenerCardInt
         gameEvent.UnregisterListener(this);
     }
 
+    private void OnDestroy()
+    {
+        gameEvent.UnregisterListener(this);
+    }
+
     public void OnEventRaised()
     {
         Debug.Log("Cannot use this version");

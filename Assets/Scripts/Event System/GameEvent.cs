@@ -88,12 +88,6 @@ public class GameEvent : ScriptableObject
                 continue;
             }
 
-            //IGameEventListenerFloat listenerFloat = listeners[i] as IGameEventListenerFloat;
-            //if (listenerFloat != null)
-            //{
-            //    listenerFloat.OnEventRaised((float)args[0]);
-            //    continue;
-            //}
             listeners[i].OnEventRaised();
         }
     }

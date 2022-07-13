@@ -8025,51 +8025,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DontDestroy: 1
   RunInBackground: 1
-  LogLevel: 1
+  LogLevel: 0
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1405857821}
     RegisteredScenes:
-    - SampleScene
     - GameplayScene
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 6819681765602089542, guid: c7fd04ff0c162c14ab9cdd9dd17bc93b,
         type: 3}
       PlayerPrefab: 1
-    - Prefab: {fileID: 8086397070506978306, guid: c06184e5659bf004d851bf253f2b7d98,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: 1e6b97106d4eec24196632ab638e584e,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: fd107ef90e34e7b4f962ff69f436c6fb,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: b90b792c5d9f9e14fa52167f953914b5,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: cd194c7c0fbd5bf418896d8f328bdced,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: df0d7aa53f529924e910b922b2934666,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: 6fd24a373fc430b45871871b5612a242,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: 75c474cca0ff17c42863be2c7605d22b,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: ea0e3405c1da92a48b4828071b88f440,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: d71eb2a78df70d74f8c7b60c00c3b3ce,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: b61d5ac7d06fb3f48948a9b5c47d31a9,
-        type: 3}
-      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
     CreatePlayerPrefab: 1

@@ -464,7 +464,7 @@ public class GameManager : MonoBehaviour
 
     public void OnStartGame()
     {
-        //UIManager.instance.RequestScreen("Room Manager Screen", false);
+        UIManager.instance.RequestScreen("Room Manager Screen", false);
         UIManager.instance.RequestScreen("Status Panel", true);
         UIManager.instance.RequestScreen("Notes", true);
         boardGO.SetActive(true);

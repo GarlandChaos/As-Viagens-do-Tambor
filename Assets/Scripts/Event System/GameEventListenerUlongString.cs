@@ -26,6 +26,11 @@ public class GameEventListenerUlongString : MonoBehaviour, IGameEventListenerUlo
         gameEvent.UnregisterListener(this);
     }
 
+    private void OnDestroy()
+    {
+        gameEvent.UnregisterListener(this);
+    }
+
     public void OnEventRaised()
     {
         Debug.Log("Cannot use this version");
