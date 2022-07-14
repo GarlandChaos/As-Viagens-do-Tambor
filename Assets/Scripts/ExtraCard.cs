@@ -20,10 +20,10 @@ public enum Effect
 [CreateAssetMenu]
 public class ExtraCard : Card
 {
-    public string description;
-    public Effect effect;
-    public PlaceName placeToGo;
-    public bool askIfWantToGuess;
+    public string description = null;
+    public Effect effect = Effect.reroll;
+    public PlaceName placeToGo = PlaceName.None;
+    public bool askIfWantToGuess = false;
 
     ExtraCard()
     {

@@ -8,11 +8,11 @@ public class CardTemplatePawn : MonoBehaviour
 {
     //Inspector reference fields
     [SerializeField]
-    Image pawnImage;
+    Image pawnImage = null;
     [SerializeField]
-    Pawn pawn;
+    Pawn pawn = null;
     [SerializeField]
-    RoomManagerScreen roomManagerScreen;
+    RoomManagerScreen roomManagerScreen = null;
 
     //Properties
     public string _PawnName { get => pawn.name; }

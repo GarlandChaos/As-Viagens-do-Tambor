@@ -7,16 +7,19 @@ namespace System.UI
 {
     public class NotesController : APanelController
     {
-        List<NoteCard> noteCards = new List<NoteCard>();
+        //Inspector reference fields
         [SerializeField]
         Button notePanel = null;
         [SerializeField]
         RectTransform arrowIndicator1 = null;
         [SerializeField]
         RectTransform arrowIndicator2 = null;
-        bool hidden = true;
         [SerializeField]
         GameEvent eventPlayerCanInteract = null, eventPlayerCannotInteract = null;
+
+        //Runtime fields
+        List<NoteCard> noteCards = new List<NoteCard>();
+        bool hidden = true;
 
         private void Awake()
         {

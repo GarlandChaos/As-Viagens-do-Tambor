@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6819681765602089541}
   - component: {fileID: 2936002786673998453}
   - component: {fileID: 6819681765602089547}
-  - component: {fileID: 8715247539427629639}
   - component: {fileID: 7819250624989035976}
   - component: {fileID: 558523179026005749}
   - component: {fileID: 7025939271702575821}
@@ -109,7 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8383716a3a4d51740a1b23c601642a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: -1
   canRollDices: 0
   currentBoardSpace: {fileID: 0}
   eventRequestPaths: {fileID: 11400000, guid: 7b3ff6ae19684254991e6526eb4879d6, type: 2}
@@ -128,6 +126,9 @@ MonoBehaviour:
   eventDisplayDiceResults: {fileID: 11400000, guid: 59c362c29ef511d47b89e22522489b8a,
     type: 2}
   eventUpdateAvailablePawns: {fileID: 11400000, guid: 657a6347b8b79984091e8afca6173351,
+    type: 2}
+  eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
+  eventUpdateStatusPanel: {fileID: 11400000, guid: d31db058477ca2243a41d223375c4cf6,
     type: 2}
   spriteRenderer: {fileID: 3963900548354619676}
   pawnContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
@@ -174,34 +175,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: OnFinalBoardSpacePressed
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &8715247539427629639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6819681765602089542}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 7347478efb72f4749a79dbb5cfd902c8, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: CreatePlayerPawn
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

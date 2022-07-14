@@ -23,17 +23,6 @@ public class MyNetworkDiscovery : NetworkDiscovery
             Destroy(gameObject);
     }
 
-    private void Start()
-    {
-        StartCoroutine(InitializeCoroutine());
-    }
-
-    private void OnApplicationQuit()
-    {
-        //MLAPI.NetworkManager.Singleton.NetworkConfig.NetworkTransport.Shutdown();
-        //MLAPI.NetworkManager.Singleton.Shutdown();
-    }
-
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
         if (!addresses.ContainsKey(fromAddress))
@@ -41,12 +30,5 @@ public class MyNetworkDiscovery : NetworkDiscovery
             addresses.Add(fromAddress, data);
             emitterUpdateRooms.EmitEvent();
         }
-    }
-
-    IEnumerator InitializeCoroutine()
-    {
-        yield return new WaitForEndOfFrame();
-        //MLAPI.NetworkManager.Singleton.NetworkConfig.NetworkTransport.Init();
-        //Initialize();
     }
 }

@@ -6,6 +6,7 @@ namespace System.UI
 {
     public class ExtraCardScreenController : ADialogController
     {
+        //Inspector reference fields
         [SerializeField]
         Image rtExtraCardContainer = null;
         [SerializeField]

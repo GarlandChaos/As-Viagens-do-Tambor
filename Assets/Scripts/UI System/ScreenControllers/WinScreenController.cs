@@ -4,12 +4,13 @@ namespace System.UI
 {
     public class WinScreenController : ADialogController
     {
+        //Inspector reference fields
         [SerializeField]
-        CardTemplate prefabCardTemplate;
+        CardTemplate prefabCardTemplate = null;
         [SerializeField]
-        RectTransform rtCardContainer;
+        RectTransform rtCardContainer = null;
         [SerializeField]
-        GameEvent eventCloseWinScreen;
+        GameEvent eventCloseWinScreen = null;
 
         public void OnEnable()
         {

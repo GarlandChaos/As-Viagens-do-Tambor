@@ -6,10 +6,11 @@ using TMPro;
 
 public class RoomUITemplate : MonoBehaviour
 {
+    //Inspector reference fields
     [SerializeField]
-    TMP_Text roomNameText;
+    TMP_Text roomNameText = null;
     [SerializeField]
-    Button playButton;
+    Button playButton = null;
 
     public void SetRoomName(string s)
     {
@@ -20,16 +21,4 @@ public class RoomUITemplate : MonoBehaviour
     {
         return playButton;
     }
-
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 }

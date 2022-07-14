@@ -6,7 +6,7 @@ using System.UI;
 
 public class CardTemplateGuess : CardTemplate
 {
-    GuessScreenController guessScreen;
+    GuessScreenController guessScreen = null;
 
     public void CardSelect()
     {

@@ -102,7 +102,6 @@ namespace System.UI
         public void SetSelectedPawn(Pawn pawn)
         {
             selectedPawn = pawn;
-            GameManager.instance.clientPawn = pawn;
 
             if (createRoomDialog.gameObject.activeSelf)
                 CreateRoomInputChange();
@@ -112,47 +111,29 @@ namespace System.UI
 
         public void FillRoomsTemplates()
         {
-            GameObject go = Instantiate(roomTemplatePrefab);
-            RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
-
-            if (roomTemplate != null)
+            if (MyNetworkDiscovery.instance.addresses.Count > 0)
             {
-                go.transform.SetParent(selectRoomDialogBG, false);
-                roomTemplate.SetRoomName("Minha salinha");
-                roomTemplate.GetPlayButton().interactable = false;
-                roomTemplate.GetPlayButton().onClick.AddListener(
-                delegate
+                foreach (KeyValuePair<string, string> kvp in MyNetworkDiscovery.instance.addresses)
                 {
-                    NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1";
-                    EnterRoom();
-                });
-                roomTemplate.GetPlayButton().interactable = true;
+                    GameObject go = Instantiate(roomTemplatePrefab);
+                    RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
+
+                    if (roomTemplate != null)
+                    {
+                        go.transform.SetParent(selectRoomDialogBG, false);
+                        roomTemplate.SetRoomName(kvp.Value);
+                        roomTemplate.GetPlayButton().interactable = false;
+                        roomTemplate.GetPlayButton().onClick.AddListener(
+                        delegate
+                        {
+                            NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = kvp.Key;
+                            EnterRoom();
+                        });
+                        roomTemplate.GetPlayButton().interactable = true;
+                    }
+                }
+                backToMainMenuButton.transform.SetAsLastSibling();
             }
-            backToMainMenuButton.transform.SetAsLastSibling();
-
-            //if (MyNetworkDiscovery.instance.addresses.Count > 0)
-            //{
-            //    foreach (KeyValuePair<string, string> kvp in MyNetworkDiscovery.instance.addresses)
-            //    {
-            //        GameObject go = Instantiate(roomTemplatePrefab);
-            //        RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
-
-            //        if (roomTemplate != null)
-            //        {
-            //            go.transform.SetParent(selectRoomDialogBG, false);
-            //            roomTemplate.SetRoomName(kvp.Value);
-            //            roomTemplate.GetPlayButton().interactable = false;
-            //            roomTemplate.GetPlayButton().onClick.AddListener(
-            //            delegate
-            //            {
-            //                NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = kvp.Key;
-            //                EnterRoom();
-            //            });
-            //            roomTemplate.GetPlayButton().interactable = true;
-            //        }
-            //    }
-            //    backToMainMenuButton.transform.SetAsLastSibling();
-            //}
         }
 
         public async void OnBackToMainMenuScreen(RectTransform currentScreen)
@@ -160,7 +141,8 @@ namespace System.UI
             foreach (RoomTemplate rt in selectRoomDialogBG.GetComponentsInChildren<RoomTemplate>())
                 Destroy(rt.gameObject);
 
-            //MyNetworkDiscovery.instance.addresses.Clear();
+            MyNetworkDiscovery.instance.addresses.Clear();
+            MyNetworkDiscovery.instance.StopBroadcast();
 
             eventBackToMainMenu.Raise();
             await CloseScreenAnimation(currentScreen);
@@ -178,21 +160,22 @@ namespace System.UI
             mainMenuDialog.gameObject.SetActive(false);
             await OpenScreenAnimation(selectRoomDialog);
             FillRoomsTemplates();
-            
-            //if (!MyNetworkDiscovery.instance.running)
-            //    MyNetworkDiscovery.instance.StartAsClient();
+
+            MyNetworkDiscovery.instance.Initialize();    
+            MyNetworkDiscovery.instance.StartAsClient();
         }
 
         public async void CreateRoom()
         {
             await CloseScreenAnimation(createRoomDialog);
             await OpenScreenAnimation(waitingForPlayersDialog);
-            
-            //MyNetworkDiscovery.instance.broadcastData = roomNameInputField.text;
-            //MyNetworkDiscovery.instance.StartAsServer();
+
+            MyNetworkDiscovery.instance.Initialize();
+            MyNetworkDiscovery.instance.broadcastData = roomNameInputField.text;
+            MyNetworkDiscovery.instance.StartAsServer();
             
             NetworkManager.Singleton.StartHost();
-            
+
             eventCreatePlayerPawn.Raise(NetworkManager.Singleton.LocalClientId, selectedPawn.name);
         }
 
@@ -202,6 +185,7 @@ namespace System.UI
             await OpenScreenAnimation(enterRoomDialog);
 
             NetworkManager.Singleton.StartClient();
+            
             StartCoroutine(RequestPawnsCoroutine());
         }
 

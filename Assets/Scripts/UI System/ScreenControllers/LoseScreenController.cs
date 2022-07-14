@@ -6,12 +6,13 @@ namespace System.UI
 {
     public class LoseScreenController : ADialogController
     {
+        //Inspector reference fields
         [SerializeField]
-        CardTemplate prefabCardTemplate;
+        CardTemplate prefabCardTemplate = null;
         [SerializeField]
-        RectTransform rtCardContainer;
+        RectTransform rtCardContainer = null;
         [SerializeField]
-        GameEvent eventCloseLoseScreen;
+        GameEvent eventCloseLoseScreen = null;
 
         public void OnEnable()
         {

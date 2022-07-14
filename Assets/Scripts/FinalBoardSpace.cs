@@ -5,9 +5,9 @@ using UnityEngine;
 public class FinalBoardSpace : MonoBehaviour
 {
     [SerializeField]
-    GameEvent eventFinalBoardSpaceSelected, eventFinalBoardSpaceDeselected, eventFinalBoardSpacePressed;
+    GameEvent eventFinalBoardSpaceSelected = null, eventFinalBoardSpaceDeselected = null, eventFinalBoardSpacePressed = null;
     [SerializeField]
-    Queue<BoardSpace> completePath;
+    Queue<BoardSpace> completePath = new Queue<BoardSpace>();
 
     public static FinalBoardSpace Attach(GameObject go, GameEvent fbSelected, GameEvent fbDeselected, GameEvent fbPressed, Queue<BoardSpace> path)
     {
@@ -28,24 +28,18 @@ public class FinalBoardSpace : MonoBehaviour
     private void OnMouseEnter()
     {
         if (GameManager.instance._PlayerCanInteract)
-        {
             eventFinalBoardSpaceSelected.Raise(completePath);
-        }
     }
 
     private void OnMouseExit()
     {
         if (GameManager.instance._PlayerCanInteract)
-        {
             eventFinalBoardSpaceDeselected.Raise();
-        }
     }
 
     private void OnMouseDown()
     {
         if (GameManager.instance._PlayerCanInteract)
-        {
             eventFinalBoardSpacePressed.Raise(completePath);
-        }
     }
 }

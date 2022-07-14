@@ -2,12 +2,13 @@
 
 namespace System.UI
 {
+    [DisallowMultipleComponent]
     public class UIManager : MonoBehaviour
     {
         //Singleton
         public static UIManager instance { get; set; }
 
-        //Inspector references
+        //Inspector reference fields
         [SerializeField]
         UISettings settings;
         [SerializeField]

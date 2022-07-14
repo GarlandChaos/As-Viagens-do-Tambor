@@ -8,19 +8,23 @@ namespace System.UI
 {
     public class GuessScreenController : ADialogController
     {
+        //Inspector reference fields
         [SerializeField]
-        Button buttonSendGuess;
+        Button buttonSendGuess = null;
         [SerializeField]
-        RectTransform rtAskIfWantToGuess, rtGuess, rtPlaceContainer, rtPeopleContainer, rtPracticesContainer, rtWaiting, rtConfirmGuess, rtShowCardFromOtherPlayers, rtShowCardContainer;
+        RectTransform rtAskIfWantToGuess = null, rtGuess = null, rtPlaceContainer = null, rtPeopleContainer = null, 
+            rtPracticesContainer = null, rtWaiting = null, rtConfirmGuess = null, rtShowCardFromOtherPlayers = null, rtShowCardContainer = null;
         [SerializeField]
-        GameEvent eventCloseGuessScreen, eventTryToWinWithGuess;
+        GameEvent eventCloseGuessScreen = null, eventTryToWinWithGuess = null;
         [SerializeField]
-        TMP_Text textShowCard;
+        TMP_Text textShowCard = null;
         [SerializeField]
-        CardTemplate prefabCardTemplate;
+        CardTemplate prefabCardTemplate = null;
         [SerializeField]
-        CardTemplateGuess prefabCardTemplateGuess;
-        Card selectedPersonCard, selectedPracticeCard, selectedPlaceCard;
+        CardTemplateGuess prefabCardTemplateGuess = null;
+        
+        //Runtime fields
+        Card selectedPersonCard = null, selectedPracticeCard = null, selectedPlaceCard = null;
         bool confirmScreen = false;
 
         private void OnEnable()
@@ -45,7 +49,6 @@ namespace System.UI
 
         public void OnYesButton()
         {
-            Debug.Log("Pressed yes button once?");
             CleanCardContainers();
             selectedPersonCard = null;
             selectedPracticeCard = null;

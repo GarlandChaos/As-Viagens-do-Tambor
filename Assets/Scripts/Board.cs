@@ -16,11 +16,11 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     //Singleton
-    public static Board instance;
+    public static Board instance = null;
 
-    //Inspector references
-    public List<Place> places;
-    public BoardSpace initialSpace;
+    //Inspector reference fields
+    public List<Place> places = new List<Place>();
+    public BoardSpace initialSpace =  null;
 
     //Runtime fields
     public List<BoardSpace> spaces = new List<BoardSpace>();
@@ -28,9 +28,9 @@ public class Board : MonoBehaviour
 
     //Serialized fields
     [SerializeField]
-    GameEvent eventFinalBoardSpaceSelected, 
-              eventFinalBoardSpaceDeselected, 
-              eventFinalBoardSpacePressed;
+    GameEvent eventFinalBoardSpaceSelected = null, 
+              eventFinalBoardSpaceDeselected = null, 
+              eventFinalBoardSpacePressed = null;
 
     private void Awake()
     {

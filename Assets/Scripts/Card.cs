@@ -14,7 +14,6 @@ public enum CardType
 public class Card : ScriptableObject
 {
     public int id;
-    //public string name;
     public CardType type;
     public Sprite sprite;
 }

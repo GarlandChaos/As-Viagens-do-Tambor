@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class CardTemplate : MonoBehaviour
 {
     [SerializeField]
-    protected Image imageCard;
-    protected Card card;
+    protected Image imageCard = null;
+    protected Card card = null;
 
     public void Setup(Card c)
     {

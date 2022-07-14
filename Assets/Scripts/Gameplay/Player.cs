@@ -6,6 +6,7 @@ using MLAPI.NetworkVariable;
 using MLAPI.NetworkVariable.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using MLAPI.Transports.UNET;
 
 //Has an id
 //Has a pawn
@@ -27,8 +28,6 @@ public class Player : NetworkBehaviour
 {
     //Runtime fields
     [HideInInspector]
-    public int id = -1;
-    [HideInInspector]
     public bool canRollDices = false;
     List<Card> cardPersonList = new List<Card>(),
         cardPracticeList = new List<Card>(),
@@ -49,7 +48,9 @@ public class Player : NetworkBehaviour
         eventWin = null,
         eventLose = null,
         eventDisplayDiceResults = null,
-        eventUpdateAvailablePawns = null;
+        eventUpdateAvailablePawns = null,
+        eventDiscardCard = null,
+        eventUpdateStatusPanel = null;
     [SerializeField]
     SpriteRenderer spriteRenderer = null;
     [SerializeField]
@@ -100,7 +101,24 @@ public class Player : NetworkBehaviour
         ReadPermission = NetworkVariablePermission.Everyone
     });
 
-    private void OnDestroy()
+    private void Singleton_OnClientDisconnectCallback(ulong obj) //not working!!!
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
+        if(OwnerClientId == obj)
+            Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        listPeopleIds.OnListChanged += AddPersonCardToListById;
+        listPlacesIds.OnListChanged += AddPlaceCardToListById;
+        listPracticesIds.OnListChanged += AddPracticeCardToListById;
+        discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
+        isMyTurn.OnValueChanged += OnMyTurnValueChanged;
+        pawnName.OnValueChanged += OnPawnNameValueChanged;
+    }
+
+    private void OnDisable()
     {
         listPeopleIds.OnListChanged -= AddPersonCardToListById;
         listPlacesIds.OnListChanged -= AddPlaceCardToListById;
@@ -110,22 +128,8 @@ public class Player : NetworkBehaviour
         pawnName.OnValueChanged -= OnPawnNameValueChanged;
     }
 
-    private void Singleton_OnClientDisconnectCallback(ulong obj) //not working!!!
-    {
-        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
-        Debug.Log("Disconnected prefab from client: " + obj);
-
-        //Destroy(gameObject);
-    }
-
     private void Start()
     {
-        listPeopleIds.OnListChanged += AddPersonCardToListById;
-        listPlacesIds.OnListChanged += AddPlaceCardToListById;
-        listPracticesIds.OnListChanged += AddPracticeCardToListById;
-        discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
-        isMyTurn.OnValueChanged += OnMyTurnValueChanged;
-        pawnName.OnValueChanged += OnPawnNameValueChanged;
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
 
         //COMEÇO GAMBIARRA
@@ -140,19 +144,9 @@ public class Player : NetworkBehaviour
     }
 
     public override void NetworkStart()
-    {
-        if (GameManager.instance != null)
-        {
-            if (!GameManager.instance._RegisterPlayerLock)
-                GameManager.instance.RegisterPlayer(this);
-            else
-                StartCoroutine(WaitToRegisterCoroutine()); //RegisterLock is on, starting coroutine.
-        }
-        else
-            StartCoroutine(WaitToRegisterCoroutine()); //GameManager is null, starting coroutine.
-        
-        if (!IsServer && IsOwner)
-            RequestEnvelopeCardsServerRpc();
+    {   
+        //if (!IsServer && IsOwner)
+        //    RequestEnvelopeCardsServerRpc();
 
         networkPosition.Value = transform.position;
     }
@@ -160,29 +154,17 @@ public class Player : NetworkBehaviour
     public void AddToCardLists(Card card)
     {
         if(card.type == CardType.person)
-        {
-            cardPersonList.Add(card);
             listPeopleIds.Add(card.id);
-        }
         else if(card.type == CardType.practice)
-        {
-            cardPracticeList.Add(card);
             listPracticesIds.Add(card.id);
-        }
         else if(card.type == CardType.place)
-        {
-            cardPlaceList.Add(card);
             listPlacesIds.Add(card.id);
-        }
     }
 
     public void AddToDiscardedCards(Card card)
     {
         if (!discardedCardList.Contains(card))
-        {
-            discardedCardList.Add(card);
             discardedCardsIds.Add(card.id);
-        }
     }
 
     public bool IsItADiscardedCard(Card card)
@@ -221,7 +203,7 @@ public class Player : NetworkBehaviour
                 MovePawnClientRpc(Board.instance.GetPathIds(path)); //send client rpc to move
             else
                 MovePawnServerRpc(Board.instance.GetPathIds(path)); //send server rpc to move
-            
+
             StartCoroutine(MoveCoroutine(path, askIfWantToGuess));
         }
     }
@@ -303,60 +285,66 @@ public class Player : NetworkBehaviour
         return pawnNames;
     }
 
-    Pawn InstantiatePawn(Pawn pawn, Vector3 positionOffset, Transform parent)
-    {
-        Pawn p = Instantiate(pawn);
-        p.GetComponent<NetworkObject>().Spawn();
-        p.transform.position += positionOffset;
-        p.transform.SetParent(parent, false);
-        
-        return p;
-    }
+    //[ServerRpc]
+    //void RequestEnvelopeCardsServerRpc()
+    //{
+    //    SendEvelopeCardsClientRpc(GameManager.instance._EnvelopePerson, GameManager.instance._EnvelopePractice, GameManager.instance._EnvelopePlace);
+    //}
 
-    [ServerRpc]
-    void RequestEnvelopeCardsServerRpc()
-    {
-        SendEvelopeCardsClientRpc(GameManager.instance._EnvelopePerson, GameManager.instance._EnvelopePractice, GameManager.instance._EnvelopePlace);
-    }
-
-    [ClientRpc]
-    void SendEvelopeCardsClientRpc(int personID, int practiceID, int placeID)
-    {
-        if (IsServer) return;
-        GameManager.instance.FillEnvelope(personID, practiceID, placeID);
-    }
+    //[ClientRpc]
+    //void SendEvelopeCardsClientRpc(int personID, int practiceID, int placeID)
+    //{
+    //    if (IsServer) return;
+    //    GameManager.instance.FillEnvelope(personID, practiceID, placeID);
+    //}
 
     void AddPersonCardToListById(NetworkListEvent<int> changeEvent)
     {
         Card c = GameManager.instance.GetCardByTypeAndID(CardType.person, changeEvent.Value);
         if (!cardPersonList.Contains(c))
+        {
             cardPersonList.Add(c);
+            if(IsOwner)
+                eventDiscardCard.Raise(c);
+        }
     }
 
     void AddPlaceCardToListById(NetworkListEvent<int> changeEvent)
     {
         Card c = GameManager.instance.GetCardByTypeAndID(CardType.place, changeEvent.Value);
         if (!cardPlaceList.Contains(c))
+        {
             cardPlaceList.Add(c);
+            if (IsOwner)
+                eventDiscardCard.Raise(c);
+        }
     }
 
     void AddPracticeCardToListById(NetworkListEvent<int> changeEvent)
     {
         Card c = GameManager.instance.GetCardByTypeAndID(CardType.practice, changeEvent.Value);
         if (!cardPracticeList.Contains(c))
+        {
             cardPracticeList.Add(c);
+            if (IsOwner)
+                eventDiscardCard.Raise(c);
+        }
     }
 
     void AddDiscardedCardToListById(NetworkListEvent<int> changeEvent)
     {
         Card c = GameManager.instance.GetCardByID(changeEvent.Value);
         if (!discardedCardList.Contains(c))
+        {
             discardedCardList.Add(c);
+            if (IsOwner)
+                eventDiscardCard.Raise(c);
+        }
     }
 
     void OnMyTurnValueChanged(bool previous, bool current)
     {
-        if (!previous)
+        if (current)
         {
             if (IsOwner && !canRollDices)
                 canRollDices = true;
@@ -364,6 +352,10 @@ public class Player : NetworkBehaviour
             if (isMyTurn.Value && IsOwner && canRollDices)
                 RollDices();
         }
+
+        //envia um rpc para atualizar em todos os clientes o status
+        if(IsOwner)
+            eventUpdateStatusPanel.Raise(current);
     }
 
     void OnPawnNameValueChanged(string previous, string current)
@@ -375,40 +367,10 @@ public class Player : NetworkBehaviour
             eventUpdateAvailablePawns.Raise(GetPlayersPawnNames());
     }
 
-    public void RequestPlayerToSendDiscardCardEvents()
-    {
-        SendDiscardCardEventsClientRpc();
-    }
-
-    [ClientRpc]
-    void SendDiscardCardEventsClientRpc()
-    {
-        if (IsServer) 
-            return;
-
-        //cuidar que os cards do envelope estão diferentes para cada jogador.
-        //o server retira o envelope e comunica os clientes.
-        //comunicar o GameManager para disparar os eventos de descarte no bloco de notas
-        GameManager.instance.SendDiscardCardEvents(this);
-    }
-
-    public void SendStartGameRPC()
-    {
-        if (IsServer && IsOwner)
-            if (NetworkManager.Singleton.ConnectedClientsList.Count < 5)
-                StartGameClientRpc();
-    }
-
     public void DisconnectPlayer()
     {
         if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
-        {
-            //MyNetworkDiscovery.instance.StopBroadcast();
-            //NetworkManager.Singleton.StopClient(); 
             DisconnectPlayerServerRPC(NetworkManager.Singleton.LocalClientId);
-            //NetworkManager.Singleton.NetworkConfig.NetworkTransport.Shutdown();
-            //NetworkManager.Singleton.Shutdown();
-        }
     }
 
     [ServerRpc]
@@ -416,6 +378,13 @@ public class Player : NetworkBehaviour
     {
         //if (IsServer && IsOwner)
             NetworkManager.Singleton.DisconnectClient(clientID); Debug.Log("Disconnected client: " + clientID);
+    }
+
+    public void SendStartGameRPC()
+    {
+        if (IsServer && IsOwner)
+            if (NetworkManager.Singleton.ConnectedClientsList.Count < 5)
+                StartGameClientRpc();
     }
 
     [ClientRpc]
@@ -427,19 +396,13 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     void ChangePlayerTurnServerRpc()
     {
-        ChangePlayerTurnClientRpc();
-    }
-
-    [ClientRpc]
-    void ChangePlayerTurnClientRpc()
-    {
         eventChangePlayerTurn.Raise();
     }
 
     public void ChangePlayerTurn()
     {
         if (IsServer && IsOwner)
-            ChangePlayerTurnClientRpc();
+            eventChangePlayerTurn.Raise();
         else if(!IsServer && IsOwner)
             ChangePlayerTurnServerRpc();
     }
@@ -458,21 +421,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    IEnumerator WaitToRegisterCoroutine()
-    {
-        yield return new WaitForSeconds(1f);
-
-        if(GameManager.instance != null)
-        {
-            if (!GameManager.instance._RegisterPlayerLock)
-                GameManager.instance.RegisterPlayer(this);
-            else
-                StartCoroutine(WaitToRegisterCoroutine());
-        }
-        else
-            StartCoroutine(WaitToRegisterCoroutine());
-    }
-
     IEnumerator MoveCoroutine(Queue<BoardSpace> path, bool askIfWantToGuess)
     {
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
@@ -486,7 +434,7 @@ public class Player : NetworkBehaviour
         {
             timer += Time.deltaTime * 2f;
             transform.position = Vector3.Lerp(startPos, endPos, curve.Evaluate(timer));
-            
+
             yield return wait;
         }
 
@@ -509,7 +457,7 @@ public class Player : NetworkBehaviour
                 else
                     ChangePlayerTurn();
 
-                eventDisplayDiceResults.Raise();
+                eventDisplayDiceResults.Raise(); //mudar isso porque só serve para o UIManager desabilitar a UI dos dados
             }
         }
     }
