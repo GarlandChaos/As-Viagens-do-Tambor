@@ -50,7 +50,8 @@ public class Player : NetworkBehaviour
         eventDisplayDiceResults = null,
         eventUpdateAvailablePawns = null,
         eventDiscardCard = null,
-        eventUpdateStatusPanel = null;
+        eventUpdateStatusPanel = null,
+        eventSendCard = null;
     [SerializeField]
     SpriteRenderer spriteRenderer = null;
     [SerializeField]
@@ -412,6 +413,55 @@ public class Player : NetworkBehaviour
         canRollDices = true;
     }
 
+    [ServerRpc]
+    void RequestPlayerCardsServerRPC()
+    {
+        List<Card> cards = GameManager.instance.GetPersonCards();
+        int[] ids = new int[cards.Count];
+        int i = 0;
+        foreach(Card c in cards)
+        {
+            ids[i] = c.id;
+            i++;
+        }
+
+        SendCardsClientRPC(ids);
+    }
+
+    [ServerRpc]
+    void RequestPracticeCardsServerRPC()
+    {
+        List<Card> cards = GameManager.instance.GetPracticeCards();
+        int[] ids = new int[cards.Count];
+        int i = 0;
+        foreach (Card c in cards)
+        {
+            ids[i] = c.id;
+            i++;
+        }
+
+        SendCardsClientRPC(ids);
+    }
+
+    [ClientRpc]
+    void SendCardsClientRPC(int[] ids)
+    {
+        foreach (int i in ids)
+            eventSendCard.Raise(GameManager.instance.GetCardByID(i));
+    }
+
+    public void OnRequestPersonCards()
+    {
+        if (IsOwner)
+            RequestPlayerCardsServerRPC();
+    }
+
+    public void OnRequestPracticeCards()
+    {
+        if (IsOwner)
+            RequestPracticeCardsServerRPC();
+    }
+
     public void MoveToPlaceFromExtraCard(ExtraCard extraCard)
     {
         if (isMyTurn.Value && IsOwner)
@@ -445,7 +495,7 @@ public class Player : NetworkBehaviour
             currentBoardSpace = bs;
             if (IsOwner)
             {
-                eventEndOfMove.Raise();
+                eventEndOfMove.Raise(); //checar quem tá ouvindo esse evento...
                 Place place = bs.GetComponent<Place>();
                 if (place != null)
                 {

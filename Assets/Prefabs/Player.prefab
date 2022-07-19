@@ -24,6 +24,8 @@ GameObject:
   - component: {fileID: 2864375706094465534}
   - component: {fileID: 1165097323352503153}
   - component: {fileID: 6365531079482982527}
+  - component: {fileID: 8294141413536960894}
+  - component: {fileID: 2829808990906145070}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -130,6 +132,7 @@ MonoBehaviour:
   eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
   eventUpdateStatusPanel: {fileID: 11400000, guid: d31db058477ca2243a41d223375c4cf6,
     type: 2}
+  eventSendCard: {fileID: 11400000, guid: 01f966207fd6b484e9ae42bc17ffc2de, type: 2}
   spriteRenderer: {fileID: 3963900548354619676}
   pawnContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   isMyTurn:
@@ -482,6 +485,62 @@ MonoBehaviour:
       - m_Target: {fileID: 6819681765602089541}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: DisconnectPlayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8294141413536960894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 8df2843fe75ef0b49ab0c5ec81f194a8, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnRequestPersonCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2829808990906145070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 72b98ab16ef54e24e90a5976a7673a34, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnRequestPracticeCards
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

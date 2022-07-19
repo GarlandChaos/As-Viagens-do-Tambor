@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject prefabUIManager = null;
     [SerializeField]
-    GameEvent eventShowCardToPlayer = null, eventAskForGuessConfirmation = null, eventShowExtraCard = null, eventSendExtraCardToAskIfWantToGoToPlaceScreen = null;
+    GameEvent eventShowCardToPlayer = null, eventAskForGuessConfirmation = null, eventShowExtraCard = null, eventSendExtraCardToAskIfWantToGoToPlaceScreen = null,
+        eventRequestPersonCards = null, eventRequestPracticeCards = null;
     [SerializeField]
     CardContainer peopleCardContainer = null, 
         practicesCardContainer = null, 
@@ -154,66 +155,57 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //essa função só serve para retornar para GuessScreenController, o(s) Player(s) poderiam retornar diretamente em vez de usar um intermediário
-    public List<Card> GetPersonCards() //quando o jogador puder selecionar quais cartas mostrar, pode repetir cartas já mostradas, é responsabilidade do jogador do turno cuidar para não pedir as mesmas (?)
+    List<Card> GetCardsByType(CardType type)
     {
-        List<Card> personCards = new List<Card>();
-        Player turnPlayer = NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>();
-        
-        foreach(NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
+        if (NetworkManager.Singleton.IsServer)
         {
-            Player p = n.PlayerObject.GetComponent<Player>();
-            if(!p.isMyTurn.Value)
+            List<Card> cards = new List<Card>();
+            Player turnPlayer = NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>();
+
+            foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
             {
-                foreach(Card c in p._CardPersonList)
+                Player p = n.PlayerObject.GetComponent<Player>();
+                List<Card> cardTypeList = type == CardType.person ? p._CardPersonList : p._CardPracticeList;
+                if (!p.isMyTurn.Value)
                 {
-                    if (!turnPlayer.IsItADiscardedCard(c))
-                        personCards.Add(c);
+                    foreach (Card c in cardTypeList)
+                    {
+                        if (!turnPlayer.IsItADiscardedCard(c))
+                            cards.Add(c);
+                    }
                 }
             }
-        }
-        
-        foreach(Card c in envelope)
-        {
-            if(c.type == CardType.person)
+
+            foreach (Card c in envelope)
             {
-                personCards.Add(c);
-                return personCards;
+                if (c.type == type)
+                {
+                    cards.Add(c);
+                    return cards;
+                }
             }
+
+            return cards;
+        }
+        else
+        {
+            if (type == CardType.person)
+                eventRequestPersonCards.Raise();
+            else if(type == CardType.practice)
+                eventRequestPracticeCards.Raise();
         }
 
-        return personCards;
+        return null;
     }
 
-    //essa função só serve para retornar para GuessScreenController, o(s) Player(s) poderiam retornar diretamente em vez de usar um intermediário
+    public List<Card> GetPersonCards()
+    {
+        return GetCardsByType(CardType.person);
+    }
+
     public List<Card> GetPracticeCards()
     {
-        List<Card> practiceCards = new List<Card>();
-        Player turnPlayer = NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>();
-
-        foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
-        {
-            Player p = n.PlayerObject.GetComponent<Player>();
-            if (!p.isMyTurn.Value)
-            {
-                foreach (Card c in p._CardPracticeList)
-                {
-                    if (!turnPlayer.IsItADiscardedCard(c))
-                        practiceCards.Add(c);
-                }
-            }
-        }
-
-        foreach (Card c in envelope)
-        {
-            if (c.type == CardType.practice)
-            {
-                practiceCards.Add(c);
-                return practiceCards;
-            }
-        }
-
-        return practiceCards;
+        return GetCardsByType(CardType.practice);
     }
 
     void OrganizeCards()
@@ -342,13 +334,13 @@ public class GameManager : MonoBehaviour
         currentPersonGuess = personCard;
         currentPracticeGuess = practiceCard;
         List<Card> cardsToShow = CheckGuessCards(placeCard, personCard, practiceCard);
+        
         if(cardsToShow.Count == 0)
             eventAskForGuessConfirmation.Raise(); //ninguém tinha as cartas, pergunta para o jogador do turno se quer confirmar o palpite
         else
         {
-            //IMPORTANTE: por enquanto fica a primeira carta encontrada, mas o certo é programar uma interface para o outro jogador escolher qual carta mostrar!!!
             eventShowCardToPlayer.Raise(cardsToShow[0], showCardPlayer);
-            NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().AddToDiscardedCards(cardsToShow[0]);
+            NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().AddToDiscardedCards(cardsToShow[0]); //só ocorre no servidor...
         }
     }
     

@@ -25,26 +25,36 @@ namespace System.UI
         
         //Runtime fields
         Card selectedPersonCard = null, selectedPracticeCard = null, selectedPlaceCard = null;
-        bool confirmScreen = false;
+        //bool confirmScreen = false;
 
         private void OnEnable()
         {
-            if (!confirmScreen) //precisa mesmo disso?
-            {
+            //if (!confirmScreen) //precisa mesmo disso?
+            //{
                 rtAskIfWantToGuess.gameObject.SetActive(true);
                 rtGuess.gameObject.SetActive(false);
                 rtWaiting.gameObject.SetActive(false);
                 rtConfirmGuess.gameObject.SetActive(false);
                 rtShowCardFromOtherPlayers.gameObject.SetActive(false);
-            }
-            else
-            {
-                rtAskIfWantToGuess.gameObject.SetActive(false);
-                rtGuess.gameObject.SetActive(false);
-                rtWaiting.gameObject.SetActive(false);
-                rtConfirmGuess.gameObject.SetActive(false);
-                rtShowCardFromOtherPlayers.gameObject.SetActive(false);
-            }
+            //}
+            //else
+            //{
+            //    rtAskIfWantToGuess.gameObject.SetActive(false);
+            //    rtGuess.gameObject.SetActive(false);
+            //    rtWaiting.gameObject.SetActive(false);
+            //    rtConfirmGuess.gameObject.SetActive(false);
+            //    rtShowCardFromOtherPlayers.gameObject.SetActive(false);
+            //}
+        }
+
+        public void CreateCardTemplate(Card c)
+        {
+            CardTemplateGuess ct = Instantiate(prefabCardTemplateGuess);
+            ct.Setup(this, c);
+            if (c.type == CardType.person)
+                ct.transform.SetParent(rtPeopleContainer, false);
+            else if (c.type == CardType.practice)
+                ct.transform.SetParent(rtPracticesContainer, false);
         }
 
         public void OnYesButton()
@@ -63,19 +73,15 @@ namespace System.UI
             ctPlace.Setup(this, selectedPlaceCard);
             ctPlace.transform.SetParent(rtPlaceContainer, false);
 
-            foreach (Card c in GameManager.instance.GetPersonCards())
-            {
-                CardTemplateGuess ct = Instantiate(prefabCardTemplateGuess);
-                ct.Setup(this, c);
-                ct.transform.SetParent(rtPeopleContainer, false);
-            }
+            List<Card> personCards = GameManager.instance.GetPersonCards();
+            if(personCards != null)
+                foreach (Card c in personCards)
+                    CreateCardTemplate(c);
 
-            foreach (Card c in GameManager.instance.GetPracticeCards())
-            {
-                CardTemplateGuess ct = Instantiate(prefabCardTemplateGuess);
-                ct.Setup(this, c);
-                ct.transform.SetParent(rtPracticesContainer, false);
-            }
+            List<Card> practiceCards = GameManager.instance.GetPracticeCards();
+            if (practiceCards != null)
+                foreach (Card c in practiceCards)
+                    CreateCardTemplate(c);
         }
 
         public void OnNoButton()
@@ -89,7 +95,6 @@ namespace System.UI
             rtGuess.gameObject.SetActive(false);
             rtWaiting.gameObject.SetActive(true);
             GameManager.instance.SendGuessToOtherPlayers(selectedPlaceCard, selectedPersonCard, selectedPracticeCard);
-
         }
 
         public void TryToWinWithGuess()

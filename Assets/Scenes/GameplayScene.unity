@@ -3234,11 +3234,12 @@ MonoBehaviour:
     type: 2}
   eventAskForGuessConfirmation: {fileID: 11400000, guid: 137286a982dda5b41a3e2704b3eeb1ce,
     type: 2}
-  eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
-  eventUpdateStatusPanel: {fileID: 11400000, guid: d31db058477ca2243a41d223375c4cf6,
-    type: 2}
   eventShowExtraCard: {fileID: 11400000, guid: fd62fcb58967ba44ba3798f0637d9ce4, type: 2}
   eventSendExtraCardToAskIfWantToGoToPlaceScreen: {fileID: 11400000, guid: 8392a72d78222a14cb37782728c16085,
+    type: 2}
+  eventRequestPersonCards: {fileID: 11400000, guid: 8df2843fe75ef0b49ab0c5ec81f194a8,
+    type: 2}
+  eventRequestPracticeCards: {fileID: 11400000, guid: 72b98ab16ef54e24e90a5976a7673a34,
     type: 2}
   peopleCardContainer: {fileID: 11400000, guid: 07e5e39ebd398104e96a812cfa857d4d,
     type: 2}
@@ -3250,7 +3251,6 @@ MonoBehaviour:
     type: 2}
   pawnsContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   boardGO: {fileID: 872512588}
-  clientPawn: {fileID: 0}
 --- !u!114 &502138679
 MonoBehaviour:
   m_ObjectHideFlags: 0
