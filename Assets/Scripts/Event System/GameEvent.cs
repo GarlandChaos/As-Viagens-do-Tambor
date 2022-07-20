@@ -32,6 +32,13 @@ public class GameEvent : ScriptableObject
                 continue;
             }
 
+            IGameEventListenerInt3 listenerInt3 = listeners[i] as IGameEventListenerInt3;
+            if (listenerInt3 != null)
+            {
+                listenerInt3.OnEventRaised((int)args[0], (int)args[1], (int)args[2]);
+                continue;
+            }
+
             IGameEventListenerString listenerString = listeners[i] as IGameEventListenerString;
             if (listenerString != null)
             {
@@ -64,6 +71,13 @@ public class GameEvent : ScriptableObject
             if (listenerCardInt != null)
             {
                 listenerCardInt.OnEventRaised((Card)args[0], (int)args[1]);
+                continue;
+            }
+
+            IGameEventListenerCardString listenerCardString = listeners[i] as IGameEventListenerCardString;
+            if (listenerCardString != null)
+            {
+                listenerCardString.OnEventRaised((Card)args[0], (string)args[1]);
                 continue;
             }
 

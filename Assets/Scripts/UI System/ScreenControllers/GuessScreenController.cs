@@ -15,7 +15,7 @@ namespace System.UI
         RectTransform rtAskIfWantToGuess = null, rtGuess = null, rtPlaceContainer = null, rtPeopleContainer = null, 
             rtPracticesContainer = null, rtWaiting = null, rtConfirmGuess = null, rtShowCardFromOtherPlayers = null, rtShowCardContainer = null;
         [SerializeField]
-        GameEvent eventCloseGuessScreen = null, eventTryToWinWithGuess = null;
+        GameEvent eventCloseGuessScreen = null, eventTryToWinWithGuess = null, eventRequestPersonCards = null, eventRequestPracticeCards = null;
         [SerializeField]
         TMP_Text textShowCard = null;
         [SerializeField]
@@ -24,27 +24,15 @@ namespace System.UI
         CardTemplateGuess prefabCardTemplateGuess = null;
         
         //Runtime fields
-        Card selectedPersonCard = null, selectedPracticeCard = null, selectedPlaceCard = null;
-        //bool confirmScreen = false;
+        Card selectedPersonCard = null, selectedPracticeCard = null;
 
         private void OnEnable()
         {
-            //if (!confirmScreen) //precisa mesmo disso?
-            //{
-                rtAskIfWantToGuess.gameObject.SetActive(true);
-                rtGuess.gameObject.SetActive(false);
-                rtWaiting.gameObject.SetActive(false);
-                rtConfirmGuess.gameObject.SetActive(false);
-                rtShowCardFromOtherPlayers.gameObject.SetActive(false);
-            //}
-            //else
-            //{
-            //    rtAskIfWantToGuess.gameObject.SetActive(false);
-            //    rtGuess.gameObject.SetActive(false);
-            //    rtWaiting.gameObject.SetActive(false);
-            //    rtConfirmGuess.gameObject.SetActive(false);
-            //    rtShowCardFromOtherPlayers.gameObject.SetActive(false);
-            //}
+            rtAskIfWantToGuess.gameObject.SetActive(true);
+            rtGuess.gameObject.SetActive(false);
+            rtWaiting.gameObject.SetActive(false);
+            rtConfirmGuess.gameObject.SetActive(false);
+            rtShowCardFromOtherPlayers.gameObject.SetActive(false);
         }
 
         public void CreateCardTemplate(Card c)
@@ -64,24 +52,26 @@ namespace System.UI
             selectedPracticeCard = null;
             buttonSendGuess.interactable = false;
 
-            selectedPlaceCard = GameManager.instance._CurrentPlaceGuess;
-
             rtAskIfWantToGuess.gameObject.SetActive(false);
             rtGuess.gameObject.SetActive(true);
 
             CardTemplateGuess ctPlace = Instantiate(prefabCardTemplateGuess);
-            ctPlace.Setup(this, selectedPlaceCard);
+            ctPlace.Setup(this, GameManager.instance._CurrentPlaceGuess);
             ctPlace.transform.SetParent(rtPlaceContainer, false);
 
             List<Card> personCards = GameManager.instance.GetPersonCards();
             if(personCards != null)
                 foreach (Card c in personCards)
                     CreateCardTemplate(c);
+            else
+                eventRequestPersonCards.Raise();
 
             List<Card> practiceCards = GameManager.instance.GetPracticeCards();
             if (practiceCards != null)
                 foreach (Card c in practiceCards)
                     CreateCardTemplate(c);
+            else
+                eventRequestPracticeCards.Raise();
         }
 
         public void OnNoButton()
@@ -91,10 +81,9 @@ namespace System.UI
 
         public void OnConfirmButton()
         {
-            //envia pessoa, local e prática para o gamemanager...
             rtGuess.gameObject.SetActive(false);
             rtWaiting.gameObject.SetActive(true);
-            GameManager.instance.SendGuessToOtherPlayers(selectedPlaceCard, selectedPersonCard, selectedPracticeCard);
+            GameManager.instance.SetGuessCardsAndCheck(selectedPersonCard, selectedPracticeCard);
         }
 
         public void TryToWinWithGuess()
@@ -108,16 +97,12 @@ namespace System.UI
                 Destroy(rtPlaceContainer.GetChild(0).gameObject);
 
             if (rtPeopleContainer.childCount > 0)
-            {
                 for (int i = 0; i < rtPeopleContainer.childCount; i++)
                     Destroy(rtPeopleContainer.GetChild(i).gameObject);
-            }
 
             if (rtPracticesContainer.childCount > 0)
-            {
                 for (int i = 0; i < rtPracticesContainer.childCount; i++)
                     Destroy(rtPracticesContainer.GetChild(i).gameObject);
-            }
 
             if (rtShowCardContainer.childCount > 0)
                 Destroy(rtShowCardContainer.GetChild(0).gameObject);
@@ -137,9 +122,9 @@ namespace System.UI
                 buttonSendGuess.interactable = true;
         }
 
-        public void OnShowCardToPlayer(Card card, int playerID)
+        public void OnShowCardToPlayer(Card card, string playerName)
         {
-            textShowCard.text = "O jogador " + playerID.ToString() + " possui a seguinte carta:";
+            textShowCard.text = playerName.ToString() + " possui a seguinte carta:";
             CardTemplate ct = Instantiate(prefabCardTemplate);
             ct.Setup(card);
             ct.transform.SetParent(rtShowCardContainer, false);

@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     GameObject prefabUIManager = null;
     [SerializeField]
     GameEvent eventShowCardToPlayer = null, eventAskForGuessConfirmation = null, eventShowExtraCard = null, eventSendExtraCardToAskIfWantToGoToPlaceScreen = null,
-        eventRequestPersonCards = null, eventRequestPracticeCards = null;
+        eventRequestToCheckGuessCards = null;
     [SerializeField]
     CardContainer peopleCardContainer = null, 
         practicesCardContainer = null, 
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     Card[] envelope = new Card[3];
     Card currentPlaceGuess = null, currentPersonGuess = null, currentPracticeGuess = null;
     int turnPlayerIndex = 0;
-    int showCardPlayer = 0;
+    string unraveledCardPlayerName = string.Empty;
     bool playerCanInteract = false;
     bool onGuessScreen = false;
 
@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     public Card _CurrentPlaceGuess { get => currentPlaceGuess; }
     public Card _CurrentPersonGuess { get => currentPersonGuess; }
     public Card _CurrentPracticeGuess { get => currentPracticeGuess; }
+    public string _UnraveledCardPlayerName { get => unraveledCardPlayerName; }
 
     private void Awake()
     {
@@ -60,12 +61,16 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    void Start()
+    public void OnStartGame()
     {
-        //UIManager.instance.RequestScreen("Notes", true);
-        //UIManager.instance.RequestScreen("Status Panel", true);
-        UIManager.instance.RequestScreen("Room Manager Screen", true);
-        //boardGO.SetActive(false);
+        boardGO.SetActive(true);
+        playerCanInteract = true;
+
+        if (NetworkManager.Singleton.IsServer)
+        {
+            OrganizeCards();
+            NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().isMyTurn.Value = true;
+        }
     }
 
     public void FillEnvelope(int person, int practice, int place)
@@ -78,10 +83,9 @@ public class GameManager : MonoBehaviour
     public Pawn GetPawnByName(string pawn)
     {
         foreach(Pawn p in pawnsContainer._Pawns)
-        {
             if(p.name == pawn)
                 return p;
-        }
+
         return null;
     }
 
@@ -100,30 +104,26 @@ public class GameManager : MonoBehaviour
     Card GetCardFromContainerByID(CardContainer cardContainer, int id)
     {
         foreach (Card c in cardContainer._Cards)
-        {
             if (c.id == id)
                 return c;
-        }
+
         return null;
     }
 
     public Card GetCardByID(int id) //REVER ESTA FUNÇÃO POIS CARDS DE DIFERENTES TIPOS PODEM TER O MESMO ID!!! Atualmente botei um id pra cada, faz mais sentido
     {
         foreach (Card c in peopleCardContainer._Cards)
-        {
             if (c.id == id)
                 return c;
-        }
+
         foreach (Card c in practicesCardContainer._Cards)
-        {
             if (c.id == id)
                 return c;
-        }
+
         foreach (Card c in placesCardContainer._Cards)
-        {
             if (c.id == id)
                 return c;
-        }
+
         return null;
     }
 
@@ -136,10 +136,9 @@ public class GameManager : MonoBehaviour
     {
         List<Card> tempCards = new List<Card>(cards);
         foreach (Card c in envelope)
-        {
             if (tempCards.Contains(c))
                 tempCards.Remove(c);
-        }
+
         while (tempCards.Count > 0)
         {
             foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
@@ -155,7 +154,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    List<Card> GetCardsByType(CardType type)
+    List<Card> GetRemainingCardsByType(CardType type)
     {
         if (NetworkManager.Singleton.IsServer)
         {
@@ -165,7 +164,7 @@ public class GameManager : MonoBehaviour
             foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
             {
                 Player p = n.PlayerObject.GetComponent<Player>();
-                List<Card> cardTypeList = type == CardType.person ? p._CardPersonList : p._CardPracticeList;
+                List<Card> cardTypeList = type == CardType.person ? p._CardPersonList : type == CardType.practice ? p._CardPracticeList : p._CardPlaceList;
                 if (!p.isMyTurn.Value)
                 {
                     foreach (Card c in cardTypeList)
@@ -187,25 +186,18 @@ public class GameManager : MonoBehaviour
 
             return cards;
         }
-        else
-        {
-            if (type == CardType.person)
-                eventRequestPersonCards.Raise();
-            else if(type == CardType.practice)
-                eventRequestPracticeCards.Raise();
-        }
 
         return null;
     }
 
     public List<Card> GetPersonCards()
     {
-        return GetCardsByType(CardType.person);
+        return GetRemainingCardsByType(CardType.person);
     }
 
     public List<Card> GetPracticeCards()
     {
-        return GetCardsByType(CardType.practice);
+        return GetRemainingCardsByType(CardType.practice);
     }
 
     void OrganizeCards()
@@ -242,8 +234,6 @@ public class GameManager : MonoBehaviour
 
     public void OnRequestExtraCard()
     {
-        UIManager.instance.RequestScreen("Extra Card Screen", true);
-        //get random extra card from list and emit it to ExtraCardScreenController
         eventShowExtraCard.Raise(extraCardsContainer._Cards[Random.Range(0, extraCardsContainer._Cards.Count)]);
     }
 
@@ -252,152 +242,115 @@ public class GameManager : MonoBehaviour
         currentPlaceGuess = cardPlace;
         playerCanInteract = false;
         onGuessScreen = true;
-        UIManager.instance.RequestScreen("Guess Screen", true);
     }
 
     public void OnCloseGuessScreen()
     {
-        UIManager.instance.RequestScreen("Guess Screen", false);
         playerCanInteract = true;
         onGuessScreen = false;
     }
 
-    public void CloseExtraCardScreen()
-    {
-        UIManager.instance.RequestScreen("Extra Card Screen", false);
-    }
-
     public void OnChangePlayerTurn()
     {
-        //Debug.Log("Called OnChangePlayerTurn");
         ChangePlayerTurn();
     }
 
-    List<Card> CheckGuessCards(Card placeCard, Card personCard, Card practiceCard)
+    public List<Card> CheckGuessCards(Card placeCard, Card personCard, Card practiceCard)
     {
-        List<Card> cardsToShow = new List<Card>();
-        Player turnPlayer = NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>();
-
-        foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
+        if (NetworkManager.Singleton.IsServer)
         {
-            Player p = n.PlayerObject.GetComponent<Player>();
-            if (!p.isMyTurn.Value)
-            {
-                if(placeCard != null)
-                {
-                    foreach (Card c in p._CardPlaceList)
-                    {
-                        if (c == placeCard)
-                        {
-                            if (!turnPlayer.IsItADiscardedCard(c))
-                                cardsToShow.Add(c);
-                        }
-                    }
-                }
+            List<Card> cardsToShow = new List<Card>();
+            Player turnPlayer = NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>();
 
-                if(personCard != null)
+            foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
+            {
+                Player p = n.PlayerObject.GetComponent<Player>();
+                if (!p.isMyTurn.Value)
                 {
-                    foreach (Card c in p._CardPersonList)
-                    {
-                        if (c == personCard)
-                        {
-                            if (!turnPlayer.IsItADiscardedCard(c))
-                                cardsToShow.Add(c);
-                        }
-                    }
+                    AddToCardListIfAnotherPlayerContains(placeCard, cardsToShow, turnPlayer, p);
+                    AddToCardListIfAnotherPlayerContains(personCard, cardsToShow, turnPlayer, p);
+                    AddToCardListIfAnotherPlayerContains(practiceCard, cardsToShow, turnPlayer, p);
                 }
-                
-                if(practiceCard != null)
+            }
+
+            return cardsToShow;
+        }
+
+        return null;
+    }
+
+    void AddToCardListIfAnotherPlayerContains(Card cardToCheck, List<Card> cardList, Player turnPlayer, Player otherPlayer)
+    {
+        List<Card> cardTypeList = cardToCheck.type == CardType.person ? otherPlayer._CardPersonList : cardToCheck.type == CardType.practice ? otherPlayer._CardPracticeList : otherPlayer._CardPlaceList;
+        foreach (Card c in cardTypeList)
+        {
+            if (c == cardToCheck)
+            {
+                if (!turnPlayer.IsItADiscardedCard(c))
                 {
-                    foreach (Card c in p._CardPracticeList)
-                    {
-                        if (c == practiceCard)
-                        {
-                            if (!turnPlayer.IsItADiscardedCard(c))
-                                cardsToShow.Add(c);
-                        }
-                    }
-                }
-                
-                if (cardsToShow.Count > 0)
-                {
-                    //showCardPlayer = p.id; //rever se precisa de id!!!
-                    return cardsToShow;
+                    cardList.Add(c);
+                    if (cardList.Count == 1)
+                        unraveledCardPlayerName = otherPlayer.name;
                 }
             }
         }
-        return cardsToShow;
     }
 
-    public void SendGuessToOtherPlayers(Card placeCard, Card personCard, Card practiceCard)
+    public void SetGuessCardsAndCheck(Card personCard, Card practiceCard)
     {
         currentPersonGuess = personCard;
         currentPracticeGuess = practiceCard;
-        List<Card> cardsToShow = CheckGuessCards(placeCard, personCard, practiceCard);
-        
-        if(cardsToShow.Count == 0)
-            eventAskForGuessConfirmation.Raise(); //ninguém tinha as cartas, pergunta para o jogador do turno se quer confirmar o palpite
-        else
+        List<Card> cardsToShow = CheckGuessCards(currentPlaceGuess, personCard, practiceCard);
+
+        if(cardsToShow != null) //is host
         {
-            eventShowCardToPlayer.Raise(cardsToShow[0], showCardPlayer);
-            NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().AddToDiscardedCards(cardsToShow[0]); //só ocorre no servidor...
+            if (cardsToShow.Count == 0)
+                eventAskForGuessConfirmation.Raise(); //ninguém tinha as cartas, pergunta para o jogador do turno se quer confirmar o palpite
+            else
+            {
+                eventShowCardToPlayer.Raise(cardsToShow[0], unraveledCardPlayerName);
+                NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().AddToDiscardedCards(cardsToShow[0]);
+            }
         }
+        else //is client
+            eventRequestToCheckGuessCards.Raise(currentPlaceGuess.id, currentPersonGuess.id, currentPracticeGuess.id);
     }
     
     public void OnTryToWinWithGuess()
     {
-        if (!envelope.Contains(currentPlaceGuess) || !envelope.Contains(currentPersonGuess) || !envelope.Contains(currentPracticeGuess))
+        if (NetworkManager.Singleton.IsServer)
         {
-            //lose
-            UIManager.instance.RequestScreen("Lose Screen", true);
-            //mandar evento para o outro jogador via rpc
-            if (NetworkManager.Singleton.IsServer)
-                NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendWinEventClientRpc();
+            if (!envelope.Contains(currentPlaceGuess) || !envelope.Contains(currentPersonGuess) || !envelope.Contains(currentPracticeGuess))
+            {
+                //local player lose
+                UIManager.instance.RequestScreen("Lose Screen", true);
+                //mandar evento para o outro jogador via rpc
+                if (NetworkManager.Singleton.IsServer)
+                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendWinEventClientRpc();
+                else
+                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendWinEventServerRpc();
+            }
             else
-                NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendWinEventServerRpc();
+            {
+                //local player win
+                UIManager.instance.RequestScreen("Win Screen", true);
+                //mandar evento para o outro jogador via rpc
+                if (NetworkManager.Singleton.IsServer)
+                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendLoseEventClientRpc();
+                else
+                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendLoseEventServerRpc();
+            }
         }
         else
         {
-            //win
-            UIManager.instance.RequestScreen("Win Screen", true);
-            //mandar evento para o outro jogador via rpc
-            if (NetworkManager.Singleton.IsServer)
-                NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendLoseEventClientRpc();
-            else
-                NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendLoseEventServerRpc();
+            //provavelmente manda um ClientRPC para o player checar as cartas do envelope
         }
+        
     }
 
     public void OnEffectGoToPlaceOptional(ExtraCard extraCard)
     {
-        CloseExtraCardScreen();
-        UIManager.instance.RequestScreen("AskIfWantToGoToPlace Screen", true);
         eventSendExtraCardToAskIfWantToGoToPlaceScreen.Raise(extraCard);
-    }
-
-    public void OnCloseAskIfWantToGoToPlaceScreen()
-    {
-        UIManager.instance.RequestScreen("AskIfWantToGoToPlace Screen", false);
-    }
-
-    public void OnWin()
-    {
-        UIManager.instance.RequestScreen("Win Screen", true);
-    }
-
-    public void OnLose()
-    {
-        UIManager.instance.RequestScreen("Lose Screen", true);
-    }
-
-    public void OnCloseWinScreen()
-    {
-        UIManager.instance.RequestScreen("Win Screen", false);
-    }
-
-    public void OnCloseLoseScreen()
-    {
-        UIManager.instance.RequestScreen("Lose Screen", false);
     }
 
     public void OnPlayerCanInteract()
@@ -410,21 +363,5 @@ public class GameManager : MonoBehaviour
     {
         if (!onGuessScreen)
             playerCanInteract = false;
-    }
-
-    public void OnStartGame()
-    {
-        UIManager.instance.RequestScreen("Room Manager Screen", false);
-        UIManager.instance.RequestScreen("Status Panel", true);
-        UIManager.instance.RequestScreen("Notes", true);
-        
-        boardGO.SetActive(true);
-        playerCanInteract = true;
-
-        if (NetworkManager.Singleton.IsServer)
-        {
-            OrganizeCards();
-            NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().isMyTurn.Value = true;
-        }
     }
 }

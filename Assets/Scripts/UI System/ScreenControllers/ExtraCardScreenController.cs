@@ -13,7 +13,7 @@ namespace System.UI
         Sprite cardBackSprite = null;
         ExtraCard currentExtraCard = null;
         [SerializeField]
-        GameEvent eventEffectLoseTurn = null, eventEffectReroll = null, eventEffectGoToPlaceAndGuess = null, eventEffectGoToPlaceOptional = null;
+        GameEvent eventEffectLoseTurn = null, eventEffectReroll = null, eventEffectGoToPlaceAndGuess = null, eventOpenAskIfWantToGoToPlaceScreen = null, eventEffectGoToPlaceOptional = null;
 
         public void OnShowExtraCard(ExtraCard extraCard)
         {
@@ -34,15 +34,13 @@ namespace System.UI
                     break;
 
                 case Effect.goToPlace:
-#if UNITY_EDITOR
-                    Debug.Log("Effect goToPlaceAndGuess");
-#endif
                     //precisa comunicar o local exato que o player deve ir...
                     //http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
                     eventEffectGoToPlaceAndGuess.Raise(currentExtraCard);
                     break;
 
                 case Effect.goToPlaceOptional:
+                    eventOpenAskIfWantToGoToPlaceScreen.Raise();
                     eventEffectGoToPlaceOptional.Raise(currentExtraCard);
                     break;
 
@@ -57,6 +55,8 @@ namespace System.UI
                 default:
                     break;
             }
+
+            Hide();
         }
 
         IEnumerator ShowExtraCardCoroutine(ExtraCard extraCard)
@@ -92,6 +92,7 @@ namespace System.UI
             timer = 0f;
             endScale = startScale;
             startScale = rtExtraCardContainer.rectTransform.localScale;
+            
             while (timer < 1f)
             {
                 timer += Time.deltaTime / animationTime;
