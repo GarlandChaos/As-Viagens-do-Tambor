@@ -10,7 +10,8 @@ public class RequestProvider : NetworkBehaviour
     [SerializeField]
     Player player = null;
     [SerializeField]
-    GameEvent eventSendAvailablePawnsToRoomManager = null, eventSendCard = null, eventShowCardToPlayer = null, eventAskForGuessConfirmation = null;
+    GameEvent eventSendAvailablePawnsToRoomManager = null, eventSendCard = null, eventShowCardToPlayer = null, eventAskForGuessConfirmation = null,
+        eventOpenGameOverScreen = null, eventGameOver = null, eventOpenPlayerLoseScreen = null, eventPlayerLose = null;
 
     public void OnRequestPawns()
     {
@@ -105,5 +106,31 @@ public class RequestProvider : NetworkBehaviour
         }
         else
             eventAskForGuessConfirmation.Raise();
+    }
+
+    public void OnHostWin()
+    {
+        if (IsServer && IsOwner)
+            GameOverClientRPC(player.playerName.Value);
+    }
+
+    [ClientRpc]
+    void GameOverClientRPC(string victorName)
+    {
+        eventOpenGameOverScreen.Raise();
+        eventGameOver.Raise(victorName);
+    }
+
+    public void OnHostLose()
+    {
+        if (IsServer && IsOwner)
+            PlayerLoseClientRPC(player.playerName.Value);
+    }
+
+    [ClientRpc]
+    void PlayerLoseClientRPC(string loserName)
+    {
+        eventOpenPlayerLoseScreen.Raise();
+        eventPlayerLose.Raise(loserName);
     }
 }

@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     GameObject prefabUIManager = null;
     [SerializeField]
     GameEvent eventShowCardToPlayer = null, eventAskForGuessConfirmation = null, eventShowExtraCard = null, eventSendExtraCardToAskIfWantToGoToPlaceScreen = null,
-        eventRequestToCheckGuessCards = null;
+        eventRequestToCheckGuessCards = null, eventWin = null, eventLose = null;
     [SerializeField]
     CardContainer peopleCardContainer = null, 
         practicesCardContainer = null, 
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     {
         boardGO.SetActive(true);
         playerCanInteract = true;
-
+        
         if (NetworkManager.Singleton.IsServer)
         {
             OrganizeCards();
@@ -73,12 +73,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void FillEnvelope(int person, int practice, int place)
+    public void ResetFields()
     {
-        envelope[0] = peopleCardContainer._Cards.SingleOrDefault(obj => obj.id == person);
-        envelope[1] = practicesCardContainer._Cards.SingleOrDefault(obj => obj.id == practice);
-        envelope[2] = placesCardContainer._Cards.SingleOrDefault(obj => obj.id == place);
+        boardGO.SetActive(false);
+        envelope[0] = null;
+        envelope[1] = null;
+        envelope[2] = null;
+        currentPlaceGuess = null;
+        currentPersonGuess = null;
+        currentPracticeGuess = null;
+        turnPlayerIndex = 0;
+        unraveledCardPlayerName = string.Empty;
+        playerCanInteract = false;
+        onGuessScreen = false;
     }
+
+    //public void FillEnvelope(int person, int practice, int place)
+    //{
+    //    envelope[0] = peopleCardContainer._Cards.SingleOrDefault(obj => obj.id == person);
+    //    envelope[1] = practicesCardContainer._Cards.SingleOrDefault(obj => obj.id == practice);
+    //    envelope[2] = placesCardContainer._Cards.SingleOrDefault(obj => obj.id == place);
+    //}
 
     public Pawn GetPawnByName(string pawn)
     {
@@ -290,7 +305,7 @@ public class GameManager : MonoBehaviour
                 {
                     cardList.Add(c);
                     if (cardList.Count == 1)
-                        unraveledCardPlayerName = otherPlayer.name;
+                        unraveledCardPlayerName = otherPlayer.playerName.Value;
                 }
             }
         }
@@ -316,36 +331,41 @@ public class GameManager : MonoBehaviour
             eventRequestToCheckGuessCards.Raise(currentPlaceGuess.id, currentPersonGuess.id, currentPracticeGuess.id);
     }
     
+    bool CheckEnvelope(Card placeCard, Card personCard, Card practiceCard)
+    {
+        return envelope.Contains(placeCard) && envelope.Contains(personCard) && envelope.Contains(practiceCard);
+    }
+
     public void OnTryToWinWithGuess()
     {
-        if (NetworkManager.Singleton.IsServer)
+        //Checa se é servidor
+        //Se for servidor:
+        //  checa envelope
+        //      se ganhou, manda ClientRPC para todos encerrando o jogo
+        //      se perdeu, manda ClientRPC e assiste o jogo até o fim
+        //Se for cliente:
+        //  manda ServerRPC para checar o envelope
+        //  servidor checa e manda resposta para o cliente
+        //      se venceu, manda ServerRPC para encerrar o jogo
+        //      se perdeu, manda ServerRPC e assiste o jogo
+
+        if (NetworkManager.Singleton.IsServer) //is server
         {
-            if (!envelope.Contains(currentPlaceGuess) || !envelope.Contains(currentPersonGuess) || !envelope.Contains(currentPracticeGuess))
+            if (CheckEnvelope(currentPlaceGuess, currentPersonGuess, currentPracticeGuess)) //local player win
             {
-                //local player lose
-                UIManager.instance.RequestScreen("Lose Screen", true);
-                //mandar evento para o outro jogador via rpc
-                if (NetworkManager.Singleton.IsServer)
-                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendWinEventClientRpc();
-                else
-                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendWinEventServerRpc();
+                //manda ClientRPC para todos encerrando o jogo
+                eventWin.Raise();
             }
-            else
+            else //local player lose
             {
-                //local player win
-                UIManager.instance.RequestScreen("Win Screen", true);
-                //mandar evento para o outro jogador via rpc
-                if (NetworkManager.Singleton.IsServer)
-                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendLoseEventClientRpc();
-                else
-                    NetworkManager.Singleton.ConnectedClientsList[turnPlayerIndex].PlayerObject.GetComponent<Player>().SendLoseEventServerRpc();
+                //manda ClientRPC e assiste o jogo até o fim
+                eventLose.Raise();
             }
         }
-        else
+        else //is client
         {
-            //provavelmente manda um ClientRPC para o player checar as cartas do envelope
+            //manda ServerRPC para checar o envelope
         }
-        
     }
 
     public void OnEffectGoToPlaceOptional(ExtraCard extraCard)

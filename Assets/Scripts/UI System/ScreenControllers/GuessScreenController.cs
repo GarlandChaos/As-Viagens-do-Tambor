@@ -89,6 +89,7 @@ namespace System.UI
         public void TryToWinWithGuess()
         {
             eventTryToWinWithGuess.Raise();
+            eventCloseGuessScreen.Raise();
         }
 
         public void CleanCardContainers()

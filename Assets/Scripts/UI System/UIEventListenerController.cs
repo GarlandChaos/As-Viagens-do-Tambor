@@ -54,24 +54,25 @@ namespace System.UI
             UIManager.instance.RequestScreen("AskIfWantToGoToPlace Screen", true);
         }
 
-        public void OnWin()
+        public void OnOpenGameOverScreen()
         {
-            UIManager.instance.RequestScreen("Win Screen", true);
+            UIManager.instance.RequestScreen("Game Over Screen", true);
         }
 
-        public void OnLose()
+        public void OnOpenPlayerLoseScreen()
         {
-            UIManager.instance.RequestScreen("Lose Screen", true);
+            UIManager.instance.RequestScreen("Player Lose Screen", true);
         }
 
         public void OnCloseWinScreen()
         {
-            UIManager.instance.RequestScreen("Win Screen", false);
+            UIManager.instance.ClearAllScreens();
+            UIManager.instance.RequestScreen("Room Manager Screen", true);
         }
 
         public void OnCloseLoseScreen()
         {
-            UIManager.instance.RequestScreen("Lose Screen", false);
+            UIManager.instance.RequestScreen("Player Lose Screen", false);
         }
 
         public void OnCloseAskIfWantToGoToPlaceScreen()

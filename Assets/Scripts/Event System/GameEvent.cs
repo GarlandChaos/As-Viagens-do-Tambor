@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class GameEvent : ScriptableObject
 {
-    private List<IGameEventListener> listeners = new List<IGameEventListener>();
+    List<IGameEventListener> listeners = new List<IGameEventListener>();
 
     public void Raise(params object[] args)
     {

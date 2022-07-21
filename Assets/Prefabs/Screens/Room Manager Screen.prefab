@@ -2412,6 +2412,7 @@ MonoBehaviour:
   eventReadyToPlay: {fileID: 11400000, guid: fde24e56f971827478cef73445af2e25, type: 2}
   eventBackToMainMenu: {fileID: 11400000, guid: e92e47671b2e71149a8af24c3e9c4da2,
     type: 2}
+  eventSetPlayerName: {fileID: 11400000, guid: 3bcfc0e63ffa2b64f8e8aa70bb71f32e, type: 2}
   animationSettings: {fileID: 11400000, guid: 68bb1e74e88b5c148a86a76e97ae0227, type: 2}
 --- !u!114 &2322508254749188470
 MonoBehaviour:

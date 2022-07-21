@@ -44,7 +44,7 @@ namespace System.UI
                 var screenInstance = Instantiate(screen);
                 screenInstance.SetActive(false);
                 var screenController = screenInstance.GetComponent<IScreenController>();
-                //Debug.Log("Screen #:" + screen.name);
+
                 if (screenController != null)
                 {
                     IDialogController dialog = screenController as IDialogController;
@@ -125,6 +125,12 @@ namespace System.UI
         public void ClearScreenStack()
         {
             dialogLayer.ClearScreenStack();
+        }
+
+        public void ClearAllScreens()
+        {
+            panelLayer.ClearScreens();
+            dialogLayer.ClearScreens();
         }
 
         public bool IsScreenVisible(string screenID)

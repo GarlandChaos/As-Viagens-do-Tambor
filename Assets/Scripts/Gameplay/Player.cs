@@ -32,19 +32,18 @@ public class Player : NetworkBehaviour
     [HideInInspector]
     public BoardSpace currentBoardSpace = null;
 
-    //Serialized fields
+    //Inspector reference fields
     [SerializeField]
     GameEvent eventRequestPaths = null,
         eventRequestExtraCard = null,
         eventChangePlayerTurn = null,
         eventStartGame = null,
-        eventWin = null,
-        eventLose = null,
         eventDisplayDiceResults = null,
         eventUpdateAvailablePawns = null,
         eventDiscardCard = null,
         eventUpdateStatusPanel = null,
-        eventOpenExtraCardScreen = null;    
+        eventOpenExtraCardScreen = null,
+        eventPlayerDisconnected = null;    
     [SerializeField]
     SpriteRenderer spriteRenderer = null;
     [SerializeField]
@@ -94,13 +93,12 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
-
-    private void Singleton_OnClientDisconnectCallback(ulong obj)
+    [HideInInspector]
+    public NetworkVariableString playerName = new NetworkVariableString(new NetworkVariableSettings
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
-        if(OwnerClientId == obj)
-            Destroy(gameObject);
-    }
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    });
 
     private void OnEnable()
     {
@@ -139,25 +137,14 @@ public class Player : NetworkBehaviour
         networkPosition.Value = transform.position;
     }
 
-    public void AddToCardLists(Card card)
+    private void Singleton_OnClientDisconnectCallback(ulong obj)
     {
-        if(card.type == CardType.person)
-            listPeopleIds.Add(card.id);
-        else if(card.type == CardType.practice)
-            listPracticesIds.Add(card.id);
-        else if(card.type == CardType.place)
-            listPlacesIds.Add(card.id);
-    }
-
-    public void AddToDiscardedCards(Card card)
-    {
-        if (!discardedCardList.Contains(card))
-            discardedCardsIds.Add(card.id);
-    }
-
-    public bool IsItADiscardedCard(Card card)
-    {
-        return discardedCardList.Contains(card);
+        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
+        if (OwnerClientId == obj)
+        {
+            eventPlayerDisconnected.Raise();
+            Destroy(gameObject);
+        }
     }
 
     public void RollDices()
@@ -192,6 +179,12 @@ public class Player : NetworkBehaviour
             this.pawnName.Value = pawnName;
     }
 
+    public void SetPlayerName(ulong clientID, string playerName)
+    {
+        if (OwnerClientId == clientID)
+            this.playerName.Value = playerName;
+    }
+
     public string[] GetPlayersPawnNames()
     {
         if (IsServer)
@@ -208,30 +201,25 @@ public class Player : NetworkBehaviour
         return null;
     }
 
-    [ServerRpc]
-    public void SendWinEventServerRpc()
+    public void AddToCardLists(Card card)
     {
-        eventWin.Raise();
+        if (card.type == CardType.person)
+            listPeopleIds.Add(card.id);
+        else if (card.type == CardType.practice)
+            listPracticesIds.Add(card.id);
+        else if (card.type == CardType.place)
+            listPlacesIds.Add(card.id);
     }
 
-    [ClientRpc]
-    public void SendWinEventClientRpc()
+    public void AddToDiscardedCards(Card card)
     {
-        if (!IsServer)
-            eventWin.Raise();
+        if (!discardedCardList.Contains(card))
+            discardedCardsIds.Add(card.id);
     }
 
-    [ServerRpc]
-    public void SendLoseEventServerRpc()
+    public bool IsItADiscardedCard(Card card)
     {
-        eventLose.Raise();
-    }
-
-    [ClientRpc]
-    public void SendLoseEventClientRpc()
-    {
-        if (!IsServer)
-            eventLose.Raise();
+        return discardedCardList.Contains(card);
     }
 
     void AddPersonCardToListById(NetworkListEvent<int> changeEvent)
@@ -300,14 +288,18 @@ public class Player : NetworkBehaviour
     public void DisconnectPlayer()
     {
         if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
-            DisconnectPlayerServerRPC(NetworkManager.Singleton.LocalClientId);
+        {
+            if (IsServer)
+                NetworkManager.Shutdown();
+            else
+                DisconnectPlayerServerRPC(NetworkManager.Singleton.LocalClientId);
+        }
     }
 
     [ServerRpc]
     public void DisconnectPlayerServerRPC(ulong clientID)
     {
-        //if (IsServer && IsOwner)
-            NetworkManager.Singleton.DisconnectClient(clientID);
+        NetworkManager.Singleton.DisconnectClient(clientID);
     }
 
     public void SendStartGameRPC()

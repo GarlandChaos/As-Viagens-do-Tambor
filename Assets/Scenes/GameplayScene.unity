@@ -3187,6 +3187,8 @@ GameObject:
   - component: {fileID: 502138684}
   - component: {fileID: 502138688}
   - component: {fileID: 502138694}
+  - component: {fileID: 502138678}
+  - component: {fileID: 502138685}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3231,16 +3233,46 @@ MonoBehaviour:
     type: 2}
   eventRequestToCheckGuessCards: {fileID: 11400000, guid: c598ad8e342a041498bfe46a6e8791f9,
     type: 2}
-  peopleCardContainer: {fileID: 11400000, guid: 07e5e39ebd398104e96a812cfa857d4d,
+  eventWin: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
+  eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
+  peopleCardContainer: {fileID: 11400000, guid: ef805d383ec1e64419b945659c672c03,
     type: 2}
-  practicesCardContainer: {fileID: 11400000, guid: b28271ddf82ef664da28757d45971030,
+  practicesCardContainer: {fileID: 11400000, guid: 5a1f9347e64a1a84c8594a1c6be80af2,
     type: 2}
-  placesCardContainer: {fileID: 11400000, guid: ecb3d642e6079784196427c9aee4df52,
+  placesCardContainer: {fileID: 11400000, guid: ecfb193da3d05554b894a5257e7d5f74,
     type: 2}
   extraCardsContainer: {fileID: 11400000, guid: 754df865d17f30940b3fedb0ffe65841,
     type: 2}
   pawnsContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   boardGO: {fileID: 872512588}
+--- !u!114 &502138678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502138675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 502138677}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResetFields
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &502138679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3400,6 +3432,34 @@ MonoBehaviour:
       - m_Target: {fileID: 502138677}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnTryToWinWithGuess
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &502138685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502138675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 1987e8b93e2e405448d1cb1e29e3a5ee, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 502138677}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResetFields
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

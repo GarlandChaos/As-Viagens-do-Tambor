@@ -26,7 +26,7 @@ namespace System.UI
         [SerializeField]
         GameObject roomTemplatePrefab = null;
         [SerializeField]
-        GameEvent eventRequestPawns, eventCreatePlayerPawn = null, eventShowCredits = null, eventReadyToPlay = null, eventBackToMainMenu = null;
+        GameEvent eventRequestPawns, eventCreatePlayerPawn = null, eventShowCredits = null, eventReadyToPlay = null, eventBackToMainMenu = null, eventSetPlayerName = null;
         [SerializeField]
         InterpolationSettings animationSettings = null;
 
@@ -111,6 +111,28 @@ namespace System.UI
 
         public void FillRoomsTemplates()
         {
+            bool debug = true;
+            if (debug)
+            {
+                GameObject go = Instantiate(roomTemplatePrefab);
+                RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
+
+                if (roomTemplate != null)
+                {
+                    go.transform.SetParent(selectRoomDialogBG, false);
+                    roomTemplate.SetRoomName("127.0.0.1");
+                    roomTemplate.GetPlayButton().interactable = false;
+                    roomTemplate.GetPlayButton().onClick.AddListener(
+                    delegate
+                    {
+                        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1";
+                        EnterRoom();
+                    });
+                    roomTemplate.GetPlayButton().interactable = true;
+                }
+                backToMainMenuButton.transform.SetAsLastSibling();
+            }
+
             if (MyNetworkDiscovery.instance.addresses.Count > 0)
             {
                 foreach (KeyValuePair<string, string> kvp in MyNetworkDiscovery.instance.addresses)
@@ -191,7 +213,10 @@ namespace System.UI
 
         public void HostPlay()
         {
+            eventSetPlayerName.Raise(NetworkManager.Singleton.LocalClientId, playerNameCreateInputField.text);
             eventReadyToPlay.Raise();
+            MyNetworkDiscovery.instance.addresses.Clear();
+            MyNetworkDiscovery.instance.StopBroadcast();
             Hide();
         }
 
@@ -200,6 +225,9 @@ namespace System.UI
             await CloseScreenAnimation(enterRoomDialog);
             await OpenScreenAnimation(waitingForHostToStartDialog);
             eventCreatePlayerPawn.Raise(NetworkManager.Singleton.LocalClientId, selectedPawn.name);
+            eventSetPlayerName.Raise(NetworkManager.Singleton.LocalClientId, playerNameSearchInputField.text);
+            MyNetworkDiscovery.instance.addresses.Clear();
+            MyNetworkDiscovery.instance.StopBroadcast();
             //Hide();
         }
 
