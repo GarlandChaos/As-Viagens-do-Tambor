@@ -8,16 +8,15 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(GameEventEmitter))]
 public class MyNetworkDiscovery : NetworkDiscovery
 {
-    public static MyNetworkDiscovery instance;
-    public Dictionary<string, string> addresses;
-    GameEventEmitter emitterUpdateRooms;
+    public static MyNetworkDiscovery instance = null;
+    public Dictionary<string, string> addresses = new Dictionary<string, string>();
+    GameEventEmitter emitterUpdateRooms = null;
 
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            addresses = new Dictionary<string, string>();
             emitterUpdateRooms = GetComponent<GameEventEmitter>();
         }
         else

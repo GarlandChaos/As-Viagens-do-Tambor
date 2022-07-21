@@ -20,6 +20,6 @@ public enum PlaceName
 
 public class Place : MonoBehaviour
 {
-    public Card cardPlace;
-    public PlaceName placeName;
+    public Card cardPlace = null;
+    public PlaceName placeName = PlaceName.None;
 }

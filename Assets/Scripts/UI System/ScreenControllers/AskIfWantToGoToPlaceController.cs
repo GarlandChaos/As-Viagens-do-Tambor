@@ -7,11 +7,12 @@ namespace System.UI
 {
     public class AskIfWantToGoToPlaceController : ADialogController
     {
+        //Inspector reference fields
         [SerializeField]
-        TMP_Text textAskPlayer;
-        ExtraCard currentExtraCard;
+        TMP_Text textAskPlayer = null;
+        ExtraCard currentExtraCard = null;
         [SerializeField]
-        GameEvent eventSendExtraCardToPlayerFromOptionalChoice, eventCloseAskIfWantToGoToPlaceScreen, eventRequestChangeOfPlayerTurnToPlayer;
+        GameEvent eventSendExtraCardToPlayerFromOptionalChoice = null, eventCloseAskIfWantToGoToPlaceScreen = null, eventRequestChangeOfPlayerTurnToPlayer = null;
 
         public void ReceiveExtraCard(ExtraCard extraCard)
         {

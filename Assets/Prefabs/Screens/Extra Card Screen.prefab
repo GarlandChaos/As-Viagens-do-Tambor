@@ -269,6 +269,8 @@ MonoBehaviour:
   eventEffectReroll: {fileID: 11400000, guid: 151a9e4680660614a887196ce3c87ac2, type: 2}
   eventEffectGoToPlaceAndGuess: {fileID: 11400000, guid: db2f3f052f70c454d80b902708ad106d,
     type: 2}
+  eventOpenAskIfWantToGoToPlaceScreen: {fileID: 11400000, guid: 70f576504a9179b47a2e5b115daf7fde,
+    type: 2}
   eventEffectGoToPlaceOptional: {fileID: 11400000, guid: df28900fcda186e41922648e321ba1e7,
     type: 2}
 --- !u!114 &4665539151860038427

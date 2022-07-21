@@ -5,6 +5,7 @@ using System.UI;
 
 public class CreditsScreenController : APanelController
 {
+    //Inspector reference fields
     [SerializeField]
     GameEvent eventShowMainMenu = null;
 

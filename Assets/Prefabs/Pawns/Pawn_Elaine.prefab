@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8086397070506978307}
   - component: {fileID: 8086397070506978333}
   - component: {fileID: 2180482588190352446}
-  - component: {fileID: -8909369065471641175}
   m_Layer: 0
   m_Name: Pawn_Elaine
   m_TagString: Untagged
@@ -119,31 +118,3 @@ MonoBehaviour:
   PrefabHashGenerator: Pawn_Elaine
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &-8909369065471641175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8086397070506978306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d787b0075660bf94a990f4b2ca5061f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 50c05b6b848adec47a2588fa7f0bf11e, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8086397070506978333}
-        m_TargetAssemblyTypeName: Pawn, Assembly-CSharp
-        m_MethodName: OnFinalBoardSpacePressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2

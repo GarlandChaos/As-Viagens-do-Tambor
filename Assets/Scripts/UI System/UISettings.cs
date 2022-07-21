@@ -7,6 +7,6 @@ namespace System.UI
     [CreateAssetMenu]
     public class UISettings : ScriptableObject
     {
-        public List<GameObject> screensPrefabs;
+        public List<GameObject> screensPrefabs =  new List<GameObject>();
     }
 }

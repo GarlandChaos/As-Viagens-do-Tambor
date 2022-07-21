@@ -6,10 +6,11 @@ using TMPro;
 
 public class RoomTemplate : MonoBehaviour
 {
+    //Inspector reference fields
     [SerializeField]
-    TMP_Text roomNameText;
+    TMP_Text roomNameText = null;
     [SerializeField]
-    Button playButton;
+    Button playButton = null;
 
     public void SetRoomName(string s)
     {

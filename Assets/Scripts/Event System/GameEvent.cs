@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class GameEvent : ScriptableObject
 {
-    private List<IGameEventListener> listeners = new List<IGameEventListener>();
+    List<IGameEventListener> listeners = new List<IGameEventListener>();
 
     public void Raise(params object[] args)
     {
@@ -29,6 +29,13 @@ public class GameEvent : ScriptableObject
             if (listenerInt2 != null)
             {
                 listenerInt2.OnEventRaised((int)args[0], (int)args[1]);
+                continue;
+            }
+
+            IGameEventListenerInt3 listenerInt3 = listeners[i] as IGameEventListenerInt3;
+            if (listenerInt3 != null)
+            {
+                listenerInt3.OnEventRaised((int)args[0], (int)args[1], (int)args[2]);
                 continue;
             }
 
@@ -67,12 +74,34 @@ public class GameEvent : ScriptableObject
                 continue;
             }
 
-            //IGameEventListenerFloat listenerFloat = listeners[i] as IGameEventListenerFloat;
-            //if (listenerFloat != null)
-            //{
-            //    listenerFloat.OnEventRaised((float)args[0]);
-            //    continue;
-            //}
+            IGameEventListenerCardString listenerCardString = listeners[i] as IGameEventListenerCardString;
+            if (listenerCardString != null)
+            {
+                listenerCardString.OnEventRaised((Card)args[0], (string)args[1]);
+                continue;
+            }
+
+            IGameEventListenerUlong listenerUlong = listeners[i] as IGameEventListenerUlong;
+            if (listenerUlong != null)
+            {
+                listenerUlong.OnEventRaised((ulong)args[0]);
+                continue;
+            }
+
+            IGameEventListenerUlongString listenerUlongString = listeners[i] as IGameEventListenerUlongString;
+            if (listenerUlongString != null)
+            {
+                listenerUlongString.OnEventRaised((ulong)args[0], (string)args[1]);
+                continue;
+            }
+
+            IGameEventListenerStringArray listenerStringArray = listeners[i] as IGameEventListenerStringArray;
+            if (listenerStringArray != null)
+            {
+                listenerStringArray.OnEventRaised((string[])args);
+                continue;
+            }
+
             listeners[i].OnEventRaised();
         }
     }

@@ -9,10 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6819681765602089540}
+  - component: {fileID: 3963900548354619676}
   - component: {fileID: 6819681765602089541}
   - component: {fileID: 2936002786673998453}
+  - component: {fileID: 8644167628532478746}
+  - component: {fileID: 198592674188698129}
   - component: {fileID: 6819681765602089547}
-  - component: {fileID: 8715247539427629639}
   - component: {fileID: 7819250624989035976}
   - component: {fileID: 558523179026005749}
   - component: {fileID: 7025939271702575821}
@@ -21,6 +23,16 @@ GameObject:
   - component: {fileID: 1274651921785696640}
   - component: {fileID: 7569817381000206538}
   - component: {fileID: 5553864226894468007}
+  - component: {fileID: 2864375706094465534}
+  - component: {fileID: 1165097323352503153}
+  - component: {fileID: 1672686393831863802}
+  - component: {fileID: 6365531079482982527}
+  - component: {fileID: 8294141413536960894}
+  - component: {fileID: 2829808990906145070}
+  - component: {fileID: 4426702573838037807}
+  - component: {fileID: 5235836937976296781}
+  - component: {fileID: 2363799888341543682}
+  - component: {fileID: 1529972388595242969}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -37,11 +49,62 @@ Transform:
   m_GameObject: {fileID: 6819681765602089542}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &3963900548354619676
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 4.12, y: 6.98}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!114 &6819681765602089541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,25 +117,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8383716a3a4d51740a1b23c601642a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: -1
   canRollDices: 0
+  currentBoardSpace: {fileID: 0}
   eventRequestPaths: {fileID: 11400000, guid: 7b3ff6ae19684254991e6526eb4879d6, type: 2}
   eventRequestExtraCard: {fileID: 11400000, guid: 6e8cb5207fd1b7441bc5f092bdfb2ee5,
     type: 2}
-  eventAskIfWantToGuess: {fileID: 11400000, guid: e8ed097c9ccdb3b4d8b85785960d1e77,
-    type: 2}
-  eventEndOfMove: {fileID: 11400000, guid: 3a102db6f43d17f4ebe770237ef2a7e8, type: 2}
   eventChangePlayerTurn: {fileID: 11400000, guid: ffc55c482d74308438510dec34d79d19,
     type: 2}
   eventStartGame: {fileID: 11400000, guid: 3a8f8ca74b2fe494c98734a0295d692f, type: 2}
-  eventSendServerPawnToRoomManager: {fileID: 11400000, guid: 051e527b8501715489657a0175201cc1,
-    type: 2}
-  eventWin: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
-  eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
   eventDisplayDiceResults: {fileID: 11400000, guid: 59c362c29ef511d47b89e22522489b8a,
     type: 2}
+  eventUpdateAvailablePawns: {fileID: 11400000, guid: 657a6347b8b79984091e8afca6173351,
+    type: 2}
+  eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
+  eventUpdateStatusPanel: {fileID: 11400000, guid: d31db058477ca2243a41d223375c4cf6,
+    type: 2}
+  eventOpenExtraCardScreen: {fileID: 11400000, guid: 0dd4ebc881cfc7243a7dfe6259a518f1,
+    type: 2}
+  eventPlayerDisconnected: {fileID: 11400000, guid: 1987e8b93e2e405448d1cb1e29e3a5ee,
+    type: 2}
+  spriteRenderer: {fileID: 3963900548354619676}
+  pawnContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   isMyTurn:
     m_InternalValue: 0
+  networkPosition:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  pawnName:
+    m_InternalValue: 
+  playerName:
+    m_InternalValue: 
 --- !u!114 &2936002786673998453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,6 +163,50 @@ MonoBehaviour:
   PrefabHashGenerator: Player
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
+--- !u!114 &8644167628532478746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88a7f71b53ead514098c9e20d8b81a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 6819681765602089541}
+  eventSendAvailablePawnsToRoomManager: {fileID: 11400000, guid: 051e527b8501715489657a0175201cc1,
+    type: 2}
+  eventSendCard: {fileID: 11400000, guid: 01f966207fd6b484e9ae42bc17ffc2de, type: 2}
+  eventShowCardToPlayer: {fileID: 11400000, guid: 01b6461a7dd63d54b989b72a0d932f4d,
+    type: 2}
+  eventAskForGuessConfirmation: {fileID: 11400000, guid: 137286a982dda5b41a3e2704b3eeb1ce,
+    type: 2}
+  eventOpenGameOverScreen: {fileID: 11400000, guid: be0969855e13e704890242142b274aac,
+    type: 2}
+  eventGameOver: {fileID: 11400000, guid: d5f2f7dd933c40446a246057eef10693, type: 2}
+  eventOpenPlayerLoseScreen: {fileID: 11400000, guid: 2d672116ee171234994d84c5c24d8477,
+    type: 2}
+  eventPlayerLose: {fileID: 11400000, guid: 4003180d9bcd3bd4eae6e943772cbab8, type: 2}
+--- !u!114 &198592674188698129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285f283709b2be045be0b59fa724bc0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 6819681765602089541}
+  eventEndOfMove: {fileID: 11400000, guid: 3a102db6f43d17f4ebe770237ef2a7e8, type: 2}
+  eventAskIfWantToGuess: {fileID: 11400000, guid: e8ed097c9ccdb3b4d8b85785960d1e77,
+    type: 2}
+  eventOpenGuessScreen: {fileID: 11400000, guid: 05379e92fcd4fa549b3e5bba74941ee0,
+    type: 2}
 --- !u!114 &6819681765602089547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,50 +223,10 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 198592674188698129}
+        m_TargetAssemblyTypeName: MovePawn, Assembly-CSharp
         m_MethodName: OnFinalBoardSpacePressed
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &8715247539427629639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6819681765602089542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 7347478efb72f4749a79dbb5cfd902c8, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: CreatePlayerPawn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: SendStartGameRPC
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -174,8 +251,8 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
         m_MethodName: OnRequestPawns
         m_Mode: 1
         m_Arguments:
@@ -286,8 +363,8 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 198592674188698129}
+        m_TargetAssemblyTypeName: MovePawn, Assembly-CSharp
         m_MethodName: MoveToPlaceFromExtraCard
         m_Mode: 0
         m_Arguments:
@@ -314,8 +391,8 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6819681765602089541}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 198592674188698129}
+        m_TargetAssemblyTypeName: MovePawn, Assembly-CSharp
         m_MethodName: MoveToPlaceFromExtraCard
         m_Mode: 0
         m_Arguments:
@@ -373,6 +450,286 @@ MonoBehaviour:
       - m_Target: {fileID: 6819681765602089541}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: OnActUponDiceResults
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2864375706094465534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: fde24e56f971827478cef73445af2e25, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: SendStartGameRPC
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1165097323352503153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6fa815052d352048a4b6c7d0d8953c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 7347478efb72f4749a79dbb5cfd902c8, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: SetPlayerPawn
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1672686393831863802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6fa815052d352048a4b6c7d0d8953c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 3bcfc0e63ffa2b64f8e8aa70bb71f32e, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: SetPlayerName
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6365531079482982527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: e92e47671b2e71149a8af24c3e9c4da2, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: DisconnectPlayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8294141413536960894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 8df2843fe75ef0b49ab0c5ec81f194a8, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnRequestPersonCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2829808990906145070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 72b98ab16ef54e24e90a5976a7673a34, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnRequestPracticeCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4426702573838037807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df93ace02c7678c4dbb554af9081f9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: c598ad8e342a041498bfe46a6e8791f9, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnRequestToCheckGuessCards
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5235836937976296781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnHostWin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2363799888341543682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnHostLose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1529972388595242969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6819681765602089541}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: DisconnectPlayer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

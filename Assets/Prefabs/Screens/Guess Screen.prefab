@@ -1764,8 +1764,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5460524607106295999}
   - component: {fileID: 8634922592001610588}
-  - component: {fileID: 6732327755120088667}
   - component: {fileID: 6736742523362314442}
+  - component: {fileID: 349377218049680818}
+  - component: {fileID: 5417074630510928318}
   m_Layer: 5
   m_Name: Guess Screen
   m_TagString: Untagged
@@ -1823,39 +1824,15 @@ MonoBehaviour:
     type: 2}
   eventTryToWinWithGuess: {fileID: 11400000, guid: 6375bbdaa276ed74f870a54c7efe7340,
     type: 2}
+  eventRequestPersonCards: {fileID: 11400000, guid: 8df2843fe75ef0b49ab0c5ec81f194a8,
+    type: 2}
+  eventRequestPracticeCards: {fileID: 11400000, guid: 72b98ab16ef54e24e90a5976a7673a34,
+    type: 2}
   textShowCard: {fileID: 392810174740969826}
   prefabCardTemplate: {fileID: 6378109098343327915, guid: cf05df4dfbcc063408f122f70eb639a9,
     type: 3}
   prefabCardTemplateGuess: {fileID: 6093189617055447083, guid: a6bb30471a29b294394c4dbd5613682c,
     type: 3}
---- !u!114 &6732327755120088667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2654664258504706692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdbd52cbeea58284bb0bb2e5e8e86205, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 01b6461a7dd63d54b989b72a0d932f4d, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8634922592001610588}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: OnShowCardToPlayer
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &6736742523362314442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1876,6 +1853,62 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: 
         m_MethodName: OnAskForGuessConfirmation
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &349377218049680818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654664258504706692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e76fe7816385e2247b312a97885fba78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 01f966207fd6b484e9ae42bc17ffc2de, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8634922592001610588}
+        m_TargetAssemblyTypeName: System.UI.GuessScreenController, Assembly-CSharp
+        m_MethodName: CreateCardTemplate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5417074630510928318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654664258504706692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52b631a2f78c36c40bb04c48ac8ea19f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 01b6461a7dd63d54b989b72a0d932f4d, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8634922592001610588}
+        m_TargetAssemblyTypeName: System.UI.GuessScreenController, Assembly-CSharp
+        m_MethodName: OnShowCardToPlayer
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

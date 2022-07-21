@@ -51,5 +51,11 @@ namespace System.UI
             foreach (KeyValuePair<string, T> kvp in screens)
                 Debug.Log(kvp.Key + " " + kvp.Value);
         }
+
+        public virtual void ClearScreens()
+        {
+            foreach (KeyValuePair<string, T> kvp in screens)
+                kvp.Value.Hide();
+        }
     }
 }

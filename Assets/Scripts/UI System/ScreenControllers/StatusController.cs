@@ -5,8 +5,14 @@ namespace System.UI
 {
     public class StatusController : APanelController
     {
+        //Inspector reference fields
         [SerializeField]
-        TMP_Text textStatus;
+        TMP_Text textStatus = null;
+
+        private void Awake()
+        {
+            textStatus.text = "Aguardando o outro jogador...";
+        }
 
         public void OnUpdateStatusPanel(bool isOwnerTurn)
         {

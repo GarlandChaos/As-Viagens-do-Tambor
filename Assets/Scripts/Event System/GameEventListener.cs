@@ -6,17 +6,6 @@ public interface IGameEventListener
     void OnEventRaised();
 }
 
-//DELETE IF NOT USED UNTIL RELEASE
-//public interface IGameEventListenerString : IGameEventListener
-//{
-//    void OnEventRaised(string element);
-//}
-
-//public interface IGameEventListenerFloat : IGameEventListener
-//{
-//    void OnEventRaised(float value);
-//}
-
 public class GameEventListener : MonoBehaviour, IGameEventListener
 {
     public GameEvent gameEvent;
@@ -28,6 +17,11 @@ public class GameEventListener : MonoBehaviour, IGameEventListener
     }
 
     private void OnDisable()
+    {
+        gameEvent.UnregisterListener(this);
+    }
+
+    private void OnDestroy()
     {
         gameEvent.UnregisterListener(this);
     }

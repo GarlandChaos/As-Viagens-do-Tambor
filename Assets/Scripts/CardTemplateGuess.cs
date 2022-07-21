@@ -6,27 +6,17 @@ using System.UI;
 
 public class CardTemplateGuess : CardTemplate
 {
-    GuessScreenController guessScreen;
+    GuessScreenController guessScreen = null;
 
     public void CardSelect()
     {
         if(card.type != CardType.place)
         {
-            Debug.Log("Clicou em : " + card.name);
             if (card.type == CardType.person)
-            {
                 guessScreen.SetSelectedPersonCard(card);
-            }
             else if (card.type == CardType.practice)
-            {
                 guessScreen.SetSelectedPracticeCard(card);
-            }
         }
-        else
-        {
-            Debug.Log("Clicou em : " + card.name + " porém já está definido o card de lugar.");
-        }
-
     }
 
     public void Setup(GuessScreenController g, Card c)

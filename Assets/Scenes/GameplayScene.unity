@@ -1972,7 +1972,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 379861673}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.45596313, y: -0.24414062, z: 0.8763198}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3178,23 +3178,17 @@ GameObject:
   m_Component:
   - component: {fileID: 502138676}
   - component: {fileID: 502138677}
-  - component: {fileID: 502138679}
-  - component: {fileID: 502138680}
+  - component: {fileID: 502138687}
+  - component: {fileID: 502138683}
   - component: {fileID: 502138682}
   - component: {fileID: 502138681}
-  - component: {fileID: 502138683}
+  - component: {fileID: 502138680}
+  - component: {fileID: 502138679}
   - component: {fileID: 502138684}
-  - component: {fileID: 502138686}
-  - component: {fileID: 502138685}
-  - component: {fileID: 502138687}
   - component: {fileID: 502138688}
-  - component: {fileID: 502138689}
-  - component: {fileID: 502138690}
-  - component: {fileID: 502138691}
-  - component: {fileID: 502138693}
-  - component: {fileID: 502138692}
   - component: {fileID: 502138694}
-  - component: {fileID: 502138695}
+  - component: {fileID: 502138678}
+  - component: {fileID: 502138685}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3234,23 +3228,51 @@ MonoBehaviour:
     type: 2}
   eventAskForGuessConfirmation: {fileID: 11400000, guid: 137286a982dda5b41a3e2704b3eeb1ce,
     type: 2}
-  eventDiscardCard: {fileID: 11400000, guid: 3e043f46f43c58148be538a3f22f85b0, type: 2}
-  eventUpdateStatusPanel: {fileID: 11400000, guid: d31db058477ca2243a41d223375c4cf6,
-    type: 2}
   eventShowExtraCard: {fileID: 11400000, guid: fd62fcb58967ba44ba3798f0637d9ce4, type: 2}
   eventSendExtraCardToAskIfWantToGoToPlaceScreen: {fileID: 11400000, guid: 8392a72d78222a14cb37782728c16085,
     type: 2}
-  peopleCardContainer: {fileID: 11400000, guid: 07e5e39ebd398104e96a812cfa857d4d,
+  eventRequestToCheckGuessCards: {fileID: 11400000, guid: c598ad8e342a041498bfe46a6e8791f9,
     type: 2}
-  practicesCardContainer: {fileID: 11400000, guid: b28271ddf82ef664da28757d45971030,
+  eventWin: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
+  eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
+  peopleCardContainer: {fileID: 11400000, guid: ef805d383ec1e64419b945659c672c03,
     type: 2}
-  placesCardContainer: {fileID: 11400000, guid: ecb3d642e6079784196427c9aee4df52,
+  practicesCardContainer: {fileID: 11400000, guid: 5a1f9347e64a1a84c8594a1c6be80af2,
+    type: 2}
+  placesCardContainer: {fileID: 11400000, guid: ecfb193da3d05554b894a5257e7d5f74,
     type: 2}
   extraCardsContainer: {fileID: 11400000, guid: 754df865d17f30940b3fedb0ffe65841,
     type: 2}
   pawnsContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   boardGO: {fileID: 872512588}
-  clientPawn: {fileID: 0}
+--- !u!114 &502138678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502138675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 502138677}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResetFields
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &502138679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3431,41 +3453,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 01fb6003cdc1ef649a9ad84f339ba381, type: 2}
+  gameEvent: {fileID: 11400000, guid: 1987e8b93e2e405448d1cb1e29e3a5ee, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: OnCloseLoseScreen
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &502138686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: OnCloseWinScreen
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResetFields
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3531,146 +3525,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &502138689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 66254e98079ade447b6e4e89ce01af36, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: CloseExtraCardScreen
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &502138690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 151a9e4680660614a887196ce3c87ac2, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: CloseExtraCardScreen
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &502138691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: db2f3f052f70c454d80b902708ad106d, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: CloseExtraCardScreen
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &502138692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnLose
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &502138693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnWin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &502138694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3691,34 +3545,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: OnEffectGoToPlaceOptional
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &502138695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502138675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: cb7911ad2e252514f97b525382ac2e7f, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 502138677}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnCloseAskIfWantToGoToPlaceScreen
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8030,46 +7856,12 @@ MonoBehaviour:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1405857821}
     RegisteredScenes:
-    - SampleScene
     - GameplayScene
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 6819681765602089542, guid: c7fd04ff0c162c14ab9cdd9dd17bc93b,
         type: 3}
       PlayerPrefab: 1
-    - Prefab: {fileID: 8086397070506978306, guid: c06184e5659bf004d851bf253f2b7d98,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: 1e6b97106d4eec24196632ab638e584e,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: fd107ef90e34e7b4f962ff69f436c6fb,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: b90b792c5d9f9e14fa52167f953914b5,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: cd194c7c0fbd5bf418896d8f328bdced,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: df0d7aa53f529924e910b922b2934666,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: 6fd24a373fc430b45871871b5612a242,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: 75c474cca0ff17c42863be2c7605d22b,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: ea0e3405c1da92a48b4828071b88f440,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: d71eb2a78df70d74f8c7b60c00c3b3ce,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8086397070506978306, guid: b61d5ac7d06fb3f48948a9b5c47d31a9,
-        type: 3}
-      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
     CreatePlayerPrefab: 1
@@ -8108,7 +7900,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1405857820}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.45596313, y: -0.24414062, z: 0.8763198}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

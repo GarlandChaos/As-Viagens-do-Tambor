@@ -14,41 +14,42 @@ using UnityEngine;
 //Has network variables: lists of cards' ids of people, practice and place and a bool to check turn
 
 //Instantiate Pawn
-//Register itself to GameManager
 //Request envelope cards from server's GameManager and send them to client's GameManager
 //Roll dices when is it's turn
 //Add to lists of cards and cards' ids
 //Change turns
-//Move Pawn
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class Player : NetworkBehaviour
 {
     //Runtime fields
-    [HideInInspector]
-    public int id = -1;
     [HideInInspector]
     public bool canRollDices = false;
     List<Card> cardPersonList = new List<Card>(),
         cardPracticeList = new List<Card>(),
         cardPlaceList = new List<Card>(),
         discardedCardList = new List<Card>();
-    Pawn playerPawn;
+    [HideInInspector]
+    public BoardSpace currentBoardSpace = null;
 
-    //Serialized fields
+    //Inspector reference fields
     [SerializeField]
-    GameEvent eventRequestPaths, 
-        eventRequestExtraCard,
-        eventAskIfWantToGuess, 
-        eventEndOfMove, 
-        eventChangePlayerTurn, 
-        eventStartGame, 
-        eventSendServerPawnToRoomManager,
-        eventWin,
-        eventLose,
-        eventDisplayDiceResults;
+    GameEvent eventRequestPaths = null,
+        eventRequestExtraCard = null,
+        eventChangePlayerTurn = null,
+        eventStartGame = null,
+        eventDisplayDiceResults = null,
+        eventUpdateAvailablePawns = null,
+        eventDiscardCard = null,
+        eventUpdateStatusPanel = null,
+        eventOpenExtraCardScreen = null,
+        eventPlayerDisconnected = null;    
+    [SerializeField]
+    SpriteRenderer spriteRenderer = null;
+    [SerializeField]
+    PawnContainer pawnContainer = null;
 
     //Properties
-    public Pawn _PlayerPawn { set { playerPawn = value; } }
     public List<Card> _CardPersonList { get => cardPersonList; }
     public List<Card> _CardPracticeList { get => cardPracticeList; }
     public List<Card> _CardPlaceList { get => cardPlaceList; }
@@ -56,22 +57,22 @@ public class Player : NetworkBehaviour
     //Network variables
     NetworkList<int> listPeopleIds = new NetworkList<int>(new NetworkVariableSettings
     {
-        WritePermission = NetworkVariablePermission.ServerOnly,
+        WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
     NetworkList<int> listPracticesIds = new NetworkList<int>(new NetworkVariableSettings
     {
-        WritePermission = NetworkVariablePermission.ServerOnly,
+        WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
     NetworkList<int> listPlacesIds = new NetworkList<int>(new NetworkVariableSettings
     {
-        WritePermission = NetworkVariablePermission.ServerOnly,
+        WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
     NetworkList<int> discardedCardsIds = new NetworkList<int>(new NetworkVariableSettings
     {
-        WritePermission = NetworkVariablePermission.ServerOnly,
+        WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     });
     [HideInInspector]
@@ -80,78 +81,70 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     }, false);
+    [HideInInspector]
+    public NetworkVariableVector3 networkPosition = new NetworkVariableVector3(new NetworkVariableSettings
+    {
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    });
+    [HideInInspector]
+    public NetworkVariableString pawnName = new NetworkVariableString(new NetworkVariableSettings
+    {
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    });
+    [HideInInspector]
+    public NetworkVariableString playerName = new NetworkVariableString(new NetworkVariableSettings
+    {
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    });
 
-    private void Awake()
+    private void OnEnable()
     {
         listPeopleIds.OnListChanged += AddPersonCardToListById;
         listPlacesIds.OnListChanged += AddPlaceCardToListById;
         listPracticesIds.OnListChanged += AddPracticeCardToListById;
         discardedCardsIds.OnListChanged += AddDiscardedCardToListById;
         isMyTurn.OnValueChanged += OnMyTurnValueChanged;
+        pawnName.OnValueChanged += OnPawnNameValueChanged;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         listPeopleIds.OnListChanged -= AddPersonCardToListById;
         listPlacesIds.OnListChanged -= AddPlaceCardToListById;
         listPracticesIds.OnListChanged -= AddPracticeCardToListById;
         discardedCardsIds.OnListChanged -= AddDiscardedCardToListById;
         isMyTurn.OnValueChanged -= OnMyTurnValueChanged;
+        pawnName.OnValueChanged -= OnPawnNameValueChanged;
     }
 
     private void Start()
     {
-        if (!IsServer && playerPawn == null && transform.childCount > 0)
-            playerPawn = GetComponentInChildren<Pawn>();
+        NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
+        //COMEÇO GAMBIARRA
+        Board.instance.gameObject.SetActive(true);
+        //FIM GAMBIARRA
+        currentBoardSpace = Board.instance.initialSpace;
+        //COMEÇO GAMBIARRA
+        Board.instance.gameObject.SetActive(false);
+        //FIM GAMBIARRA
     }
 
     public override void NetworkStart()
-    {
-        if (GameManager.instance != null)
-        {
-            if (!GameManager.instance._RegisterPlayerLock)
-                GameManager.instance.RegisterPlayer(this);
-            else
-                StartCoroutine(WaitToRegisterCoroutine()); //RegisterLock is on, starting coroutine.
-        }
-        else
-            StartCoroutine(WaitToRegisterCoroutine()); //GameManager is null, starting coroutine.
-        
-        if (!IsServer && IsOwner)
-            RequestEnvelopeCardsServerRpc();
+    {   
+        networkPosition.Value = transform.position;
     }
 
-    public void AddToCardLists(Card card)
+    private void Singleton_OnClientDisconnectCallback(ulong obj)
     {
-        if(card.type == CardType.person)
+        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
+        if (OwnerClientId == obj)
         {
-            cardPersonList.Add(card);
-            listPeopleIds.Add(card.id);
+            eventPlayerDisconnected.Raise();
+            Destroy(gameObject);
         }
-        else if(card.type == CardType.practice)
-        {
-            cardPracticeList.Add(card);
-            listPracticesIds.Add(card.id);
-        }
-        else if(card.type == CardType.place)
-        {
-            cardPlaceList.Add(card);
-            listPlacesIds.Add(card.id);
-        }
-    }
-
-    public void AddToDiscardedCards(Card card)
-    {
-        if (!discardedCardList.Contains(card))
-        {
-            discardedCardList.Add(card);
-            discardedCardsIds.Add(card.id);
-        }
-    }
-
-    public bool IsItADiscardedCard(Card card)
-    {
-        return discardedCardList.Contains(card);
     }
 
     public void RollDices()
@@ -161,167 +154,115 @@ public class Player : NetworkBehaviour
         eventDisplayDiceResults.Raise();
     }
 
+    public void ActivateReroll()
+    {
+        canRollDices = true;
+    }
+
     public void OnActUponDiceResults()
     {
         if (isMyTurn.Value && IsOwner)
         {
             if (Dices._Dice1Result != Dices._Dice2Result)
-                eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, playerPawn.currentBoardSpace);
+                eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, currentBoardSpace);
             else
+            {
+                eventOpenExtraCardScreen.Raise();
                 eventRequestExtraCard.Raise();
+            }
         }
     }
 
-    public void OnFinalBoardSpacePressed(Queue<BoardSpace> path)
+    public void SetPlayerPawn(ulong clientID, string pawnName)
     {
-        MovePawn(path, true);
+        if (OwnerClientId == clientID)
+            this.pawnName.Value = pawnName;
     }
 
-    public void MovePawn(Queue<BoardSpace> path, bool askIfWantToGuess)
+    public void SetPlayerName(ulong clientID, string playerName)
     {
-        if (isMyTurn.Value && IsOwner)
-        {
-            if (IsServer)
-                MovePawnClientRpc(Board.instance.GetPathIds(path)); //send client rpc to move
-            else
-                MovePawnServerRpc(Board.instance.GetPathIds(path)); //send server rpc to move
-            
-            StartCoroutine(MoveCoroutine(path, askIfWantToGuess));
-        }
+        if (OwnerClientId == clientID)
+            this.playerName.Value = playerName;
     }
 
-    void CreatePlayerPawn()
-    {
-        if (IsOwner)
-        {
-            if (IsServer)
-                playerPawn = InstantiatePawn(GameManager.instance.clientPawn, new Vector3(-0.5f, 0f, 0f), NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject.transform);
-            else
-                SpawnClientPawnServerRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name); //precisa ser feito no servidor o primeiro instanciamento
-        }
-    }
-
-    public void OnRequestPawns()
-    {
-        if (!IsServer && IsOwner)
-            RequestPawnsServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-
-    [ServerRpc]
-    public void SendWinEventServerRpc()
-    {
-        eventWin.Raise();
-    }
-
-    [ClientRpc]
-    public void SendWinEventClientRpc()
-    {
-        if (!IsServer)
-            eventWin.Raise();
-    }
-
-    [ServerRpc]
-    public void SendLoseEventServerRpc()
-    {
-        eventLose.Raise();
-    }
-
-    [ClientRpc]
-    public void SendLoseEventClientRpc()
-    {
-        if (!IsServer)
-            eventLose.Raise();
-    }
-
-    [ServerRpc]
-    void MovePawnServerRpc(int[] ids)
-    {
-        StartCoroutine(MoveCoroutine(Board.instance.GetBoardSpacesByIds(ids), false));
-    }
-
-    [ClientRpc]
-    void MovePawnClientRpc(int[] ids)
-    {
-        if (!IsServer)
-            StartCoroutine(MoveCoroutine(Board.instance.GetBoardSpacesByIds(ids), false));
-    }
-
-    [ServerRpc]
-    void RequestPawnsServerRpc(ulong clientID)
-    {
-        CreatePawnCardsClientRpc(NetworkManager.Singleton.LocalClientId, GameManager.instance.clientPawn.name);       
-    }
-
-    [ClientRpc]
-    void CreatePawnCardsClientRpc(ulong serverID, string serverPawn)
+    public string[] GetPlayersPawnNames()
     {
         if (IsServer)
-            return;
+        {
+            string[] pawnNames = new string[NetworkManager.Singleton.ConnectedClientsList.Count];
+            List<MLAPI.Connection.NetworkClient> clientList = NetworkManager.Singleton.ConnectedClientsList;
 
-        eventSendServerPawnToRoomManager.Raise(serverPawn);
+            for (int i = 0; i < clientList.Count; i++)
+                pawnNames[i] = clientList[i].PlayerObject.GetComponent<Player>().pawnName.Value;
+
+            return pawnNames;
+        }
+
+        return null;
     }
 
-    [ServerRpc]
-    void SpawnClientPawnServerRpc(ulong clientID, string clientPawn)
+    public void AddToCardLists(Card card)
     {
-        playerPawn = InstantiatePawn(GameManager.instance.GetPawnByName(clientPawn), new Vector3(1f, 0f, 0f), transform);
-        playerPawn.SetClientParentClientRpc(clientID);
+        if (card.type == CardType.person)
+            listPeopleIds.Add(card.id);
+        else if (card.type == CardType.practice)
+            listPracticesIds.Add(card.id);
+        else if (card.type == CardType.place)
+            listPlacesIds.Add(card.id);
     }
 
-    Pawn InstantiatePawn(Pawn pawn, Vector3 positionOffset, Transform parent)
+    public void AddToDiscardedCards(Card card)
     {
-        Pawn p = Instantiate(pawn);
-        p.GetComponent<NetworkObject>().Spawn();
-        p.transform.position += positionOffset;
-        p.transform.SetParent(parent, false);
-        
-        return p;
+        if (!discardedCardList.Contains(card))
+            discardedCardsIds.Add(card.id);
     }
 
-    [ServerRpc]
-    void RequestEnvelopeCardsServerRpc()
+    public bool IsItADiscardedCard(Card card)
     {
-        SendEvelopeCardsClientRpc(GameManager.instance._EnvelopePerson, GameManager.instance._EnvelopePractice, GameManager.instance._EnvelopePlace);
-    }
-
-    [ClientRpc]
-    void SendEvelopeCardsClientRpc(int personID, int practiceID, int placeID)
-    {
-        if (IsServer) return;
-        GameManager.instance.FillEnvelope(personID, practiceID, placeID);
+        return discardedCardList.Contains(card);
     }
 
     void AddPersonCardToListById(NetworkListEvent<int> changeEvent)
     {
-        Card c = GameManager.instance.GetCardByTypeAndID(CardType.person, changeEvent.Value);
-        if (!cardPersonList.Contains(c))
-            cardPersonList.Add(c);
+        AddCardToListByIdAndType(changeEvent.Value, CardType.person);
     }
 
     void AddPlaceCardToListById(NetworkListEvent<int> changeEvent)
     {
-        Card c = GameManager.instance.GetCardByTypeAndID(CardType.place, changeEvent.Value);
-        if (!cardPlaceList.Contains(c))
-            cardPlaceList.Add(c);
+        AddCardToListByIdAndType(changeEvent.Value, CardType.place);
     }
 
     void AddPracticeCardToListById(NetworkListEvent<int> changeEvent)
     {
-        Card c = GameManager.instance.GetCardByTypeAndID(CardType.practice, changeEvent.Value);
-        if (!cardPracticeList.Contains(c))
-            cardPracticeList.Add(c);
+        AddCardToListByIdAndType(changeEvent.Value, CardType.practice);
+    }
+
+    void AddCardToListByIdAndType(int cardId, CardType cardType)
+    {
+        List<Card> cardList = cardType == CardType.place ? cardPlaceList : cardType == CardType.person ? cardPersonList : cardPracticeList;
+        Card c = GameManager.instance.GetCardByTypeAndID(cardType, cardId);
+        if (!cardList.Contains(c))
+        {
+            cardList.Add(c);
+            if (IsOwner)
+                eventDiscardCard.Raise(c);
+        }
     }
 
     void AddDiscardedCardToListById(NetworkListEvent<int> changeEvent)
     {
         Card c = GameManager.instance.GetCardByID(changeEvent.Value);
         if (!discardedCardList.Contains(c))
+        {
             discardedCardList.Add(c);
+            if (IsOwner)
+                eventDiscardCard.Raise(c);
+        }
     }
 
     void OnMyTurnValueChanged(bool previous, bool current)
     {
-        if (!previous)
+        if (current)
         {
             if (IsOwner && !canRollDices)
                 canRollDices = true;
@@ -329,134 +270,62 @@ public class Player : NetworkBehaviour
             if (isMyTurn.Value && IsOwner && canRollDices)
                 RollDices();
         }
+
+        //envia um rpc para atualizar em todos os clientes o status
+        if(IsOwner)
+            eventUpdateStatusPanel.Raise(current);
     }
 
-    public void RequestPlayerToSendDiscardCardEvents()
+    void OnPawnNameValueChanged(string previous, string current)
     {
-        SendDiscardCardEventsClientRpc();
+        if(!string.IsNullOrEmpty(current))
+            spriteRenderer.sprite = pawnContainer.GetPawnByName(pawnName.Value).spritePawn;
+
+        if (IsServer)
+            eventUpdateAvailablePawns.Raise(GetPlayersPawnNames());
     }
 
-    [ClientRpc]
-    void SendDiscardCardEventsClientRpc()
+    public void DisconnectPlayer()
     {
-        if (IsServer) 
-            return;
+        if (OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            if (IsServer)
+                NetworkManager.Shutdown();
+            else
+                DisconnectPlayerServerRPC(NetworkManager.Singleton.LocalClientId);
+        }
+    }
 
-        //cuidar que os cards do envelope estão diferentes para cada jogador.
-        //o server retira o envelope e comunica os clientes.
-        //comunicar o GameManager para disparar os eventos de descarte no bloco de notas
-        GameManager.instance.SendDiscardCardEvents(this);
+    [ServerRpc]
+    public void DisconnectPlayerServerRPC(ulong clientID)
+    {
+        NetworkManager.Singleton.DisconnectClient(clientID);
     }
 
     public void SendStartGameRPC()
     {
-        if (!IsServer && IsOwner) //apenas quando não for servidor, ou seja, quando é garantido que tenha dois jogadores
-            StartGameWithTwoPlayersServerRpc();
-    }
-
-    [ServerRpc]
-    void StartGameWithTwoPlayersServerRpc()
-    {
-        StartGameWithTwoPlayersClientRpc();
+        if (IsServer && IsOwner)
+            if (NetworkManager.Singleton.ConnectedClientsList.Count < 5)
+                StartGameClientRpc();
     }
 
     [ClientRpc]
-    void StartGameWithTwoPlayersClientRpc()
+    void StartGameClientRpc()
     {
         eventStartGame.Raise();
-    }
-
-    [ServerRpc]
-    void ChangePlayerTurnServerRpc()
-    {
-        ChangePlayerTurnClientRpc();
-    }
-
-    [ClientRpc]
-    void ChangePlayerTurnClientRpc()
-    {
-        eventChangePlayerTurn.Raise();
     }
 
     public void ChangePlayerTurn()
     {
         if (IsServer && IsOwner)
-            ChangePlayerTurnClientRpc();
-        else if(!IsServer && IsOwner)
+            eventChangePlayerTurn.Raise();
+        else if (!IsServer && IsOwner)
             ChangePlayerTurnServerRpc();
     }
 
-    public void ActivateReroll()
+    [ServerRpc]
+    void ChangePlayerTurnServerRpc()
     {
-        canRollDices = true;
-    }
-
-    public void MoveToPlaceFromExtraCard(ExtraCard extraCard)
-    {
-        if (isMyTurn.Value && IsOwner)
-        {
-            BoardSpace goal = Board.instance.GetPlaceByEnum(extraCard.placeToGo);
-            MovePawn(AStar.CalculatePathToPlace(playerPawn.currentBoardSpace, goal), extraCard.askIfWantToGuess);
-        }
-    }
-
-    IEnumerator WaitToRegisterCoroutine()
-    {
-        yield return new WaitForSeconds(1f);
-
-        if(GameManager.instance != null)
-        {
-            if (!GameManager.instance._RegisterPlayerLock)
-            {
-                GameManager.instance.RegisterPlayer(this);
-                if (!IsServer && IsOwner) //mudar aqui para iniciar com mais players
-                    StartGameWithTwoPlayersServerRpc();
-            }
-            else
-                StartCoroutine(WaitToRegisterCoroutine());
-        }
-        else
-            StartCoroutine(WaitToRegisterCoroutine());
-    }
-
-    IEnumerator MoveCoroutine(Queue<BoardSpace> path, bool askIfWantToGuess)
-    {
-        WaitForEndOfFrame wait = new WaitForEndOfFrame();
-        AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        float timer = 0f;
-        Vector3 startPos = playerPawn.transform.position;
-        BoardSpace bs = path.Dequeue();
-        Vector3 endPos = bs.transform.position;
-
-        while (timer < 1f)
-        {
-            timer += Time.deltaTime * 2f;
-            playerPawn.transform.position = Vector3.Lerp(startPos, endPos, curve.Evaluate(timer));
-            
-            yield return wait;
-        }
-
-        if (path.Count > 0)
-            StartCoroutine(MoveCoroutine(path, askIfWantToGuess));
-        else
-        {
-            playerPawn.currentBoardSpace = bs;
-            if (IsOwner)
-            {
-                eventEndOfMove.Raise();
-                Place place = bs.GetComponent<Place>();
-                if (place != null)
-                {
-                    if (askIfWantToGuess)
-                        eventAskIfWantToGuess.Raise(place.cardPlace);
-                    else
-                        ChangePlayerTurn();
-                }
-                else
-                    ChangePlayerTurn();
-
-                eventDisplayDiceResults.Raise();
-            }
-        }
+        eventChangePlayerTurn.Raise();
     }
 }
