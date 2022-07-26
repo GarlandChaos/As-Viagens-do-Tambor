@@ -23,7 +23,7 @@ namespace System.UI
             UIManager.instance.RequestScreen("Dices Results Panel", true);
         }
 
-        public void OnEndOfMove()
+        public void CloseDiceResultsPanel()
         {
             UIManager.instance.RequestScreen("Dices Results Panel", false);
         }

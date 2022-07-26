@@ -76,7 +76,7 @@ public class MovePawn : NetworkBehaviour
             player.currentBoardSpace = bs;
             if (IsOwner)
             {
-                eventEndOfMove.Raise(); //checar quem tá ouvindo esse evento...
+                eventEndOfMove.Raise();
                 Place place = bs.GetComponent<Place>();
                 if (place != null)
                 {

@@ -13,7 +13,8 @@ namespace System.UI
         Sprite cardBackSprite = null;
         ExtraCard currentExtraCard = null;
         [SerializeField]
-        GameEvent eventEffectLoseTurn = null, eventEffectReroll = null, eventEffectGoToPlaceAndGuess = null, eventOpenAskIfWantToGoToPlaceScreen = null, eventEffectGoToPlaceOptional = null;
+        GameEvent eventEffectLoseTurn = null, eventEffectReroll = null, eventEffectGoToPlaceAndGuess = null, eventOpenAskIfWantToGoToPlaceScreen = null,
+            eventEffectGoToPlaceOptional = null;
 
         public void OnShowExtraCard(ExtraCard extraCard)
         {
@@ -55,8 +56,6 @@ namespace System.UI
                 default:
                     break;
             }
-
-            Hide();
         }
 
         IEnumerator ShowExtraCardCoroutine(ExtraCard extraCard)

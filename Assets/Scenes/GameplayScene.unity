@@ -3241,10 +3241,11 @@ MonoBehaviour:
     type: 2}
   placesCardContainer: {fileID: 11400000, guid: ecfb193da3d05554b894a5257e7d5f74,
     type: 2}
-  extraCardsContainer: {fileID: 11400000, guid: 754df865d17f30940b3fedb0ffe65841,
+  extraCardsContainer: {fileID: 11400000, guid: 4171431f5ea01cf48885b1ad60ded55c,
     type: 2}
   pawnsContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   boardGO: {fileID: 872512588}
+  DEBUG: 1
 --- !u!114 &502138678
 MonoBehaviour:
   m_ObjectHideFlags: 0

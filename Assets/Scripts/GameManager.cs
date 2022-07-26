@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     string unraveledCardPlayerName = string.Empty;
     bool playerCanInteract = false;
     bool onGuessScreen = false;
+    public bool DEBUG = true;
 
     //Properties
     public int _EnvelopePerson { get => envelope[0].id; }

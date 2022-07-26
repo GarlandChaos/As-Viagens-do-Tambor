@@ -157,13 +157,14 @@ public class Player : NetworkBehaviour
     public void ActivateReroll()
     {
         canRollDices = true;
+        RollDices();
     }
 
     public void OnActUponDiceResults()
     {
         if (isMyTurn.Value && IsOwner)
         {
-            if (Dices._Dice1Result != Dices._Dice2Result)
+            if (Dices._Dice1Result != Dices._Dice2Result && !GameManager.instance.DEBUG)
                 eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, currentBoardSpace);
             else
             {

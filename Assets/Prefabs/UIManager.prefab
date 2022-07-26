@@ -63,6 +63,7 @@ GameObject:
   - component: {fileID: 7845757850115503552}
   - component: {fileID: 6020496060482944063}
   - component: {fileID: 5103608802190554236}
+  - component: {fileID: 2973574465891211557}
   - component: {fileID: 1881423573845901273}
   - component: {fileID: 6531496869935347018}
   - component: {fileID: 6891647562216106925}
@@ -72,6 +73,7 @@ GameObject:
   - component: {fileID: 1153225344667901300}
   - component: {fileID: 458280414726365446}
   - component: {fileID: 8913072918660289286}
+  - component: {fileID: 8300615126346810337}
   - component: {fileID: 1957317212679690658}
   - component: {fileID: 8842892734469798215}
   m_Layer: 5
@@ -237,7 +239,35 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7741445312674578381}
         m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
-        m_MethodName: OnEndOfMove
+        m_MethodName: CloseDiceResultsPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2973574465891211557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329305519955576102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 0dd4ebc881cfc7243a7dfe6259a518f1, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7741445312674578381}
+        m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
+        m_MethodName: CloseDiceResultsPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -484,6 +514,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameEvent: {fileID: 11400000, guid: 66254e98079ade447b6e4e89ce01af36, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7741445312674578381}
+        m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
+        m_MethodName: CloseExtraCardScreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8300615126346810337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329305519955576102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 151a9e4680660614a887196ce3c87ac2, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
