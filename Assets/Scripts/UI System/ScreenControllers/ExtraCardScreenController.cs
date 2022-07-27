@@ -14,7 +14,7 @@ namespace System.UI
         ExtraCard currentExtraCard = null;
         [SerializeField]
         GameEvent eventEffectLoseTurn = null, eventEffectReroll = null, eventEffectGoToPlaceAndGuess = null, eventOpenAskIfWantToGoToPlaceScreen = null,
-            eventEffectGoToPlaceOptional = null;
+            eventEffectGoToPlaceOptional = null, eventCloseExtraCardScreen = null;
 
         public void OnShowExtraCard(ExtraCard extraCard)
         {
@@ -35,9 +35,8 @@ namespace System.UI
                     break;
 
                 case Effect.goToPlace:
-                    //precisa comunicar o local exato que o player deve ir...
-                    //http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
                     eventEffectGoToPlaceAndGuess.Raise(currentExtraCard);
+                    eventCloseExtraCardScreen.Raise();
                     break;
 
                 case Effect.goToPlaceOptional:

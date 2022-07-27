@@ -164,7 +164,7 @@ public class Player : NetworkBehaviour
     {
         if (isMyTurn.Value && IsOwner)
         {
-            if (Dices._Dice1Result != Dices._Dice2Result && !GameManager.instance.DEBUG)
+            if (Dices._Dice1Result != Dices._Dice2Result && !GameManager.instance.DEBUGEXTRACARD)
                 eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, currentBoardSpace);
             else
             {

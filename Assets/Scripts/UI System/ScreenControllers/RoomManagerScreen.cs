@@ -111,7 +111,7 @@ namespace System.UI
 
         public void FillRoomsTemplates()
         {
-            if (GameManager.instance.DEBUG)
+            if (GameManager.instance.DEBUGROOM)
             {
                 GameObject go = Instantiate(roomTemplatePrefab);
                 RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();

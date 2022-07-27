@@ -22,25 +22,23 @@ public class MovePawn : NetworkBehaviour
         if (player.isMyTurn.Value && IsOwner)
         {
             if (IsServer)
-                MovePawnClientRpc(Board.instance.GetPathIds(path)); //send client rpc to move
+                MovePawnClientRpc(Board.instance.GetPathIds(path), NetworkManager.Singleton.LocalClientId, askIfWantToGuess); //send client rpc to move
             else
-                MovePawnServerRpc(Board.instance.GetPathIds(path)); //send server rpc to move
-
-            StartCoroutine(MoveCoroutine(path, askIfWantToGuess));
+                MovePawnServerRpc(Board.instance.GetPathIds(path), NetworkManager.Singleton.LocalClientId, askIfWantToGuess); //send server rpc to move
         }
     }
 
     [ServerRpc]
-    void MovePawnServerRpc(int[] ids)
+    void MovePawnServerRpc(int[] ids, ulong clientID, bool askIfWantToGuess)
     {
-        StartCoroutine(MoveCoroutine(Board.instance.GetBoardSpacesByIds(ids), false));
+        MovePawnClientRpc(ids, clientID, askIfWantToGuess);
     }
 
     [ClientRpc]
-    void MovePawnClientRpc(int[] ids)
+    void MovePawnClientRpc(int[] ids, ulong clientID, bool askIfWantToGuess)
     {
-        if (!IsServer)
-            StartCoroutine(MoveCoroutine(Board.instance.GetBoardSpacesByIds(ids), false));
+        bool ask = OwnerClientId == clientID ? askIfWantToGuess : false;
+        StartCoroutine(MoveCoroutine(Board.instance.GetBoardSpacesByIds(ids), ask));
     }
 
     public void MoveToPlaceFromExtraCard(ExtraCard extraCard)

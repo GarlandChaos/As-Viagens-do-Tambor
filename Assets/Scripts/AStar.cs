@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
 //A*: https://www.youtube.com/watch?v=alU04hvz6L4
 // frontier = PriorityQueue()
 // frontier.put(start, 0)

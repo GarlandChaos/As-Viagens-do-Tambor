@@ -68,13 +68,14 @@ GameObject:
   - component: {fileID: 6531496869935347018}
   - component: {fileID: 6891647562216106925}
   - component: {fileID: 358177729237518576}
+  - component: {fileID: 1957317212679690658}
   - component: {fileID: 4924848430093649097}
   - component: {fileID: 8873610723567686483}
   - component: {fileID: 1153225344667901300}
   - component: {fileID: 458280414726365446}
   - component: {fileID: 8913072918660289286}
   - component: {fileID: 8300615126346810337}
-  - component: {fileID: 1957317212679690658}
+  - component: {fileID: 768780445226221828}
   - component: {fileID: 8842892734469798215}
   m_Layer: 5
   m_Name: UI Event Listener Controller
@@ -389,6 +390,34 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1957317212679690658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329305519955576102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 70f576504a9179b47a2e5b115daf7fde, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7741445312674578381}
+        m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
+        m_MethodName: OnOpenAskIfWantToGoToPlaceScreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4924848430093649097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,7 +586,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1957317212679690658
+--- !u!114 &768780445226221828
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -569,13 +598,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 70f576504a9179b47a2e5b115daf7fde, type: 2}
+  gameEvent: {fileID: 11400000, guid: f51c406a4c684de4caeb933f87edacbc, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7741445312674578381}
         m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
-        m_MethodName: OnOpenAskIfWantToGoToPlaceScreen
+        m_MethodName: CloseExtraCardScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
