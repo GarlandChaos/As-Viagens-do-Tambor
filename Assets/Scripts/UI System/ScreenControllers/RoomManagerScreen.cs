@@ -82,7 +82,7 @@ namespace System.UI
 
         private void Singleton_OnClientConnectedCallback(ulong obj)
         {
-            UpdateWaitingForPlayersDialogInfo();
+            //UpdateWaitingForPlayersDialogInfo();
         }
 
         private void Singleton_OnClientDisconnectCallback(ulong obj)
@@ -92,11 +92,14 @@ namespace System.UI
 
         void UpdateWaitingForPlayersDialogInfo()
         {
-            int playersCount = NetworkManager.Singleton.ConnectedClients.Count;
-            numberOfPlayersConnectedText.text = playersCount.ToString() + "/4";
+            if (NetworkManager.Singleton.IsServer)
+            {
+                int playersCount = NetworkManager.Singleton.ConnectedClients.Count;
+                numberOfPlayersConnectedText.text = playersCount.ToString() + "/4";
 
-            if (playersCount > 1 && playersCount < 5)
-                playGameButton.interactable = true;
+                if (playersCount > 1 && playersCount < 5)
+                    playGameButton.interactable = true;
+            }
         }
 
         public void SetSelectedPawn(Pawn pawn)
@@ -227,7 +230,6 @@ namespace System.UI
             eventSetPlayerName.Raise(NetworkManager.Singleton.LocalClientId, playerNameSearchInputField.text);
             MyNetworkDiscovery.instance.addresses.Clear();
             MyNetworkDiscovery.instance.StopBroadcast();
-            //Hide();
         }
 
         void CreateRoomInputChange()
@@ -250,17 +252,19 @@ namespace System.UI
 
         public void OnSendAvailablePawnsToRoomManager(string[] pawnNames)
         {
+            UpdateWaitingForPlayersDialogInfo();
+
             foreach (CardTemplatePawn ctp in enterRoomCardTemplatePawnList)
             {
-                bool uniqueName = true;
                 foreach(string s in pawnNames)
                 {
                     if (ctp._PawnName == s)
-                        uniqueName = false;
+                    {
+                        ctp.gameObject.SetActive(false);
+                        if (selectedPawn.name == s)
+                            enterRoomPlayButton.interactable = false;
+                    }
                 }
-
-                if (!uniqueName)
-                    ctp.gameObject.SetActive(false);
             }
         }
 

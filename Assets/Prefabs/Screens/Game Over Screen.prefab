@@ -168,7 +168,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 240, y: 0}
+  m_AnchoredPosition: {x: 340, y: 0}
   m_SizeDelta: {x: 480, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9037480521144362316
@@ -320,7 +320,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 350}
+  m_SizeDelta: {x: 700, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2679039481180253814
 CanvasRenderer:
@@ -397,6 +397,7 @@ GameObject:
   - component: {fileID: 5460524607106295999}
   - component: {fileID: 999860639203793743}
   - component: {fileID: 8423950032192446593}
+  - component: {fileID: 987362972075139574}
   m_Layer: 5
   m_Name: Game Over Screen
   m_TagString: Untagged
@@ -444,6 +445,8 @@ MonoBehaviour:
   rtCardContainer: {fileID: 5681042469494450941}
   eventCloseWinScreen: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee,
     type: 2}
+  eventRequestEnvelopeCards: {fileID: 11400000, guid: 6e546200a1697fd45a153f23becbaa5f,
+    type: 2}
 --- !u!114 &8423950032192446593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,6 +466,34 @@ MonoBehaviour:
       - m_Target: {fileID: 999860639203793743}
         m_TargetAssemblyTypeName: System.UI.WinScreenController, Assembly-CSharp
         m_MethodName: OnGameOver
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &987362972075139574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654664258504706692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df93ace02c7678c4dbb554af9081f9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 76a936ab5ab832b4592fc2d11ac8062a, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 999860639203793743}
+        m_TargetAssemblyTypeName: System.UI.WinScreenController, Assembly-CSharp
+        m_MethodName: ReceiveEnvelopeCardsFromServer
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -500,7 +531,7 @@ RectTransform:
   m_GameObject: {fileID: 2668437217419919445}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.00008, y: 1.00008, z: 1.00008}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 679921032475977916}
   - {fileID: 7759316004169643817}
@@ -511,7 +542,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 330, y: 100}
+  m_SizeDelta: {x: 330, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2918146591583585839
 MonoBehaviour:
@@ -615,7 +646,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 480, y: 330}
+  m_SizeDelta: {x: 680, y: 480}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7143873517846808885
 CanvasRenderer:
@@ -1386,6 +1417,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6027938053541821710, guid: cf05df4dfbcc063408f122f70eb639a9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf05df4dfbcc063408f122f70eb639a9, type: 3}

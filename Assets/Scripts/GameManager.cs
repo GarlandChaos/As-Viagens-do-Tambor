@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     GameObject prefabUIManager = null;
     [SerializeField]
     GameEvent eventShowCardToPlayer = null, eventAskForGuessConfirmation = null, eventShowExtraCard = null, eventSendExtraCardToAskIfWantToGoToPlaceScreen = null,
-        eventRequestToCheckGuessCards = null, eventWin = null, eventLose = null;
+        eventRequestToCheckGuessCards = null, eventRequestToCheckEnvelope = null, eventWin = null, eventLose = null;
     [SerializeField]
     CardContainer peopleCardContainer = null, 
         practicesCardContainer = null, 
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     bool playerCanInteract = false;
     bool onGuessScreen = false;
     public bool DEBUGROOM = true; //PROVISÓRIO
-    public bool DEBUGEXTRACARD = true; //PROVISÓRIO
+    public bool DEBUGEXTRACARD = false; //PROVISÓRIO
 
     //Properties
     public int _EnvelopePerson { get => envelope[0].id; }
@@ -333,7 +333,7 @@ public class GameManager : MonoBehaviour
             eventRequestToCheckGuessCards.Raise(currentPlaceGuess.id, currentPersonGuess.id, currentPracticeGuess.id);
     }
     
-    bool CheckEnvelope(Card placeCard, Card personCard, Card practiceCard)
+    public bool CheckEnvelope(Card placeCard, Card personCard, Card practiceCard)
     {
         return envelope.Contains(placeCard) && envelope.Contains(personCard) && envelope.Contains(practiceCard);
     }
@@ -354,19 +354,17 @@ public class GameManager : MonoBehaviour
         if (NetworkManager.Singleton.IsServer) //is server
         {
             if (CheckEnvelope(currentPlaceGuess, currentPersonGuess, currentPracticeGuess)) //local player win
-            {
-                //manda ClientRPC para todos encerrando o jogo
-                eventWin.Raise();
-            }
+                eventWin.Raise(); //manda ClientRPC para todos encerrando o jogo
             else //local player lose
-            {
-                //manda ClientRPC e assiste o jogo até o fim
-                eventLose.Raise();
-            }
+                eventLose.Raise(); //manda ClientRPC e assiste o jogo até o fim
         }
         else //is client
         {
-            //manda ServerRPC para checar o envelope
+            //  manda ServerRPC para checar o envelope
+            eventRequestToCheckEnvelope.Raise(currentPlaceGuess.id, currentPersonGuess.id, currentPracticeGuess.id);
+            //  servidor checa e manda resposta para o cliente
+            //      se venceu, manda ServerRPC para encerrar o jogo
+            //      se perdeu, manda ServerRPC e assiste o jogo
         }
     }
 

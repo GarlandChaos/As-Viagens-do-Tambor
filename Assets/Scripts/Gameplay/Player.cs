@@ -123,13 +123,9 @@ public class Player : NetworkBehaviour
     private void Start()
     {
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
-        //COMEÇO GAMBIARRA
         Board.instance.gameObject.SetActive(true);
-        //FIM GAMBIARRA
         currentBoardSpace = Board.instance.initialSpace;
-        //COMEÇO GAMBIARRA
         Board.instance.gameObject.SetActive(false);
-        //FIM GAMBIARRA
     }
 
     public override void NetworkStart()
@@ -164,7 +160,7 @@ public class Player : NetworkBehaviour
     {
         if (isMyTurn.Value && IsOwner)
         {
-            if (Dices._Dice1Result != Dices._Dice2Result && !GameManager.instance.DEBUGEXTRACARD)
+            if (Dices._Dice1Result != Dices._Dice2Result)
                 eventRequestPaths.Raise(Dices._Dice1Result, Dices._Dice2Result, currentBoardSpace);
             else
             {
@@ -283,7 +279,13 @@ public class Player : NetworkBehaviour
             spriteRenderer.sprite = pawnContainer.GetPawnByName(pawnName.Value).spritePawn;
 
         if (IsServer)
-            eventUpdateAvailablePawns.Raise(GetPlayersPawnNames());
+            UpdateAvailablePawnsClientRPC(GetPlayersPawnNames());
+    }
+
+    [ClientRpc]
+    void UpdateAvailablePawnsClientRPC(string[] pawnNames)
+    {
+        eventUpdateAvailablePawns.Raise(pawnNames);
     }
 
     public void DisconnectPlayer()

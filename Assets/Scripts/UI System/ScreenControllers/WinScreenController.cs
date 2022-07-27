@@ -14,21 +14,26 @@ namespace System.UI
         [SerializeField]
         RectTransform rtCardContainer = null;
         [SerializeField]
-        GameEvent eventCloseWinScreen = null;
+        GameEvent eventCloseWinScreen = null, eventRequestEnvelopeCards = null;
 
         public void ShowEnvelopeCards()
         {
             if (NetworkManager.Singleton.IsServer)
-            {
-                cardTemplates[0].Setup(GameManager.instance._EnvelopePlaceCard);
-                //cardTemplates[0].transform.SetParent(rtCardContainer, false);
+                SetupCardTemplates(GameManager.instance._EnvelopePlaceCard, GameManager.instance._EnvelopePersonCard, GameManager.instance._EnvelopePracticeCard);
+            else
+                eventRequestEnvelopeCards.Raise();
+        }
 
-                cardTemplates[1].Setup(GameManager.instance._EnvelopePersonCard);
-                //cardTemplates[1].transform.SetParent(rtCardContainer, false);
+        public void ReceiveEnvelopeCardsFromServer(int placeCardId, int personCardId, int practiceCardId)
+        {
+            SetupCardTemplates(GameManager.instance.GetCardByID(placeCardId), GameManager.instance.GetCardByID(personCardId), GameManager.instance.GetCardByID(practiceCardId));
+        }
 
-                cardTemplates[2].Setup(GameManager.instance._EnvelopePracticeCard);
-                //cardTemplates[2].transform.SetParent(rtCardContainer, false);
-            }
+        void SetupCardTemplates(Card placeCard, Card personCard, Card practiceCard)
+        {
+            cardTemplates[0].Setup(placeCard);
+            cardTemplates[1].Setup(personCard);
+            cardTemplates[2].Setup(practiceCard);
         }
 
         public void CloseWinScreen()

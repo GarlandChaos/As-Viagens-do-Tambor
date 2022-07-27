@@ -11,7 +11,8 @@ public class RequestProvider : NetworkBehaviour
     Player player = null;
     [SerializeField]
     GameEvent eventSendAvailablePawnsToRoomManager = null, eventSendCard = null, eventShowCardToPlayer = null, eventAskForGuessConfirmation = null,
-        eventOpenGameOverScreen = null, eventGameOver = null, eventOpenPlayerLoseScreen = null, eventPlayerLose = null;
+        eventOpenGameOverScreen = null, eventGameOver = null, eventOpenPlayerLoseScreen = null, eventPlayerLose = null,
+        eventSendEnvelopeCardsFromServer = null;
 
     public void OnRequestPawns()
     {
@@ -108,6 +109,21 @@ public class RequestProvider : NetworkBehaviour
             eventAskForGuessConfirmation.Raise();
     }
 
+    public void OnRequestToCheckEnvelope(int placeCardId, int personCardId, int practiceCardId)
+    {
+        if(IsOwner)
+            CheckEnvelopeServerRPC(placeCardId, personCardId, practiceCardId);
+    }
+
+    [ServerRpc]
+    void CheckEnvelopeServerRPC(int placeCardId, int personCardId, int practiceCardId)
+    {
+        if(GameManager.instance.CheckEnvelope(GameManager.instance.GetCardByID(placeCardId), GameManager.instance.GetCardByID(personCardId), GameManager.instance.GetCardByID(practiceCardId)))
+            GameOverClientRPC(player.playerName.Value); //cliente venceu
+        else
+            PlayerLoseClientRPC(player.playerName.Value); //cliente perdeu
+    }
+
     public void OnHostWin()
     {
         if (IsServer && IsOwner)
@@ -132,5 +148,23 @@ public class RequestProvider : NetworkBehaviour
     {
         eventOpenPlayerLoseScreen.Raise();
         eventPlayerLose.Raise(loserName);
+    }
+
+    public void OnRequestEnvelopeCards()
+    {
+        if(IsOwner)
+            RequestEnvelopeCardsServerRPC();
+    }
+
+    [ServerRpc]
+    void RequestEnvelopeCardsServerRPC()
+    {
+        RequestEnvelopeCardsClientRPC(GameManager.instance._EnvelopePlace, GameManager.instance._EnvelopePerson, GameManager.instance._EnvelopePractice);
+    }
+
+    [ClientRpc]
+    void RequestEnvelopeCardsClientRPC(int placeCardId, int personCardId, int practiceCardId)
+    {
+        eventSendEnvelopeCardsFromServer.Raise(placeCardId, personCardId, practiceCardId);
     }
 }

@@ -33,6 +33,8 @@ GameObject:
   - component: {fileID: 5235836937976296781}
   - component: {fileID: 2363799888341543682}
   - component: {fileID: 1529972388595242969}
+  - component: {fileID: 5445619486392532359}
+  - component: {fileID: 500255882019846227}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -189,6 +191,8 @@ MonoBehaviour:
   eventOpenPlayerLoseScreen: {fileID: 11400000, guid: 2d672116ee171234994d84c5c24d8477,
     type: 2}
   eventPlayerLose: {fileID: 11400000, guid: 4003180d9bcd3bd4eae6e943772cbab8, type: 2}
+  eventSendEnvelopeCardsFromServer: {fileID: 11400000, guid: 76a936ab5ab832b4592fc2d11ac8062a,
+    type: 2}
 --- !u!114 &198592674188698129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,6 +734,62 @@ MonoBehaviour:
       - m_Target: {fileID: 6819681765602089541}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: DisconnectPlayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5445619486392532359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df93ace02c7678c4dbb554af9081f9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 9b795539e8d390647814b7f65634be08, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnRequestToCheckEnvelope
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &500255882019846227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819681765602089542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 6e546200a1697fd45a153f23becbaa5f, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8644167628532478746}
+        m_TargetAssemblyTypeName: RequestProvider, Assembly-CSharp
+        m_MethodName: OnRequestEnvelopeCards
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

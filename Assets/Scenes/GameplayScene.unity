@@ -3233,6 +3233,8 @@ MonoBehaviour:
     type: 2}
   eventRequestToCheckGuessCards: {fileID: 11400000, guid: c598ad8e342a041498bfe46a6e8791f9,
     type: 2}
+  eventRequestToCheckEnvelope: {fileID: 11400000, guid: 9b795539e8d390647814b7f65634be08,
+    type: 2}
   eventWin: {fileID: 11400000, guid: 15b59c6ab35ccd04191984221ad0bc4a, type: 2}
   eventLose: {fileID: 11400000, guid: b675fa3328ec5e54c9f2d71cf544a1b7, type: 2}
   peopleCardContainer: {fileID: 11400000, guid: ef805d383ec1e64419b945659c672c03,
