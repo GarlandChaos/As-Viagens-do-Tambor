@@ -19,14 +19,14 @@ namespace System.UI
         public void ShowEnvelopeCards()
         {
             if (NetworkManager.Singleton.IsServer)
-                SetupCardTemplates(GameManager.instance._EnvelopePlaceCard, GameManager.instance._EnvelopePersonCard, GameManager.instance._EnvelopePracticeCard);
+                SetupCardTemplates(CardProvider.instance._EnvelopePlaceCard, CardProvider.instance._EnvelopePersonCard, CardProvider.instance._EnvelopePracticeCard);
             else
                 eventRequestEnvelopeCards.Raise();
         }
 
         public void ReceiveEnvelopeCardsFromServer(int placeCardId, int personCardId, int practiceCardId)
         {
-            SetupCardTemplates(GameManager.instance.GetCardByID(placeCardId), GameManager.instance.GetCardByID(personCardId), GameManager.instance.GetCardByID(practiceCardId));
+            SetupCardTemplates(CardProvider.instance.GetCardByID(placeCardId), CardProvider.instance.GetCardByID(personCardId), CardProvider.instance.GetCardByID(practiceCardId));
         }
 
         void SetupCardTemplates(Card placeCard, Card personCard, Card practiceCard)
@@ -38,12 +38,12 @@ namespace System.UI
 
         public void CloseWinScreen()
         {
-            eventCloseWinScreen.Raise();
+            eventCloseWinScreen.Raise(NetworkManager.Singleton.LocalClientId);
         }
 
         public void OnGameOver(string victorName)
         {
-            textWinMessage.text = "O jogador " + victorName + " acertou o palpite e venceu!";
+            textWinMessage.text = victorName + " venceu!";
             ShowEnvelopeCards();
         }
     }

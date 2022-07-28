@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
 namespace System.UI
 {
@@ -64,10 +65,13 @@ namespace System.UI
             UIManager.instance.RequestScreen("Player Lose Screen", true);
         }
 
-        public void OnCloseWinScreen()
+        public void OnCloseWinScreen(ulong clientId)
         {
-            UIManager.instance.ClearAllScreens();
-            UIManager.instance.RequestScreen("Room Manager Screen", true);
+            if(NetworkManager.Singleton.LocalClientId == clientId)
+            {
+                UIManager.instance.ClearAllScreens();
+                UIManager.instance.RequestScreen("Room Manager Screen", true);
+            }   
         }
 
         public void OnCloseLoseScreen()

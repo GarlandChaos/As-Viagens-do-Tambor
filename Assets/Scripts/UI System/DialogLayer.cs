@@ -55,13 +55,13 @@ namespace System.UI
             return false;
         }
 
-        public void ClearScreenStack()
+        public override void ClearScreens()
         {
             if (screenStack.Count > 0)
             {
                 foreach (IDialogController screen in screenStack)
                     screen.Hide();
-                
+
                 screenStack.Clear();
             }
         }

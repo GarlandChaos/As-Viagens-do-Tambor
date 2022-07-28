@@ -16,4 +16,9 @@ public class Card : ScriptableObject
     public int id;
     public CardType type;
     public Sprite sprite;
+
+    public CardType MinhaFunc()
+    {
+        return CardType.extra;
+    }
 }

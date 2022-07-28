@@ -81,6 +81,11 @@ public class Player : NetworkBehaviour
         WritePermission = NetworkVariablePermission.Everyone,
         ReadPermission = NetworkVariablePermission.Everyone
     }, false);
+    public NetworkVariableBool isPlaying = new NetworkVariableBool(new NetworkVariableSettings
+    {
+        WritePermission = NetworkVariablePermission.Everyone,
+        ReadPermission = NetworkVariablePermission.Everyone
+    }, false);
     [HideInInspector]
     public NetworkVariableVector3 networkPosition = new NetworkVariableVector3(new NetworkVariableSettings
     {
@@ -131,14 +136,20 @@ public class Player : NetworkBehaviour
     public override void NetworkStart()
     {   
         networkPosition.Value = transform.position;
+        isMyTurn.Value = false;
+        isPlaying.Value = true;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
     }
 
     private void Singleton_OnClientDisconnectCallback(ulong obj)
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback -= Singleton_OnClientDisconnectCallback;
         if (OwnerClientId == obj)
         {
-            eventPlayerDisconnected.Raise();
+            eventPlayerDisconnected.Raise(obj);
             Destroy(gameObject);
         }
     }
@@ -237,7 +248,7 @@ public class Player : NetworkBehaviour
     void AddCardToListByIdAndType(int cardId, CardType cardType)
     {
         List<Card> cardList = cardType == CardType.place ? cardPlaceList : cardType == CardType.person ? cardPersonList : cardPracticeList;
-        Card c = GameManager.instance.GetCardByTypeAndID(cardType, cardId);
+        Card c = CardProvider.instance.GetCardByTypeAndID(cardType, cardId);
         if (!cardList.Contains(c))
         {
             cardList.Add(c);
@@ -248,7 +259,7 @@ public class Player : NetworkBehaviour
 
     void AddDiscardedCardToListById(NetworkListEvent<int> changeEvent)
     {
-        Card c = GameManager.instance.GetCardByID(changeEvent.Value);
+        Card c = CardProvider.instance.GetCardByID(changeEvent.Value);
         if (!discardedCardList.Contains(c))
         {
             discardedCardList.Add(c);
@@ -268,9 +279,9 @@ public class Player : NetworkBehaviour
                 RollDices();
         }
 
-        //envia um rpc para atualizar em todos os clientes o status
-        if(IsOwner)
+        if (IsOwner)
             eventUpdateStatusPanel.Raise(current);
+
     }
 
     void OnPawnNameValueChanged(string previous, string current)

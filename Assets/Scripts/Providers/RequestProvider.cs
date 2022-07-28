@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.Connection;
 
 public class RequestProvider : NetworkBehaviour
 {
@@ -50,7 +51,7 @@ public class RequestProvider : NetworkBehaviour
     [ServerRpc]
     void RequestPlayerCardsServerRPC()
     {
-        List<Card> cards = GameManager.instance.GetPersonCards();
+        List<Card> cards = CardProvider.instance.GetPersonCards();
         int[] ids = new int[cards.Count];
         int i = 0;
         foreach (Card c in cards)
@@ -62,7 +63,7 @@ public class RequestProvider : NetworkBehaviour
     [ServerRpc]
     void RequestPracticeCardsServerRPC()
     {
-        List<Card> cards = GameManager.instance.GetPracticeCards();
+        List<Card> cards = CardProvider.instance.GetPracticeCards();
         int[] ids = new int[cards.Count];
         int i = 0;
         foreach (Card c in cards)
@@ -75,7 +76,7 @@ public class RequestProvider : NetworkBehaviour
     void SendCardsClientRPC(int[] ids)
     {
         foreach (int i in ids)
-            eventSendCard.Raise(GameManager.instance.GetCardByID(i));
+            eventSendCard.Raise(CardProvider.instance.GetCardByID(i));
     }
 
     public void OnRequestToCheckGuessCards(int placeCardId, int personCardId, int practiceCardId)
@@ -86,12 +87,12 @@ public class RequestProvider : NetworkBehaviour
 
     [ServerRpc]
     void CheckGuessCardsServerRPC(int placeCardId, int personCardId, int practiceCardId)
-    {
+    {        
         List<Card> cards = 
-            GameManager.instance.CheckGuessCards(GameManager.instance.GetCardByID(placeCardId), GameManager.instance.GetCardByID(personCardId), GameManager.instance.GetCardByID(practiceCardId));
+            CardProvider.instance.CheckGuessCards(CardProvider.instance.GetCardByID(placeCardId), CardProvider.instance.GetCardByID(personCardId), CardProvider.instance.GetCardByID(practiceCardId));
 
         if (cards.Count != 0)
-            SendUnraveledCardClientRPC(cards[0].id, GameManager.instance._UnraveledCardPlayerName);
+            SendUnraveledCardClientRPC(cards[0].id, GameManager.instance.unraveledCardPlayerName);
         else
             SendUnraveledCardClientRPC();
     }
@@ -101,7 +102,7 @@ public class RequestProvider : NetworkBehaviour
     {
         if (unraveledCardId != -1)
         {
-            Card card = GameManager.instance.GetCardByID(unraveledCardId);
+            Card card = CardProvider.instance.GetCardByID(unraveledCardId);
             eventShowCardToPlayer.Raise(card, unraveledCardPlayerName);
             player.AddToDiscardedCards(card);
         }
@@ -118,10 +119,19 @@ public class RequestProvider : NetworkBehaviour
     [ServerRpc]
     void CheckEnvelopeServerRPC(int placeCardId, int personCardId, int practiceCardId)
     {
-        if(GameManager.instance.CheckEnvelope(GameManager.instance.GetCardByID(placeCardId), GameManager.instance.GetCardByID(personCardId), GameManager.instance.GetCardByID(practiceCardId)))
+        if(CardProvider.instance.CheckEnvelope(CardProvider.instance.GetCardByID(placeCardId), CardProvider.instance.GetCardByID(personCardId), CardProvider.instance.GetCardByID(practiceCardId)))
             GameOverClientRPC(player.playerName.Value); //cliente venceu
         else
-            PlayerLoseClientRPC(player.playerName.Value); //cliente perdeu
+            RemovePlayerFromGame(player);
+    }
+
+    void RemovePlayerFromGame(Player p)
+    {
+        p.isPlaying.Value = false;
+        if (GetPlayerCount() > 1)
+            PlayerLoseClientRPC(p.playerName.Value); //cliente perdeu
+        else
+            GameOverClientRPC(GetRemainingPlayer().playerName.Value); //se tiver apenas um, manda evento de vitória
     }
 
     public void OnHostWin()
@@ -140,7 +150,7 @@ public class RequestProvider : NetworkBehaviour
     public void OnHostLose()
     {
         if (IsServer && IsOwner)
-            PlayerLoseClientRPC(player.playerName.Value);
+            RemovePlayerFromGame(player);
     }
 
     [ClientRpc]
@@ -148,6 +158,40 @@ public class RequestProvider : NetworkBehaviour
     {
         eventOpenPlayerLoseScreen.Raise();
         eventPlayerLose.Raise(loserName);
+        player.ChangePlayerTurn();
+    }
+
+    int GetPlayerCount()
+    {
+        int playerCount = 0;
+        if (IsServer)
+        {
+            foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
+            {
+                Player p = n.PlayerObject.GetComponent<Player>();
+                if(p != null)
+                    if (p.isPlaying.Value)
+                        playerCount++;
+            }
+        }
+
+        return playerCount;
+    }
+
+    Player GetRemainingPlayer()
+    {
+        if (IsServer)
+        {
+            foreach (NetworkClient n in NetworkManager.Singleton.ConnectedClientsList)
+            {
+                Player p = n.PlayerObject.GetComponent<Player>();
+                if (p != null)
+                    if (p.isPlaying.Value)
+                        return p;
+            }
+        }
+
+        return null;
     }
 
     public void OnRequestEnvelopeCards()
@@ -159,7 +203,7 @@ public class RequestProvider : NetworkBehaviour
     [ServerRpc]
     void RequestEnvelopeCardsServerRPC()
     {
-        RequestEnvelopeCardsClientRPC(GameManager.instance._EnvelopePlace, GameManager.instance._EnvelopePerson, GameManager.instance._EnvelopePractice);
+        RequestEnvelopeCardsClientRPC(CardProvider.instance._EnvelopePlace, CardProvider.instance._EnvelopePerson, CardProvider.instance._EnvelopePractice);
     }
 
     [ClientRpc]

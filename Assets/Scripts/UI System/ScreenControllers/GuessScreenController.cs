@@ -59,14 +59,14 @@ namespace System.UI
             ctPlace.Setup(this, GameManager.instance._CurrentPlaceGuess);
             ctPlace.transform.SetParent(rtPlaceContainer, false);
 
-            List<Card> personCards = GameManager.instance.GetPersonCards();
+            List<Card> personCards = CardProvider.instance.GetPersonCards();
             if(personCards != null)
                 foreach (Card c in personCards)
                     CreateCardTemplate(c);
             else
                 eventRequestPersonCards.Raise();
 
-            List<Card> practiceCards = GameManager.instance.GetPracticeCards();
+            List<Card> practiceCards = CardProvider.instance.GetPracticeCards();
             if (practiceCards != null)
                 foreach (Card c in practiceCards)
                     CreateCardTemplate(c);
@@ -89,7 +89,7 @@ namespace System.UI
         public void TryToWinWithGuess()
         {
             eventTryToWinWithGuess.Raise();
-            eventCloseGuessScreen.Raise();
+            //eventCloseGuessScreen.Raise();
         }
 
         public void CleanCardContainers()

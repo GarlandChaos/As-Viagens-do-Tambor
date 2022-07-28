@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using MLAPI;
 
 namespace System.UI
 {
@@ -9,9 +10,10 @@ namespace System.UI
         [SerializeField]
         TMP_Text textStatus = null;
 
-        private void Awake()
+        private void OnEnable()
         {
-            textStatus.text = "Aguardando o outro jogador...";
+            if(NetworkManager.Singleton != null)
+                OnUpdateStatusPanel(NetworkManager.Singleton.IsServer);
         }
 
         public void OnUpdateStatusPanel(bool isOwnerTurn)
@@ -20,6 +22,11 @@ namespace System.UI
                 textStatus.text = "Sua vez! Role os dados.";
             else
                 textStatus.text = "Aguardando o outro jogador...";
+        }
+
+        public void OnGameOverScreen()
+        {
+            textStatus.text = "Fim de jogo!";
         }
     }
 }

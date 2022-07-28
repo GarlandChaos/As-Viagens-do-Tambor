@@ -122,11 +122,6 @@ namespace System.UI
             throw new System.Exception("dialogLayer doesn't have " + screenID);
         }
 
-        public void ClearScreenStack()
-        {
-            dialogLayer.ClearScreenStack();
-        }
-
         public void ClearAllScreens()
         {
             panelLayer.ClearScreens();

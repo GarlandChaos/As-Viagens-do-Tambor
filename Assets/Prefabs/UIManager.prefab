@@ -66,7 +66,6 @@ GameObject:
   - component: {fileID: 2973574465891211557}
   - component: {fileID: 1881423573845901273}
   - component: {fileID: 6531496869935347018}
-  - component: {fileID: 6891647562216106925}
   - component: {fileID: 358177729237518576}
   - component: {fileID: 1957317212679690658}
   - component: {fileID: 4924848430093649097}
@@ -76,7 +75,9 @@ GameObject:
   - component: {fileID: 8913072918660289286}
   - component: {fileID: 8300615126346810337}
   - component: {fileID: 768780445226221828}
-  - component: {fileID: 8842892734469798215}
+  - component: {fileID: 2668207803461976927}
+  - component: {fileID: 2831836982930553751}
+  - component: {fileID: 991830352212415713}
   m_Layer: 5
   m_Name: UI Event Listener Controller
   m_TagString: Untagged
@@ -325,34 +326,6 @@ MonoBehaviour:
       - m_Target: {fileID: 7741445312674578381}
         m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
         m_MethodName: OnOpenPlayerLoseScreen
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &6891647562216106925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329305519955576102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7741445312674578381}
-        m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
-        m_MethodName: OnCloseWinScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -614,7 +587,63 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8842892734469798215
+--- !u!114 &2668207803461976927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329305519955576102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d59ef8cb82e9ff42a6da3556a7877b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: badd3bca0e1f6044697aca29c9438fee, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7741445312674578381}
+        m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
+        m_MethodName: OnCloseWinScreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2831836982930553751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329305519955576102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d59ef8cb82e9ff42a6da3556a7877b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 1987e8b93e2e405448d1cb1e29e3a5ee, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7741445312674578381}
+        m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
+        m_MethodName: OnCloseWinScreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &991830352212415713
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -626,13 +655,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 1987e8b93e2e405448d1cb1e29e3a5ee, type: 2}
+  gameEvent: {fileID: 11400000, guid: 6375bbdaa276ed74f870a54c7efe7340, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7741445312674578381}
         m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
-        m_MethodName: OnCloseWinScreen
+        m_MethodName: OnCloseGuessScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -32,6 +32,7 @@ namespace System.UI
 
         //Runtime field
         Pawn selectedPawn = null;
+        int playersConnected = 0;
 
         private void Awake()
         {
@@ -75,6 +76,7 @@ namespace System.UI
             enterRoomDialog.gameObject.SetActive(false);
             waitingForHostToStartDialog.gameObject.SetActive(false);
             selectedPawn = null;
+            playersConnected = 0;
             
             foreach (CardTemplatePawn ctp in enterRoomCardTemplatePawnList)
                 ctp.gameObject.SetActive(true);
@@ -82,11 +84,16 @@ namespace System.UI
 
         private void Singleton_OnClientConnectedCallback(ulong obj)
         {
-            //UpdateWaitingForPlayersDialogInfo();
+            if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.LocalClientId == obj)
+            {
+                playersConnected++;
+                UpdateWaitingForPlayersDialogInfo();
+            }
         }
 
         private void Singleton_OnClientDisconnectCallback(ulong obj)
         {
+            playersConnected--;
             UpdateWaitingForPlayersDialogInfo();
         }
 
@@ -94,11 +101,13 @@ namespace System.UI
         {
             if (NetworkManager.Singleton.IsServer)
             {
-                int playersCount = NetworkManager.Singleton.ConnectedClients.Count;
-                numberOfPlayersConnectedText.text = playersCount.ToString() + "/4";
+                //int playersCount = NetworkManager.Singleton.ConnectedClients.Count;
+                numberOfPlayersConnectedText.text = playersConnected.ToString() + "/4";
 
-                if (playersCount > 1 && playersCount < 5)
+                if (playersConnected > 1 && playersConnected < 5)
                     playGameButton.interactable = true;
+                else
+                    playGameButton.interactable = false;
             }
         }
 
@@ -252,6 +261,7 @@ namespace System.UI
 
         public void OnSendAvailablePawnsToRoomManager(string[] pawnNames)
         {
+            playersConnected++;
             UpdateWaitingForPlayersDialogInfo();
 
             foreach (CardTemplatePawn ctp in enterRoomCardTemplatePawnList)
