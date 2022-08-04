@@ -13,8 +13,6 @@ using UnityEngine;
 //Has lists of cards of people, practice and place
 //Has network variables: lists of cards' ids of people, practice and place and a bool to check turn
 
-//Instantiate Pawn
-//Request envelope cards from server's GameManager and send them to client's GameManager
 //Roll dices when is it's turn
 //Add to lists of cards and cards' ids
 //Change turns
@@ -37,6 +35,7 @@ public class Player : NetworkBehaviour
     GameEvent eventRequestPaths = null,
         eventRequestExtraCard = null,
         eventChangePlayerTurn = null,
+        eventPlayersReady = null,
         eventStartGame = null,
         eventDisplayDiceResults = null,
         eventUpdateAvailablePawns = null,
@@ -326,6 +325,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     void StartGameClientRpc()
     {
+        eventPlayersReady.Raise();
         eventStartGame.Raise();
     }
 

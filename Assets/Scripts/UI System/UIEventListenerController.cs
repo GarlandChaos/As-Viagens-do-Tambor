@@ -12,7 +12,7 @@ namespace System.UI
             UIManager.instance.RequestScreen("Room Manager Screen", true);
         }
 
-        public void OnStartGame()
+        public void SetupGameplayUI()
         {
             UIManager.instance.RequestScreen("Room Manager Screen", false);
             UIManager.instance.RequestScreen("Status Panel", true);

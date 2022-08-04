@@ -237,3 +237,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pawnImage: {fileID: 6555254569227736098}
+  pawn: {fileID: 0}
+  roomManagerScreen: {fileID: 0}

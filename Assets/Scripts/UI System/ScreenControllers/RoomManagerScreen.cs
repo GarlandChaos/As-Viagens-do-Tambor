@@ -271,7 +271,7 @@ namespace System.UI
                     if (ctp._PawnName == s)
                     {
                         ctp.gameObject.SetActive(false);
-                        if (selectedPawn.name == s)
+                        if (selectedPawn?.name == s)
                             enterRoomPlayButton.interactable = false;
                     }
                 }

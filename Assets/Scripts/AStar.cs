@@ -48,7 +48,7 @@ public static class AStar
             if (current == goal)
                 break;
 
-            foreach (BoardSpace bs in current.adjacent)
+            foreach (BoardSpace bs in current._Adjacent)
             {
                 float newCost = costSoFar[current] + Vector3.SqrMagnitude(bs.gameObject.transform.position - current.gameObject.transform.position);
                 if (!costSoFar.ContainsKey(bs))

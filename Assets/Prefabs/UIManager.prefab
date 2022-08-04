@@ -179,13 +179,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d2b2a721566d774fb073acb78db312a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 3a8f8ca74b2fe494c98734a0295d692f, type: 2}
+  gameEvent: {fileID: 11400000, guid: 6e64e5d75d2e76c47bc97b7421bc10b9, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7741445312674578381}
         m_TargetAssemblyTypeName: System.UI.UIEventListenerController, Assembly-CSharp
-        m_MethodName: OnStartGame
+        m_MethodName: SetupGameplayUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -126,6 +126,7 @@ MonoBehaviour:
     type: 2}
   eventChangePlayerTurn: {fileID: 11400000, guid: ffc55c482d74308438510dec34d79d19,
     type: 2}
+  eventPlayersReady: {fileID: 11400000, guid: 6e64e5d75d2e76c47bc97b7421bc10b9, type: 2}
   eventStartGame: {fileID: 11400000, guid: 3a8f8ca74b2fe494c98734a0295d692f, type: 2}
   eventDisplayDiceResults: {fileID: 11400000, guid: 59c362c29ef511d47b89e22522489b8a,
     type: 2}
@@ -141,6 +142,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3963900548354619676}
   pawnContainer: {fileID: 11400000, guid: 6816d4d3d45060f40b57df9f520fa391, type: 2}
   isMyTurn:
+    m_InternalValue: 0
+  isPlaying:
     m_InternalValue: 0
   networkPosition:
     m_InternalValue: {x: 0, y: 0, z: 0}

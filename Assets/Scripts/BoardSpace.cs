@@ -1,10 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardSpace : MonoBehaviour
 {
-    public List<BoardSpace> adjacent = new List<BoardSpace>();
+    //Public fields
     public int id = -1;
-    public GameObject marker = null;
+
+    //Inspector reference fields
+    [SerializeField]
+    List<BoardSpace> adjacent = new List<BoardSpace>();
+    [SerializeField]
+    GameObject marker = null;
+
+    //Properties
+    public List<BoardSpace> _Adjacent { get => adjacent; }
+    public GameObject _Marker { get => marker; }
 }

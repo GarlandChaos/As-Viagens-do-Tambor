@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum CardType
 {
@@ -13,12 +11,7 @@ public enum CardType
 [CreateAssetMenu]
 public class Card : ScriptableObject
 {
-    public int id;
-    public CardType type;
-    public Sprite sprite;
-
-    public CardType MinhaFunc()
-    {
-        return CardType.extra;
-    }
+    public int id = -1;
+    public CardType type = CardType.place;
+    public Sprite sprite = null;
 }

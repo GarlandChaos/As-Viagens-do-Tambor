@@ -69,7 +69,7 @@ public class Board : MonoBehaviour
         foreach (Queue<BoardSpace> q in pathList)
         {
             foreach (BoardSpace b in q)
-                b.marker.SetActive(true);
+                b._Marker.SetActive(true);
         }
     }
 
@@ -78,14 +78,14 @@ public class Board : MonoBehaviour
         foreach (Queue<BoardSpace> q in pathList)
         {
             foreach (BoardSpace b in q)
-                b.marker.SetActive(false);
+                b._Marker.SetActive(false);
         }
         pathList.Clear();
     }
 
     public void CalculatePaths(BoardSpace boardSpace, int moves, List<Queue<BoardSpace>> pathList, Queue<BoardSpace> path = null)
     {
-        foreach(BoardSpace bs in boardSpace.adjacent)
+        foreach(BoardSpace bs in boardSpace._Adjacent)
         {
             Queue<BoardSpace> p;
             int m = moves;
@@ -120,7 +120,7 @@ public class Board : MonoBehaviour
             foreach (BoardSpace b in q)
             {
                 if (!path.Contains(b))
-                    b.marker.SetActive(false);
+                    b._Marker.SetActive(false);
             }
         }
     }
