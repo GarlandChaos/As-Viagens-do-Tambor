@@ -10,16 +10,20 @@ namespace System.UI
     {
         //Inspector reference fields
         [SerializeField]
-        Button buttonSendGuess = null;
+        Button buttonSendGuess = null, buttonConfirmShownCard = null;
         [SerializeField]
         RectTransform rtAskIfWantToGuess = null, rtGuess = null, rtPlaceContainer = null, rtPeopleContainer = null, 
-            rtPracticesContainer = null, rtWaiting = null, rtConfirmGuess = null, rtShowCardFromOtherPlayers = null, rtShowCardContainer = null;
+            rtPracticesContainer = null, rtWaiting = null, rtConfirmGuess = null, rtShowCardFromOtherPlayers = null;
         [SerializeField]
         GameEvent eventCloseGuessScreen = null, eventTryToWinWithGuess = null, eventRequestPersonCards = null, eventRequestPracticeCards = null;
         [SerializeField]
         TMP_Text textShowCard = null;
         [SerializeField]
         CardTemplate prefabCardTemplate = null;
+        [SerializeField]
+        Image imageShownCard = null;
+        [SerializeField]
+        Sprite spriteCardBack = null;
         [SerializeField]
         CardTemplateGuess prefabCardTemplateGuess = null;
         
@@ -89,7 +93,6 @@ namespace System.UI
         public void TryToWinWithGuess()
         {
             eventTryToWinWithGuess.Raise();
-            //eventCloseGuessScreen.Raise();
         }
 
         public void CleanCardContainers()
@@ -104,9 +107,6 @@ namespace System.UI
             if (rtPracticesContainer.childCount > 0)
                 for (int i = 0; i < rtPracticesContainer.childCount; i++)
                     Destroy(rtPracticesContainer.GetChild(i).gameObject);
-
-            if (rtShowCardContainer.childCount > 0)
-                Destroy(rtShowCardContainer.GetChild(0).gameObject);
         }
 
         public void SetSelectedPersonCard(Card person)
@@ -126,15 +126,14 @@ namespace System.UI
         public void OnShowCardToPlayer(Card card, string playerName)
         {
             textShowCard.text = playerName.ToString() + " possui a seguinte carta:";
-            CardTemplate ct = Instantiate(prefabCardTemplate);
-            ct.Setup(card);
-            ct.transform.SetParent(rtShowCardContainer, false);
+            //imageShownCard.sprite = card.sprite;
 
             rtAskIfWantToGuess.gameObject.SetActive(false);
             rtGuess.gameObject.SetActive(false);
             rtWaiting.gameObject.SetActive(false);
             rtConfirmGuess.gameObject.SetActive(false);
             rtShowCardFromOtherPlayers.gameObject.SetActive(true);
+            StartCoroutine(ShowCardCoroutine(card));
         }
 
         public void OnAskForGuessConfirmation()
@@ -144,6 +143,53 @@ namespace System.UI
             rtWaiting.gameObject.SetActive(false);
             rtShowCardFromOtherPlayers.gameObject.SetActive(false);
             rtConfirmGuess.gameObject.SetActive(true);
+        }
+
+        IEnumerator ShowCardCoroutine(Card card)
+        {
+            buttonConfirmShownCard.interactable = false;
+            WaitForEndOfFrame wait = new WaitForEndOfFrame();
+            AnimationCurve curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+            float timer = 0f;
+            float animationTime = 1.5f;
+            imageShownCard.sprite = spriteCardBack;
+            Vector3 startScale = imageShownCard.rectTransform.localScale;
+            Vector3 endScale = startScale;
+            endScale.x = 0f;
+
+            while (timer < 1f)
+            {
+                timer += Time.deltaTime / animationTime;
+
+                yield return wait;
+            }
+
+            animationTime = 0.25f;
+            timer = 0f;
+
+            while (timer < 1f)
+            {
+                timer += Time.deltaTime / animationTime;
+                imageShownCard.rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve.Evaluate(timer));
+
+                yield return wait;
+            }
+
+            imageShownCard.sprite = card.sprite;
+
+            timer = 0f;
+            endScale = startScale;
+            startScale = imageShownCard.rectTransform.localScale;
+
+            while (timer < 1f)
+            {
+                timer += Time.deltaTime / animationTime;
+                imageShownCard.rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve.Evaluate(timer));
+
+                yield return wait;
+            }
+
+            buttonConfirmShownCard.interactable = true;
         }
     }
 }

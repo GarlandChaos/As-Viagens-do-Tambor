@@ -10,19 +10,21 @@ namespace System.UI
 
         //Inspector reference fields
         [SerializeField]
-        UISettings settings;
+        UISettings settings = null;
         [SerializeField]
-        PanelLayer panelLayer;
+        PanelLayer panelLayer = null;
         [SerializeField]
-        DialogLayer dialogLayer;
+        DialogLayer dialogLayer = null;
         [SerializeField]
-        Canvas mainCanvas;
+        SpecialPanelLayer specialPanelLayer = null;
         [SerializeField]
-        Camera UICamera;
+        Canvas mainCanvas = null;
+        [SerializeField]
+        Camera UICamera = null;
 
         //Properties
-        public Canvas _MainCanvas { get { return mainCanvas; } set { mainCanvas = value; } }
-        public Camera _UICamera { get { return UICamera; } set { UICamera = value; } }
+        public Canvas _MainCanvas { get => mainCanvas; }
+        public Camera _UICamera { get => UICamera; }
 
         private void Awake()
         {
@@ -56,7 +58,17 @@ namespace System.UI
 
                     IPanelController panel = screenController as IPanelController;
                     if (panel != null)
+                    {
                         panelLayer.RegisterScreen(screen.name, panel, screenInstance.transform);
+                        continue;
+                    }
+
+                    ISpecialPanelController specialPanel = screenController as ISpecialPanelController;
+                    if (specialPanel != null)
+                    {
+                        specialPanelLayer.RegisterScreen(screen.name, specialPanel, screenInstance.transform);
+                        continue;
+                    }
                 }
             }
         }
@@ -81,6 +93,13 @@ namespace System.UI
                     dialogLayer.ShowScreen(screenID);
                 else
                     dialogLayer.HideScreen(screenID);
+            }
+            else if (specialPanelLayer.HasScreen(screenID))
+            {
+                if (open)
+                    specialPanelLayer.ShowScreen(screenID);
+                else
+                    specialPanelLayer.HideScreen(screenID);
             }
 #if UNITY_EDITOR
             else
@@ -108,6 +127,13 @@ namespace System.UI
                 else
                     dialogLayer.HideScreen(screenID);
             }
+            else if (specialPanelLayer.HasScreen(screenID))
+            {
+                if (!specialPanelLayer.IsScreenVisible(screenID))
+                    specialPanelLayer.ShowScreen(screenID);
+                else
+                    specialPanelLayer.HideScreen(screenID);
+            }
 #if UNITY_EDITOR
             else
                 Debug.LogError(screenID + " not found on any layer.");
@@ -126,6 +152,7 @@ namespace System.UI
         {
             panelLayer.ClearScreens();
             dialogLayer.ClearScreens();
+            specialPanelLayer.ClearScreens();
         }
 
         public bool IsScreenVisible(string screenID)
@@ -134,6 +161,8 @@ namespace System.UI
                 return panelLayer.IsScreenVisible(screenID);
             else if (dialogLayer.HasScreen(screenID))
                 return dialogLayer.IsScreenVisible(screenID);
+            else if (specialPanelLayer.HasScreen(screenID))
+                return specialPanelLayer.IsScreenVisible(screenID);
 
             return false;
         }

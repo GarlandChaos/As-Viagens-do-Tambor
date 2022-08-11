@@ -23,6 +23,8 @@ namespace System.UI
         GameObject panelDice2 = null;
         [SerializeField]
         GameEvent eventActUponDiceResults = null;
+        [SerializeField]
+        RectTransform background1 = null, background2 = null;
 
         //Runtime field
         Dictionary<int, Sprite> diceFaceSpriteDictionary = new Dictionary<int, Sprite>();
@@ -38,6 +40,7 @@ namespace System.UI
             buttonRollDice.SetActive(true);
             panelDice1.SetActive(false);
             panelDice2.SetActive(false);
+            RefreshPanel();
         }
 
         public async void OnRollDiceButton()
@@ -45,8 +48,16 @@ namespace System.UI
             buttonRollDice.SetActive(false);
             panelDice1.SetActive(true);
             panelDice2.SetActive(true);
+            RefreshPanel();
+
             await AnimateDicesResults();
             eventActUponDiceResults.Raise();
+        }
+
+        void RefreshPanel()
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(background1);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(background2);
         }
 
         IEnumerator AnimateDicesResults()

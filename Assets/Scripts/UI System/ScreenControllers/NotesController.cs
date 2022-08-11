@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace System.UI
 {
-    public class NotesController : APanelController
+    public class NotesController : ASpecialPanelController
     {
         //Inspector reference fields
         [SerializeField]

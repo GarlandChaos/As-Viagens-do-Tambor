@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using MLAPI;
+using UnityEngine.UI;
 
 namespace System.UI
 {
@@ -9,6 +10,8 @@ namespace System.UI
         //Inspector reference fields
         [SerializeField]
         TMP_Text textStatus = null;
+        [SerializeField]
+        RectTransform statusBar = null, background = null;
 
         private void OnEnable()
         {
@@ -22,11 +25,20 @@ namespace System.UI
                 textStatus.text = "Sua vez! Role os dados.";
             else
                 textStatus.text = "Aguardando o outro jogador...";
+
+            RefreshPanel();
         }
 
         public void OnGameOverScreen()
         {
             textStatus.text = "Fim de jogo!";
+            RefreshPanel();
+        }
+
+        void RefreshPanel()
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(statusBar);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(background);
         }
     }
 }

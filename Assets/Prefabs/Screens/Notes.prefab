@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4235699656257096478}
   - component: {fileID: 4444212596266156696}
   - component: {fileID: 2964144498463262134}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textOliveiraSilveira
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 8511462180525934948}
   - component: {fileID: 5579975388323251203}
   - component: {fileID: 4341068231791811780}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textSopapoPoetico
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 2953851481604619694}
   - component: {fileID: 489150504854482588}
   - component: {fileID: 9073436255334372670}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textIlhota
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 8976823406310195349}
   - component: {fileID: 9037480521144362316}
   - component: {fileID: 7183454129142163763}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textPlaces
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -594,7 +594,7 @@ GameObject:
   - component: {fileID: 2679039481180253814}
   - component: {fileID: 7476900543521249476}
   - component: {fileID: 1501816454839425297}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: NotesPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +608,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629150323856318179}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -651,7 +651,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: 0}
+  m_AnchoredPosition: {x: 520.1182, y: 0}
   m_SizeDelta: {x: 1240, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2679039481180253814
@@ -760,7 +760,7 @@ GameObject:
   - component: {fileID: 8775249824353030594}
   - component: {fileID: 6529006403880845463}
   - component: {fileID: 7752364760968236622}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: "textPra\xE7aAlfandega"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -909,7 +909,7 @@ GameObject:
   - component: {fileID: 5575387431779609929}
   - component: {fileID: 2920889458746767891}
   - component: {fileID: 805749880856998390}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textRodaSamba
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1058,7 +1058,7 @@ GameObject:
   - component: {fileID: 2513900458743505196}
   - component: {fileID: 137649486768350757}
   - component: {fileID: 2438149758304078110}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textMestraGrioElaine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1206,7 +1206,7 @@ GameObject:
   - component: {fileID: 5636869353286256976}
   - component: {fileID: 7230108196544027035}
   - component: {fileID: 717903950772988657}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: imageArrowIndicator1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1281,7 +1281,7 @@ GameObject:
   - component: {fileID: 3182869390630453275}
   - component: {fileID: 8072837556420497806}
   - component: {fileID: 3256091227304744670}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textNotes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1416,7 +1416,7 @@ GameObject:
   - component: {fileID: 5536121128953009490}
   - component: {fileID: 1775186311525297728}
   - component: {fileID: 7648736069122158909}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1492,7 +1492,7 @@ GameObject:
   - component: {fileID: 4036759786448895732}
   - component: {fileID: 430858650262576522}
   - component: {fileID: 5640184501872577353}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textLupicinioRodrigues
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1641,7 +1641,7 @@ GameObject:
   - component: {fileID: 3428001554806339078}
   - component: {fileID: 5591484935362226933}
   - component: {fileID: 6018973392350304019}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textColonia
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1790,7 +1790,7 @@ GameObject:
   - component: {fileID: 8218375455297703795}
   - component: {fileID: 8575514929273752779}
   - component: {fileID: 744292938059005400}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textRubemBerta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1938,7 +1938,7 @@ GameObject:
   - component: {fileID: 756192348776007373}
   - component: {fileID: 7827658622659534627}
   - component: {fileID: 1468977670665255111}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textPeople
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2158,7 +2158,7 @@ GameObject:
   - component: {fileID: 4943901357615848181}
   - component: {fileID: 1577671290813185604}
   - component: {fileID: 4276797900284202155}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textPractices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2294,7 +2294,7 @@ GameObject:
   - component: {fileID: 1718728809092081166}
   - component: {fileID: 1843719691588958215}
   - component: {fileID: 4946167621382952498}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textIaraDeodoro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2443,7 +2443,7 @@ GameObject:
   - component: {fileID: 1497909862636460249}
   - component: {fileID: 3412528940680633155}
   - component: {fileID: 7366376865848146549}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textGibaGiba
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2592,7 +2592,7 @@ GameObject:
   - component: {fileID: 2541719516904568723}
   - component: {fileID: 7862731549432207142}
   - component: {fileID: 3892181976153531169}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textParqueRedencao
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2741,7 +2741,7 @@ GameObject:
   - component: {fileID: 8984890321871018089}
   - component: {fileID: 7511687484842394484}
   - component: {fileID: 8971061015718094656}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textCarnaval
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2890,7 +2890,7 @@ GameObject:
   - component: {fileID: 7122321896337706797}
   - component: {fileID: 4044504124106174234}
   - component: {fileID: 2840238136051545390}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textFestaBatuque
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3039,7 +3039,7 @@ GameObject:
   - component: {fileID: 5032098764973395727}
   - component: {fileID: 9180948992140300625}
   - component: {fileID: 6405544188662267684}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textNiloFeijo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3188,7 +3188,7 @@ GameObject:
   - component: {fileID: 8930307870178656080}
   - component: {fileID: 7860596676555465239}
   - component: {fileID: 4164242420967559485}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textVoChica
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3337,7 +3337,7 @@ GameObject:
   - component: {fileID: 8752744258422263360}
   - component: {fileID: 5641382619938490672}
   - component: {fileID: 4123682755214471607}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textPetronilha
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3486,7 +3486,7 @@ GameObject:
   - component: {fileID: 6889735638997193604}
   - component: {fileID: 2602843283317536231}
   - component: {fileID: 5305131881201478930}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textMestreBorel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3635,7 +3635,7 @@ GameObject:
   - component: {fileID: 7706467065817800146}
   - component: {fileID: 1553275168905354753}
   - component: {fileID: 3804668228762727642}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textQuilombo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3784,7 +3784,7 @@ GameObject:
   - component: {fileID: 6042760201445651903}
   - component: {fileID: 7754490764523453741}
   - component: {fileID: 8371083275422326843}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textIgreja
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3933,7 +3933,7 @@ GameObject:
   - component: {fileID: 4525658958110656793}
   - component: {fileID: 1244329280157761885}
   - component: {fileID: 8907946300762961757}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textHipHop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4081,7 +4081,7 @@ GameObject:
   - component: {fileID: 8680155478943881548}
   - component: {fileID: 4520480797927350009}
   - component: {fileID: 435416623844918952}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: imageArrowIndicator2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4157,7 +4157,7 @@ GameObject:
   - component: {fileID: 2425961658432076672}
   - component: {fileID: 9047563667572787394}
   - component: {fileID: 3707635602627699583}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textMariaConceicao
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4306,7 +4306,7 @@ GameObject:
   - component: {fileID: 491693773154719563}
   - component: {fileID: 307113903633796255}
   - component: {fileID: 5451839187522262570}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textCapoeira
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4455,7 +4455,7 @@ GameObject:
   - component: {fileID: 5680669101285775390}
   - component: {fileID: 3817727200718644968}
   - component: {fileID: 1173395290585115443}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textPrincipeCustodio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4604,7 +4604,7 @@ GameObject:
   - component: {fileID: 1319948538560049106}
   - component: {fileID: 1841118814818991402}
   - component: {fileID: 8752493782165353290}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textRestinga
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4753,7 +4753,7 @@ GameObject:
   - component: {fileID: 7288316613572991772}
   - component: {fileID: 4496052350052455170}
   - component: {fileID: 6912748191383368512}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textMaeRita
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4902,7 +4902,7 @@ GameObject:
   - component: {fileID: 2979945784858788155}
   - component: {fileID: 6165068220201476510}
   - component: {fileID: 4644042510441923324}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: textMercadoPublico
   m_TagString: Untagged
   m_Icon: {fileID: 0}

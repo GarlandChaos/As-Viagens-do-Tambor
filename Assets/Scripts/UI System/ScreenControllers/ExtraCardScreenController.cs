@@ -8,10 +8,12 @@ namespace System.UI
     {
         //Inspector reference fields
         [SerializeField]
-        Image rtExtraCardContainer = null;
+        Image imageExtraCard = null;
         [SerializeField]
-        Sprite cardBackSprite = null;
+        Sprite spriteCardBack = null;
         ExtraCard currentExtraCard = null;
+        [SerializeField]
+        Button buttonConfirm = null;
         [SerializeField]
         GameEvent eventEffectLoseTurn = null, eventEffectReroll = null, eventEffectGoToPlaceAndGuess = null, eventOpenAskIfWantToGoToPlaceScreen = null,
             eventEffectGoToPlaceOptional = null, eventCloseExtraCardScreen = null;
@@ -59,12 +61,13 @@ namespace System.UI
 
         IEnumerator ShowExtraCardCoroutine(ExtraCard extraCard)
         {
+            buttonConfirm.interactable = false;
             WaitForEndOfFrame wait = new WaitForEndOfFrame();
             AnimationCurve curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
             float timer = 0f;
             float animationTime = 1.5f;
-            rtExtraCardContainer.sprite = cardBackSprite;
-            Vector3 startScale = rtExtraCardContainer.rectTransform.localScale;
+            imageExtraCard.sprite = spriteCardBack;
+            Vector3 startScale = imageExtraCard.rectTransform.localScale;
             Vector3 endScale = startScale;
             endScale.x = 0f;
 
@@ -76,28 +79,31 @@ namespace System.UI
             }
 
             animationTime = 0.25f;
+            timer = 0f;
 
             while (timer < 1f)
             {
                 timer += Time.deltaTime / animationTime;
-                rtExtraCardContainer.rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve.Evaluate(timer));
+                imageExtraCard.rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve.Evaluate(timer));
                 
                 yield return wait;
             }
 
-            rtExtraCardContainer.sprite = extraCard.sprite;
+            imageExtraCard.sprite = extraCard.sprite;
 
             timer = 0f;
             endScale = startScale;
-            startScale = rtExtraCardContainer.rectTransform.localScale;
+            startScale = imageExtraCard.rectTransform.localScale;
             
             while (timer < 1f)
             {
                 timer += Time.deltaTime / animationTime;
-                rtExtraCardContainer.rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve.Evaluate(timer));
+                imageExtraCard.rectTransform.localScale = Vector3.Lerp(startScale, endScale, curve.Evaluate(timer));
                 
                 yield return wait;
             }
+
+            buttonConfirm.interactable = true;
         }
     }
 }

@@ -37,7 +37,10 @@ namespace System.UI
         private void Awake()
         {
             if (playerNameCreateInputField != null)
+            {
                 playerNameCreateInputField.onValueChanged.AddListener(delegate { CreateRoomInputChange(); });
+                playerNameCreateInputField.onSubmit.AddListener(delegate { OnSubmitPlayerNameCreateInputField(); });
+            }
 
             if (roomNameInputField != null)
                 roomNameInputField.onValueChanged.AddListener(delegate { CreateRoomInputChange(); });
@@ -82,7 +85,7 @@ namespace System.UI
                 ctp.gameObject.SetActive(true);
         }
 
-        private void Singleton_OnClientConnectedCallback(ulong obj)
+        void Singleton_OnClientConnectedCallback(ulong obj)
         {
             if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.LocalClientId == obj)
             {
@@ -91,10 +94,19 @@ namespace System.UI
             }
         }
 
-        private void Singleton_OnClientDisconnectCallback(ulong obj)
+        void Singleton_OnClientDisconnectCallback(ulong obj)
         {
             playersConnected--;
             UpdateWaitingForPlayersDialogInfo();
+        }
+
+        void OnSubmitPlayerNameCreateInputField()
+        {
+            if (playerNameCreateInputField.isFocused)
+            {
+                playerNameCreateInputField.DeactivateInputField();
+                roomNameInputField.Select();
+            }
         }
 
         void UpdateWaitingForPlayersDialogInfo()
