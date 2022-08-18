@@ -1,5 +1,14 @@
 # As Viagens do Tambor
- 
+
+<p align="center">
+<img
+  src="https://github.com/GarlandChaos/As-Viagens-do-Tambor/blob/main/Assets/Sprites/Logos/Logo.png"
+  alt="Alt text"
+  title="As Viagens do Tambor logo"
+  style="display: block; margin-left: auto; margin-right: auto; width: 300px"> 
+</p>
+<br>
+
 :brazil:<br> 
 Jogo digital baseado no jogo de tabuleiro As Viagens do Tambor. <br>
 Estado: Em desenvolvimento.<br>
