@@ -1890,6 +1890,7 @@ MonoBehaviour:
   spriteCardBack: {fileID: 21300000, guid: de8aff2033398684589db3cfbce23d7e, type: 3}
   prefabCardTemplateGuess: {fileID: 6093189617055447083, guid: a6bb30471a29b294394c4dbd5613682c,
     type: 3}
+  animationSettings: {fileID: 11400000, guid: 0e54bac7e5bd070408514a7733e1c01b, type: 2}
 --- !u!114 &6736742523362314442
 MonoBehaviour:
   m_ObjectHideFlags: 0

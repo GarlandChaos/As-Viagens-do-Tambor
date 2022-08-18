@@ -214,6 +214,7 @@ MonoBehaviour:
     type: 2}
   eventOpenGuessScreen: {fileID: 11400000, guid: 05379e92fcd4fa549b3e5bba74941ee0,
     type: 2}
+  animationSettings: {fileID: 11400000, guid: cd9f22b7b66d7b44d8f3cbc039cf1cf3, type: 2}
 --- !u!114 &6819681765602089547
 MonoBehaviour:
   m_ObjectHideFlags: 0

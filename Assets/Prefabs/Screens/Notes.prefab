@@ -2119,6 +2119,7 @@ MonoBehaviour:
     type: 2}
   eventPlayerCannotInteract: {fileID: 11400000, guid: 4b4ac7814e8d84f42ac578aae706c7e0,
     type: 2}
+  animationSettings: {fileID: 11400000, guid: 68bb1e74e88b5c148a86a76e97ae0227, type: 2}
 --- !u!114 &943534784234782751
 MonoBehaviour:
   m_ObjectHideFlags: 0

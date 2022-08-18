@@ -290,6 +290,7 @@ MonoBehaviour:
     type: 2}
   background1: {fileID: 2631548520259914898}
   background2: {fileID: 4600731251355887923}
+  animationSettings: {fileID: 11400000, guid: 39775cae0621c4d43a328b62d36c20d7, type: 2}
 --- !u!1 &2950232074791864135
 GameObject:
   m_ObjectHideFlags: 0

@@ -315,6 +315,7 @@ MonoBehaviour:
     type: 2}
   eventCloseExtraCardScreen: {fileID: 11400000, guid: f51c406a4c684de4caeb933f87edacbc,
     type: 2}
+  animationSettings: {fileID: 11400000, guid: 0e54bac7e5bd070408514a7733e1c01b, type: 2}
 --- !u!114 &4665539151860038427
 MonoBehaviour:
   m_ObjectHideFlags: 0
