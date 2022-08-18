@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Pawn Sprite Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: f333ef572616d7d41936bec9c2dc7b0b, type: 3}
+    totalSpriteSurfaceArea: 1855488
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: a0567871eda3f8946af2770891190799, type: 3}
+  - {fileID: 21300000, guid: b86c21d19ed36f9418b19b5427b3c772, type: 3}
+  - {fileID: 21300000, guid: 740f490201608d246827a1e29c9b9fa1, type: 3}
+  - {fileID: 21300000, guid: 3b998f44327fd234d8edb7a883bf5d68, type: 3}
+  - {fileID: 21300000, guid: 2637e675019778b45b8905d5b008406f, type: 3}
+  - {fileID: 21300000, guid: d39bd9e50bf02454796b6d6c956490cb, type: 3}
+  - {fileID: 21300000, guid: 63624a777a1bdb646878ceb214be7c16, type: 3}
+  - {fileID: 21300000, guid: 822d233a0fa99f94b9c76a45d664f025, type: 3}
+  - {fileID: 21300000, guid: 83312dca60a50e346bd18a7afe9f8611, type: 3}
+  - {fileID: 21300000, guid: 07c7747cc6e8acd44aef6e4a484eaeb5, type: 3}
+  - {fileID: 21300000, guid: 2210435d2c8937142a8787e41946617c, type: 3}
+  - {fileID: 21300000, guid: c8e7e4aec7e2d144b82a3d4d91fb3902, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - pawn_tambor
+  - pawn_petronilha
+  - pawn_giba
+  - pawn_principe
+  - pawn_rita
+  - pawn_feijo
+  - pawn_oliveira
+  - pawn_chica
+  - pawn_elaine
+  - pawn_borel
+  - pawn_deodoro
+  - pawn_lupicinio
+  m_RenderDataMap: {}
+  m_Tag: Pawn Sprite Atlas
+  m_IsVariant: 0

@@ -139,26 +139,26 @@ namespace TamborGame.UI
 
         public void FillRoomsTemplates()
         {
-            if (GameManager.instance.DEBUGROOM)
-            {
-                GameObject go = Instantiate(roomTemplatePrefab);
-                RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
+            //if (GameManager.instance.DEBUGROOM)
+            //{
+            //    GameObject go = Instantiate(roomTemplatePrefab);
+            //    RoomTemplate roomTemplate = go.GetComponent<RoomTemplate>();
 
-                if (roomTemplate != null)
-                {
-                    go.transform.SetParent(selectRoomDialogBG, false);
-                    roomTemplate.SetRoomName("127.0.0.1");
-                    roomTemplate.GetPlayButton().interactable = false;
-                    roomTemplate.GetPlayButton().onClick.AddListener(
-                    delegate
-                    {
-                        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1";
-                        EnterRoom();
-                    });
-                    roomTemplate.GetPlayButton().interactable = true;
-                }
-                backToMainMenuButton.transform.SetAsLastSibling();
-            }
+            //    if (roomTemplate != null)
+            //    {
+            //        go.transform.SetParent(selectRoomDialogBG, false);
+            //        roomTemplate.SetRoomName("127.0.0.1");
+            //        roomTemplate.GetPlayButton().interactable = false;
+            //        roomTemplate.GetPlayButton().onClick.AddListener(
+            //        delegate
+            //        {
+            //            NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1";
+            //            EnterRoom();
+            //        });
+            //        roomTemplate.GetPlayButton().interactable = true;
+            //    }
+            //    backToMainMenuButton.transform.SetAsLastSibling();
+            //}
 
             if (CustomNetworkDiscovery.instance.addresses.Count > 0)
             {
